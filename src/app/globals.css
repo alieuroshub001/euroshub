@@ -1,26 +1,150 @@
 @import "tailwindcss";
 
+/* Light mode (default) */
 :root {
   --background: #ffffff;
   --foreground: #171717;
+  --primary: #17b6b2;
+  --secondary: #ededed;
+  --accent: #0a0a0a;
+  --card-bg: #ffffff;
 }
 
-@theme inline {
-  --color-background: var(--background);
-  --color-foreground: var(--foreground);
-  --font-sans: var(--font-geist-sans);
-  --font-mono: var(--font-geist-mono);
+/* Dark mode when using class-based toggle */
+body.dark {
+  --background: #0a0a0a;
+  --foreground: #ededed;
+  --primary: #17b6b2;
+  --secondary: #1a1a1a;
+  --accent: #ffffff;
+  --card-bg: #000000;
 }
 
+/* Dark mode fallback for users with system preference */
 @media (prefers-color-scheme: dark) {
   :root {
     --background: #0a0a0a;
     --foreground: #ededed;
+    --primary: #17b6b2;
+    --secondary: #1a1a1a;
+    --accent: #ffffff;
   }
 }
 
+/* Tailwind custom theme (optional and for reference only) */
+@theme inline {
+  --color-background: var(--background);
+  --color-foreground: var(--foreground);
+  --font-sans: var(--font-geist-sans, Arial, Helvetica, sans-serif);
+  --font-mono: var(--font-geist-mono, monospace);
+}
+
+/* Base styles */
 body {
-  background: var(--background);
+  background-color: var(--background);
   color: var(--foreground);
-  font-family: Arial, Helvetica, sans-serif;
+  font-family: var(--font-sans, Arial, Helvetica, sans-serif);
+  transition: background-color 0.3s, color 0.3s;
+}
+
+/* Smooth transitions for all elements */
+* {
+  transition: background-color 0.3s ease, color 0.3s ease;
+}
+
+/* Hide CTA buttons in navbar under 720px */
+@media (max-width: 719px) {
+  .navbar-cta {
+    display: none !important;
+  }
+}
+
+/* Show nav links from 950px and up */
+@media (min-width: 950px) {
+  .custom-nav-visible {
+    display: flex !important;
+  }
+}
+
+@media (max-width: 949px) {
+  .custom-nav-visible {
+    display: none !important;
+  }
+}
+
+/* Center nav links when screen is ≥1400px */
+@media (min-width: 1400px) {
+  nav {
+    position: relative;
+  }
+
+  .nav-center {
+    position: absolute;
+    left: 50%;
+    transform: translateX(-50%);
+  }
+}
+
+.image-card {
+  transition: background-color 0.3s ease;
+}
+
+/* Hide scrollbar (cross-browser) */
+.no-scrollbar {
+  scrollbar-width: none; /* Firefox */
+  -ms-overflow-style: none;  /* IE 10+ */
+}
+.no-scrollbar::-webkit-scrollbar {
+  display: none; /* Chrome, Safari, Opera */
+}
+
+/* Grab cursor when scrolling */
+.active {
+  cursor: grabbing;
+  cursor: -webkit-grabbing;
+}
+
+@keyframes marquee {
+  0% {
+    transform: translateX(0%);
+  }
+  100% {
+    transform: translateX(-50%);
+  }
+}
+
+.animate-marquee {
+  animation: marquee 30s linear infinite;
+}
+
+.animate-marquee-reverse {
+  animation: marquee 30s linear infinite reverse;
+}
+@keyframes marquee {
+  0% {
+    transform: translateX(0%);
+  }
+  100% {
+    transform: translateX(-50%);
+  }
+}
+
+.animate-marquee {
+  animation: marquee 30s linear infinite;
+}
+
+.animate-marquee-reverse {
+  animation: marquee 30s linear infinite reverse;
+}
+@keyframes marquee {
+  0% { transform: translateX(0%); }
+  100% { transform: translateX(-50%); }
+}
+
+.animate-marquee {
+  animation: marquee 30s linear infinite;
+}
+
+.animate-marquee-reverse {
+  animation: marquee 30s linear infinite reverse;
 }
