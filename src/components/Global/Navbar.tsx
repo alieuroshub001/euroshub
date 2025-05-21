@@ -47,9 +47,9 @@ export default function Navbar() {
 
   return (
     <header className="w-full border-b border-secondary bg-[var(--background)] text-[var(--foreground)] transition">
-<nav className="relative flex items-center justify-between px-6 py-4 w-full">
-  {/* Left: Logo and Theme Toggle */}
-  <div className="nav-left flex items-center gap-6">
+      <nav className="relative flex items-center justify-between px-6 py-4 w-full">
+        {/* Left: Logo and Theme Toggle */}
+        <div className="nav-left flex items-center gap-6">
           <Link href="/" className="flex items-center gap-1">
             <Image
               src="/assets/images/logo.png"
@@ -83,29 +83,31 @@ export default function Navbar() {
         <div className="flex items-center gap-8 flex-wrap">
           {/* Navigation Links */}
           {!showMobileMenu && (
-<ul className="nav-center custom-nav-visible gap-6 items-center text-sm font-medium whitespace-nowrap overflow-hidden text-ellipsis">
+            <ul className="nav-center custom-nav-visible gap-6 items-center text-sm font-medium whitespace-nowrap overflow-hidden text-ellipsis">
               {[
                 'What We Do',
                 'Who We Help',
-                'Who We Are',
+                'Who We Are', 
                 'How We Deliver',
                 'Join Euroshub',
               ].map((item) => (
-        <li key={item} className="cursor-pointer hover:text-primary transition">
-          {item} <span className="inline-block ml-1">&#x25BE;</span>
-        </li>
-      ))}
-    </ul>
-  )}
+                <li key={item} className="cursor-pointer hover:text-primary transition">
+                  {item} <span className="inline-block ml-1">&#x25BE;</span>
+                </li>
+              ))}
+            </ul>
+          )}
 
-          {/* CTA Buttons - show between 689–949px and >1270px */}
-  <div className="nav-right flex gap-3 items-center navbar-cta">
+          {/* CTA Buttons */}
+          <div className="nav-right flex gap-3 items-center navbar-cta">
             <button className="border border-[var(--primary)] text-[var(--primary)] px-4 py-3 rounded-full text-md font-medium hover:bg-[var(--primary)] hover:text-white transition-colors">
               Explore Careers
             </button>
-            <button className="border border-[var(--primary)] text-[var(--primary)] px-4 py-3 rounded-full text-md font-medium hover:bg-[var(--primary)] hover:text-white transition-colors">
-              Let's Talk Business
-            </button>
+            <Link href="/contact">
+              <button className="border border-[var(--primary)] text-[var(--primary)] px-4 py-3 rounded-full text-md font-medium hover:bg-[var(--primary)] hover:text-white transition-colors">
+                Let's Talk Business
+              </button>
+            </Link>
           </div>
 
           {/* Hamburger Menu */}

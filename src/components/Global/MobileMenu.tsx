@@ -1,10 +1,24 @@
 'use client';
 
 import { Menu, X } from 'lucide-react';
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
+import Image from 'next/image';
+import Link from 'next/link';
 
 export default function MobileMenu() {
   const [isOpen, setIsOpen] = useState(false);
+  
+  // Lock body scroll when menu is open
+  useEffect(() => {
+    if (isOpen) {
+      document.body.style.overflow = 'hidden';
+    } else {
+      document.body.style.overflow = '';
+    }
+    return () => {
+      document.body.style.overflow = '';
+    };
+  }, [isOpen]);
 
   const navItems = [
     'What We Do',
@@ -26,41 +40,82 @@ export default function MobileMenu() {
       </button>
 
       {/* Mobile Menu */}
-      {isOpen && (
-        <div className="fixed inset-0 z-50 bg-[rgba(var(--background),0.95)] backdrop-blur-sm text-[var(--foreground)] flex flex-col items-center justify-center px-6 pt-16 space-y-8">
-          <button
-            onClick={() => setIsOpen(false)}
-            className="absolute top-5 right-5 text-[var(--foreground)] p-2 rounded-full hover:bg-[var(--secondary)] transition-colors"
-            aria-label="Close Menu"
-          >
-            <X className="h-6 w-6" />
-          </button>
+      <div 
+        className={`fixed inset-0 z-50 bg-[var(--background)] backdrop-blur-lg text-[var(--foreground)] flex flex-col items-center justify-start pt-20 transition-all duration-300 ${
+          isOpen 
+            ? 'opacity-100 visible translate-y-0' 
+            : 'opacity-0 invisible translate-y-4'
+        }`}
+      >
+        <div className="absolute top-4 left-4 flex items-center">
+          <Link href="/" className="flex items-center gap-2">
+            <Image
+              src="/assets/images/logo.png"
+              alt="Euroshub Logo"
+              width={60}
+              height={30}
+              className="object-contain"
+            />
+            <span className="text-lg font-bold">EurosHub</span>
+          </Link>
+        </div>
 
-          <ul className="flex flex-col items-center space-y-8 w-full">
-            {navItems.map((item) => (
-              <li
-                key={item}
-                className="w-full text-center py-3 border-b border-[var(--secondary)] last:border-0 hover:text-[var(--primary)] transition-colors text-lg font-medium"
+        <button
+          onClick={() => setIsOpen(false)}
+          className="absolute top-4 right-4 text-[var(--foreground)] p-2 rounded-full hover:bg-[var(--secondary)] transition-colors"
+          aria-label="Close Menu"
+        >
+          <X className="h-6 w-6" />
+        </button>
+
+        <ul className="flex flex-col items-center space-y-6 w-full max-w-sm px-8 mt-6">
+          {navItems.map((item, index) => (
+            <li
+              key={item}
+              className="w-full py-3 border-b border-[var(--secondary)] last:border-0 text-center"
+              style={{ animationDelay: `${index * 50}ms` }}
+            >
+              <a 
+                href="#" 
+                className="block w-full text-lg font-medium hover:text-[var(--primary)] transition-colors"
                 onClick={() => setIsOpen(false)}
               >
-                <a href="#" className="block w-full">
-                  {item}
-                </a>
-              </li>
-            ))}
-          </ul>
+                {item}
+              </a>
+            </li>
+          ))}
+        </ul>
 
-          {/* CTA Buttons (only show when hidden in navbar) */}
-          <div className="flex flex-col items-center gap-4 w-full mt-2 px-4 mobile-cta">
-            <button className="border border-[var(--primary)] text-[var(--primary)] px-6 py-3 rounded-full font-medium w-full max-w-xs hover:bg-[var(--primary)] hover:text-white transition-colors">
-              Explore Careers
-            </button>
-            <button className="border border-[var(--primary)] text-[var(--primary)] px-6 py-3 rounded-full font-medium w-full max-w-xs hover:bg-[var(--primary)] hover:text-white transition-colors">
-              Let&apos;s Talk Business
-            </button>
-          </div>
+        {/* CTA Buttons */}
+        <div className="flex flex-col items-center gap-4 w-full max-w-sm px-8 mt-8">
+          <button 
+            className="border border-[var(--primary)] text-[var(--primary)] px-6 py-3 rounded-full font-medium w-full hover:bg-[var(--primary)] hover:text-white transition-all duration-300"
+            onClick={() => setIsOpen(false)}
+          >
+            Explore Careers
+          </button>
+          <button 
+            className="border border-[var(--primary)] text-[var(--primary)] px-6 py-3 rounded-full font-medium w-full hover:bg-[var(--primary)] hover:text-white transition-all duration-300"
+            onClick={() => setIsOpen(false)}
+          >
+            Let&apos;s Talk Business
+          </button>
         </div>
-      )}
+
+        {/* Social Icons */}
+        <div className="flex justify-center gap-6 mt-12">
+          {['linkedin', 'twitter', 'facebook'].map((platform) => (
+            <a 
+              key={platform} 
+              href="#" 
+              aria-label={platform}
+              className="text-[var(--foreground)] hover:text-[var(--primary)] transition-colors"
+            >
+              <i className={`fab fa-${platform} text-xl`}></i>
+            </a>
+          ))}
+        </div>
+      </div>
     </div>
   );
 }

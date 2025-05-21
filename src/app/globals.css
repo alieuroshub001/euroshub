@@ -31,53 +31,55 @@ body.dark {
   }
 }
 
-/* Tailwind custom theme (optional and for reference only) */
-@theme inline {
-  --color-background: var(--background);
-  --color-foreground: var(--foreground);
-  --font-sans: var(--font-geist-sans, Arial, Helvetica, sans-serif);
-  --font-mono: var(--font-geist-mono, monospace);
-}
-
 /* Base styles */
 body {
   background-color: var(--background);
   color: var(--foreground);
-  font-family: var(--font-sans, Arial, Helvetica, sans-serif);
+  font-family: system-ui, -apple-system, sans-serif;
   transition: background-color 0.3s, color 0.3s;
 }
 
-/* Smooth transitions for all elements */
+/* Smooth transitions */
 * {
   transition: background-color 0.3s ease, color 0.3s ease;
 }
 
-/* Hide CTA buttons in navbar under 720px */
-@media (max-width: 719px) {
+/* Responsive navbar styles */
+.navbar-container {
+  max-width: 1440px;
+  margin: 0 auto;
+  padding: 0 1rem;
+}
+
+/* Navigation breakpoints */
+@media (max-width: 1023px) {
   .navbar-cta {
-    display: none !important;
+    display: none;
   }
 }
 
-/* Show nav links from 950px and up */
-@media (min-width: 950px) {
-  .custom-nav-visible {
-    display: flex !important;
+@media (min-width: 1024px) {
+  .navbar-cta {
+    display: flex;
   }
 }
 
+/* Navigation visibility */
 @media (max-width: 949px) {
   .custom-nav-visible {
     display: none !important;
   }
 }
 
-/* Center nav links when screen is ≥1400px */
-@media (min-width: 1400px) {
-  nav {
-    position: relative;
+@media (min-width: 950px) {
+  .custom-nav-visible {
+    display: flex !important;
+    gap: 2rem;
   }
+}
 
+/* Center navigation for larger screens */
+@media (min-width: 1280px) {
   .nav-center {
     position: absolute;
     left: 50%;
@@ -85,60 +87,46 @@ body {
   }
 }
 
-.image-card {
-  transition: background-color 0.3s ease;
+/* Navigation spacing */
+.nav-item {
+  white-space: nowrap;
+  padding: 0.5rem 0.75rem;
+  transition: color 0.2s ease;
 }
 
-/* Hide scrollbar (cross-browser) */
+/* Mobile menu styles */
+.mobile-menu {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-color: var(--background);
+  z-index: 50;
+  padding: 1.5rem;
+}
+
+/* Footer responsive grid */
+.footer-grid {
+  display: grid;
+  gap: 2rem;
+  grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+}
+
+/* Utility classes */
 .no-scrollbar {
-  scrollbar-width: none; /* Firefox */
-  -ms-overflow-style: none;  /* IE 10+ */
+  -ms-overflow-style: none;
+  scrollbar-width: none;
 }
+
 .no-scrollbar::-webkit-scrollbar {
-  display: none; /* Chrome, Safari, Opera */
+  display: none;
 }
 
-/* Grab cursor when scrolling */
-.active {
-  cursor: grabbing;
-  cursor: -webkit-grabbing;
-}
-
+/* Animation keyframes */
 @keyframes marquee {
-  0% {
-    transform: translateX(0%);
-  }
-  100% {
-    transform: translateX(-50%);
-  }
-}
-
-.animate-marquee {
-  animation: marquee 30s linear infinite;
-}
-
-.animate-marquee-reverse {
-  animation: marquee 30s linear infinite reverse;
-}
-@keyframes marquee {
-  0% {
-    transform: translateX(0%);
-  }
-  100% {
-    transform: translateX(-50%);
-  }
-}
-
-.animate-marquee {
-  animation: marquee 30s linear infinite;
-}
-
-.animate-marquee-reverse {
-  animation: marquee 30s linear infinite reverse;
-}
-@keyframes marquee {
-  0% { transform: translateX(0%); }
-  100% { transform: translateX(-50%); }
+  from { transform: translateX(0); }
+  to { transform: translateX(-50%); }
 }
 
 .animate-marquee {
