@@ -1,14 +1,16 @@
 'use client';
 
-import { motion } from 'framer-motion';
+import { motion, useAnimation } from 'framer-motion';
 import {
-  BriefcaseIcon,
-  CheckCircleIcon,
-  GroupIcon,
-  UsersIcon,
+  CheckCircle,
+  Users,
+  Globe,
+  Clock,
+  Aperture
 } from 'lucide-react';
 import Image from 'next/image';
 import { useEffect, useState } from 'react';
+import { useInView } from 'react-intersection-observer';
 
 const Counter = () => {
   const [counters, setCounters] = useState([
@@ -17,130 +19,198 @@ const Counter = () => {
       target: 150,
       label: 'Projects Completed',
       suffix: '+',
-      icon: CheckCircleIcon,
+      icon: CheckCircle,
+      color: 'text-[#17b6b2]',
+      bg: 'bg-[#17b6b2]',
+      progress: '0%'
     },
     {
       value: 0,
       target: 50,
-      label: 'Clients Worldwide',
+      label: 'Global Clients',
       suffix: '+',
-      icon: UsersIcon,
+      icon: Globe,
+      color: 'text-[#3b82f6]',
+      bg: 'bg-[#3b82f6]',
+      progress: '0%'
     },
     {
       value: 0,
       target: 10,
       label: 'Years Experience',
-      suffix: '',
-      icon: BriefcaseIcon,
+      suffix: '+',
+      icon: Clock,
+      color: 'text-[#8b5cf6]',
+      bg: 'bg-[#8b5cf6]',
+      progress: '0%'
     },
     {
       value: 0,
       target: 20,
-      label: 'Team Members',
+      label: 'Team Experts',
       suffix: '+',
-      icon: GroupIcon,
-    },
+      icon: Users,
+      color: 'text-[#ec4899]',
+      bg: 'bg-[#ec4899]',
+      progress: '0%'
+    }
   ]);
 
-  useEffect(() => {
-    const duration = 2000;
-    const increment = 10;
-    const steps = duration / increment;
+  const controls = useAnimation();
+  const [ref, inView] = useInView({
+    triggerOnce: true,
+    threshold: 0.1
+  });
 
-    const timers = counters.map((counter, index) => {
+  useEffect(() => {
+    if (inView) {
+      controls.start('visible');
+      animateCounters();
+    }
+  }, [inView, controls]);
+
+  const animateCounters = () => {
+    const duration = 2000;
+    const increment = 20;
+
+    counters.forEach((counter, index) => {
+      const steps = duration / increment;
       const stepValue = counter.target / steps;
       let currentStep = 0;
 
-      return setInterval(() => {
+      const timer = setInterval(() => {
         currentStep++;
-        const newValue = Math.round(stepValue * currentStep);
+        const newValue = Math.min(
+          Math.round(stepValue * currentStep),
+          counter.target
+        );
+        const newProgress = `${Math.min(100, (newValue / counter.target) * 100)}%`;
 
         setCounters(prev =>
           prev.map((item, i) =>
-            i === index
-              ? {
-                  ...item,
-                  value: newValue > item.target ? item.target : newValue,
-                }
-              : item
+            i === index ? { 
+              ...item, 
+              value: newValue,
+              progress: newProgress
+            } : item
           )
         );
 
         if (currentStep >= steps) {
-          clearInterval(timers[index]);
+          clearInterval(timer);
         }
       }, increment);
     });
-
-    return () => {
-      timers.forEach(timer => clearInterval(timer));
-    };
-  }, [counters]); // Added counters to dependency array
+  };
 
   return (
-    <section className="relative py-20 bg-[var(--secondary)] text-[var(--foreground)] overflow-hidden">
-      {/* Gradient overlay */}
-      <div className="absolute -z-10 inset-0 bg-gradient-to-r from-[#c2e9fb] to-[#a1c4fd] dark:from-[#232526] dark:to-[#414345] opacity-20" />
+    <section 
+      ref={ref}
+      className="relative py-20 bg-[var(--secondary)] text-[var(--foreground)] overflow-hidden"
+    >
+      <div className="absolute inset-0 -z-10 bg-gradient-to-br from-white/50 to-[var(--secondary)] dark:from-[#0a0a0a] dark:to-[#1a1a1a]" />
 
-      <div className="max-w-7xl mx-auto px-6 grid md:grid-cols-2 items-center gap-12">
-        {/* Animated counters */}
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+        {/* Keep the exact same header section */}
         <motion.div
           initial="hidden"
-          whileInView="visible"
-          viewport={{ once: true }}
+          animate={controls}
           variants={{
-            visible: { transition: { staggerChildren: 0.2 } },
-            hidden: {},
+            hidden: { opacity: 0, y: 20 },
+            visible: { opacity: 1, y: 0, transition: { duration: 0.6 } }
           }}
-          className="grid grid-cols-2 gap-6 md:gap-8"
+          className="text-center mb-16"
         >
-          {counters.map((counter, index) => {
-            const Icon = counter.icon;
-            return (
-              <motion.div
-                key={index}
-                className="text-center bg-[var(--card-bg)] rounded-xl p-6 shadow hover:shadow-lg transition"
-                initial={{ opacity: 0, y: 30 }}
-                whileInView={{ opacity: 1, y: 0 }}
-                viewport={{ once: true }}
-                transition={{ duration: 0.6, delay: index * 0.1 }}
-              >
-                <motion.div
-                  initial={{ scale: 0 }}
-                  whileInView={{ scale: 1 }}
-                  transition={{ type: 'spring', stiffness: 300, damping: 20 }}
-                  className="flex justify-center mb-2"
-                >
-                  <Icon className="w-8 h-8 text-[var(--primary)]" />
-                </motion.div>
-                <div className="text-4xl font-bold text-[var(--primary)]">
-                  {counter.value}
-                  {counter.suffix}
-                </div>
-                <div className="mt-2 text-sm md:text-base opacity-80">
-                  {counter.label}
-                </div>
-              </motion.div>
-            );
-          })}
+          <div className="inline-flex items-center justify-center px-4 py-2 rounded-full bg-[var(--primary)]/10 text-[var(--primary)] mb-4">
+            <Aperture className="w-5 h-5 mr-2" />
+            <span className="text-sm font-medium">OUR ACHIEVEMENTS</span>
+          </div>
+          <h2 className="text-3xl md:text-4xl lg:text-5xl font-bold">
+            Delivering Excellence <br className="hidden md:block" />
+            <span className="text-[var(--primary)]">Across The Globe</span>
+          </h2>
         </motion.div>
 
-        {/* Animated image */}
-        <motion.div
-          initial={{ x: 100, opacity: 0 }}
-          whileInView={{ x: 0, opacity: 1 }}
-          transition={{ duration: 1 }}
-          viewport={{ once: true }}
-          className="relative w-full h-[300px] md:h-[400px]"
-        >
-          <Image
-            src="/assets/images/counter.png"
-            alt="Counter visual"
-            layout="fill"
-            objectFit="contain"
-            priority
-          />
-        </motion.div>
+        <div className="grid md:grid-cols-2 gap-12 items-center">
+          {/* New counter design with progress bars */}
+          <motion.div
+            initial="hidden"
+            animate={controls}
+            variants={{
+              visible: { transition: { staggerChildren: 0.15 } },
+              hidden: {}
+            }}
+            className="grid grid-cols-2 gap-6"
+          >
+            {counters.map((counter, index) => {
+              const Icon = counter.icon;
+              return (
+                <motion.div
+                  key={index}
+                  variants={{
+                    hidden: { opacity: 0, scale: 0.8 },
+                    visible: { 
+                      opacity: 1, 
+                      scale: 1,
+                      transition: { 
+                        type: 'spring',
+                        stiffness: 100,
+                        damping: 15
+                      }
+                    }
+                  }}
+                  className="relative group"
+                >
+                  <div className="h-full p-6 rounded-xl bg-[var(--card-bg)] border border-[var(--secondary)]/20 shadow-sm hover:shadow-md transition-all duration-300 flex flex-col">
+                    <div className="flex items-center mb-4">
+                      <div className={`p-3 rounded-lg ${counter.bg}/10`}>
+                        <Icon className={`w-6 h-6 ${counter.color}`} />
+                      </div>
+                      <h3 className="ml-3 text-lg font-medium">
+                        {counter.label}
+                      </h3>
+                    </div>
+                    
+                    <div className="mt-auto">
+                      <div className={`text-4xl font-bold ${counter.color} mb-3`}>
+                        {counter.value}
+                        <span className="text-2xl">{counter.suffix}</span>
+                      </div>
+                      
+                      {/* Animated progress bar */}
+                      <div className="w-full h-2 bg-gray-200 dark:bg-gray-700 rounded-full overflow-hidden">
+                        <motion.div
+                          initial={{ width: '0%' }}
+                          animate={{ width: counter.progress }}
+                          transition={{ duration: 2, ease: 'easeOut' }}
+                          className={`h-full ${counter.bg} rounded-full`}
+                        />
+                      </div>
+                    </div>
+                  </div>
+                </motion.div>
+              );
+            })}
+          </motion.div>
+
+          {/* Illustration section (unchanged) */}
+          <motion.div
+            initial={{ opacity: 0, x: 50 }}
+            animate={controls}
+            variants={{
+              visible: { opacity: 1, x: 0, transition: { duration: 0.8 } }
+            }}
+            className="relative w-full h-[300px] md:h-[400px]"
+          >
+            <Image
+              src="/assets/images/counter.png"
+              alt="Achievements illustration"
+              fill
+              className="object-contain"
+              priority
+            />
+          </motion.div>
+        </div>
       </div>
     </section>
   );

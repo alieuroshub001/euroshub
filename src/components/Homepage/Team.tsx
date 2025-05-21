@@ -25,14 +25,9 @@ const teamMembers = [
     image: '/assets/team1/Humayoun Mussawar (Marketing Head).png',
   },
   {
-    name: 'Jawaria Maqbool',
-    role: 'Project Manager',
-    image: '/assets/team1/Jawaria Maqbool (Project Manager).png',
-  },
-  {
     name: 'Hamza Badar',
-    role: 'Acting Team Lead',
-    image: '/assets/team1/Hamza Badar (Acting Team Lead).png',
+    role: 'Team Lead',
+    image: '/assets/team1/Hamza Badar (Team Lead).png',
   },
    {
     name: 'Sheikh Nabeel',
@@ -55,14 +50,9 @@ const teamMembers = [
     image: '/assets/team1/Humayoun Mussawar (Marketing Head).png',
   },
   {
-    name: 'Jawaria Maqbool',
-    role: 'Project Manager',
-    image: '/assets/team1/Jawaria Maqbool (Project Manager).png',
-  },
-  {
     name: 'Hamza Badar',
-    role: 'Acting Team Lead',
-    image: '/assets/team1/Hamza Badar (Acting Team Lead).png',
+    role: 'Team Lead',
+    image: '/assets/team1/Hamza Badar (Team Lead).png',
   },
 ];
 

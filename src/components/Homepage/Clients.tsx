@@ -23,40 +23,81 @@ const logos = [
 
 export default function Clients() {
   return (
-    <section className="py-16 bg-gradient-to-r from-[#a8edea] to-[#fed6e3]">
-      <h2 className="text-3xl md:text-4xl font-bold text-center text-[var(--foreground)] mb-10">
-        Trusted by Global Brands
-      </h2>
+    <section className="py-16 bg-[var(--background)] text-[var(--foreground)] w-full">
+      <div className="w-full mx-auto">
+        <h2 className="text-3xl md:text-4xl font-bold text-center mb-12">
+          Trusted by Global Brands
+        </h2>
 
-      <div className="overflow-hidden relative space-y-12">
-        {/* Top Marquee - LTR */}
-        <div className="flex animate-marquee space-x-20 w-max">
-          {[...logos, ...logos].map((logo, i) => (
-            <Image
-              key={`top-${i}`}
-              src={`/assets/clients/${logo}`}
-              alt={`Client Logo ${i}`}
-              width={160}
-              height={80}
-              className="object-contain h-24 w-auto transition duration-300"
-            />
-          ))}
-        </div>
+        <div className="relative overflow-hidden w-full bg-[var(--secondary)]/20 dark:bg-transparent rounded-xl">
+          {/* First Marquee */}
+          <div className="flex animate-marquee whitespace-nowrap items-center py-8 w-max">
+            {[...logos, ...logos].map((logo, i) => (
+              <div 
+                key={`top-${i}`}
+                className="mx-10 flex-shrink-0"
+              >
+                <div className="p-4 rounded-lg">
+                  <Image
+                    src={`/assets/clients/${logo}`}
+                    alt={`Client Logo ${i}`}
+                    width={200}
+                    height={100}
+                    className={`
+                      object-contain h-24 w-auto 
+                      hover:scale-110 transition-transform duration-300
+                      dark:drop-shadow-none
+                      [filter:drop-shadow(0_0_1px_rgba(0,0,0,0.3))_drop-shadow(0_0_1px_rgba(0,0,0,0.3))]
+                    `}
+                  />
+                </div>
+              </div>
+            ))}
+          </div>
 
-        {/* Bottom Marquee - RTL */}
-        <div className="flex animate-marquee-reverse space-x-20 w-max">
-          {[...logos, ...logos].map((logo, i) => (
-            <Image
-              key={`bottom-${i}`}
-              src={`/assets/clients/${logo}`}
-              alt={`Client Logo ${i}`}
-              width={160}
-              height={80}
-              className="object-contain h-24 w-auto transition duration-300"
-            />
-          ))}
+          {/* Second Marquee - Offset */}
+          <div className="flex animate-marquee-reverse whitespace-nowrap items-center py-8 w-max">
+            {[...logos, ...logos].map((logo, i) => (
+              <div 
+                key={`bottom-${i}`}
+                className="mx-10 flex-shrink-0"
+              >
+                <div className="p-4 rounded-lg">
+                  <Image
+                    src={`/assets/clients/${logo}`}
+                    alt={`Client Logo ${i}`}
+                    width={200}
+                    height={100}
+                    className={`
+                      object-contain h-24 w-auto 
+                      hover:scale-110 transition-transform duration-300
+                      dark:drop-shadow-none
+                      [filter:drop-shadow(0_0_1px_rgba(0,0,0,0.3))_drop-shadow(0_0_1px_rgba(0,0,0,0.3))]
+                    `}
+                  />
+                </div>
+              </div>
+            ))}
+          </div>
         </div>
       </div>
+
+      <style jsx global>{`
+        @keyframes marquee {
+          0% { transform: translateX(0); }
+          100% { transform: translateX(-50%); }
+        }
+        @keyframes marquee-reverse {
+          0% { transform: translateX(-50%); }
+          100% { transform: translateX(0); }
+        }
+        .animate-marquee {
+          animation: marquee 35s linear infinite;
+        }
+        .animate-marquee-reverse {
+          animation: marquee-reverse 35s linear infinite;
+        }
+      `}</style>
     </section>
   );
 }
