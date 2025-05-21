@@ -9,6 +9,7 @@ import MobileMenu from './MobileMenu';
 export default function Navbar() {
   const [darkMode, setDarkMode] = useState(false);
   const [showMobileMenu, setShowMobileMenu] = useState(false);
+  const [servicesOpen, setServicesOpen] = useState(false);
 
   useEffect(() => {
     const storedTheme = localStorage.getItem('theme');
@@ -84,17 +85,45 @@ export default function Navbar() {
           {/* Navigation Links */}
           {!showMobileMenu && (
             <ul className="nav-center custom-nav-visible gap-6 items-center text-sm font-medium whitespace-nowrap overflow-hidden text-ellipsis">
-              {[
-                'What We Do',
-                'Who We Help',
-                'Who We Are', 
-                'How We Deliver',
-                'Join Euroshub',
-              ].map((item) => (
-                <li key={item} className="cursor-pointer hover:text-primary transition">
-                  {item} <span className="inline-block ml-1">&#x25BE;</span>
-                </li>
-              ))}
+              <li className="cursor-pointer hover:text-primary transition">
+                <Link href="/">Home</Link>
+              </li>
+              
+              <li 
+                className="relative group cursor-pointer hover:text-primary transition"
+                onMouseEnter={() => setServicesOpen(true)}
+                onMouseLeave={() => setServicesOpen(false)}
+              >
+                <div className="flex items-center">
+                  Services <span className="inline-block ml-1">&#x25BE;</span>
+                </div>
+                
+                {/* Services Dropdown */}
+                {servicesOpen && (
+                  <div className="absolute left-0 mt-2 w-64 bg-[var(--background)] border border-[var(--secondary)] rounded-lg shadow-lg z-50">
+                    <ul className="py-2">
+                      {[
+                        'Custom Software Development',
+                        'UI/UX Design',
+                        'Digital Transformation',
+                        'Tech Consulting',
+                        'Cloud Solutions',
+                        'Mobile App Development'
+                      ].map((service) => (
+                        <li key={service} className="px-4 py-2 hover:bg-[var(--secondary)] transition">
+                          <Link href={`/services#${service.toLowerCase().replace(/\s+/g, '-')}`} className="block w-full">
+                            {service}
+                          </Link>
+                        </li>
+                      ))}
+                    </ul>
+                  </div>
+                )}
+              </li>
+              
+              <li className="cursor-pointer hover:text-primary transition">
+                <Link href="/about">About Us</Link>
+              </li>
             </ul>
           )}
 

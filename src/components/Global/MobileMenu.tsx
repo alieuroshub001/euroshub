@@ -1,12 +1,13 @@
 'use client';
 
 import { Menu, X } from 'lucide-react';
-import { useState, useEffect } from 'react';
 import Image from 'next/image';
 import Link from 'next/link';
+import { useEffect, useState } from 'react';
 
 export default function MobileMenu() {
   const [isOpen, setIsOpen] = useState(false);
+  const [servicesOpen, setServicesOpen] = useState(false);
   
   // Lock body scroll when menu is open
   useEffect(() => {
@@ -20,12 +21,13 @@ export default function MobileMenu() {
     };
   }, [isOpen]);
 
-  const navItems = [
-    'What We Do',
-    'Who We Help',
-    'Who We Are',
-    'How We Deliver',
-    'Join Euroshub',
+  const servicesItems = [
+    'Custom Software Development',
+    'UI/UX Design',
+    'Digital Transformation',
+    'Tech Consulting',
+    'Cloud Solutions',
+    'Mobile App Development'
   ];
 
   return (
@@ -68,22 +70,53 @@ export default function MobileMenu() {
           <X className="h-6 w-6" />
         </button>
 
-        <ul className="flex flex-col items-center space-y-6 w-full max-w-sm px-8 mt-6">
-          {navItems.map((item, index) => (
-            <li
-              key={item}
-              className="w-full py-3 border-b border-[var(--secondary)] last:border-0 text-center"
-              style={{ animationDelay: `${index * 50}ms` }}
+        <ul className="flex flex-col items-center w-full max-w-sm px-8 mt-6">
+          <li className="w-full py-3 border-b border-[var(--secondary)] text-center">
+            <Link 
+              href="/" 
+              className="block w-full text-lg font-medium hover:text-[var(--primary)] transition-colors"
+              onClick={() => setIsOpen(false)}
             >
-              <a 
-                href="#" 
-                className="block w-full text-lg font-medium hover:text-[var(--primary)] transition-colors"
-                onClick={() => setIsOpen(false)}
-              >
-                {item}
-              </a>
-            </li>
-          ))}
+              Home
+            </Link>
+          </li>
+          
+          <li className="w-full py-3 border-b border-[var(--secondary)]">
+            <button 
+              className="w-full text-lg font-medium hover:text-[var(--primary)] transition-colors flex justify-center items-center"
+              onClick={() => setServicesOpen(!servicesOpen)}
+            >
+              Services
+              <span className={`ml-2 transition-transform ${servicesOpen ? 'rotate-180' : ''}`}>&#x25BE;</span>
+            </button>
+            
+            {/* Services Dropdown */}
+            {servicesOpen && (
+              <ul className="mt-2 pl-4 space-y-2">
+                {servicesItems.map((item) => (
+                  <li key={item}>
+                    <Link 
+                      href={`/services#${item.toLowerCase().replace(/\s+/g, '-')}`}
+                      className="block py-2 text-base hover:text-[var(--primary)] transition-colors"
+                      onClick={() => setIsOpen(false)}
+                    >
+                      {item}
+                    </Link>
+                  </li>
+                ))}
+              </ul>
+            )}
+          </li>
+          
+          <li className="w-full py-3 border-b border-[var(--secondary)] text-center">
+            <Link 
+              href="/about" 
+              className="block w-full text-lg font-medium hover:text-[var(--primary)] transition-colors"
+              onClick={() => setIsOpen(false)}
+            >
+              About Us
+            </Link>
+          </li>
         </ul>
 
         {/* CTA Buttons */}
@@ -94,13 +127,18 @@ export default function MobileMenu() {
           >
             Explore Careers
           </button>
-          <button 
-            className="border border-[var(--primary)] text-[var(--primary)] px-6 py-3 rounded-full font-medium w-full hover:bg-[var(--primary)] hover:text-white transition-all duration-300"
-            onClick={() => setIsOpen(false)}
-          >
-            Let&apos;s Talk Business
-          </button>
-        </div>
+          <Link 
+    href="/contact" 
+    className="w-full"
+    onClick={() => setIsOpen(false)}
+  >
+    <button 
+      className="border border-[var(--primary)] text-[var(--primary)] px-6 py-3 rounded-full font-medium w-full hover:bg-[var(--primary)] hover:text-white transition-all duration-300"
+    >
+      Let&apos;s Talk Business
+    </button>
+  </Link>
+</div>
 
         {/* Social Icons */}
         <div className="flex justify-center gap-6 mt-12">
