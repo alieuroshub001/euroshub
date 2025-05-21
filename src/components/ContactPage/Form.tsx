@@ -55,7 +55,7 @@ export default function ContactForm() {
       } else {
         toast.error(result.message || 'Something went wrong. Please try again.');
       }
-    } catch (error) {
+    } catch {
       toast.error('Failed to send message. Please try again later.');
     } finally {
       setIsSubmitting(false);
@@ -66,7 +66,7 @@ export default function ContactForm() {
     <div className="bg-[var(--card-bg)] border border-[var(--secondary)] rounded-xl p-6 md:p-8">
       <h2 className="text-2xl md:text-3xl font-bold mb-2">Send Us a Message</h2>
       <p className="text-[var(--foreground)] opacity-70 mb-6">
-        Fill out the form below and we'll get back to you as soon as possible.
+        Fill out the form below and we&apos;ll get back to you as soon as possible.
       </p>
       
       <form onSubmit={handleSubmit(onSubmit)} className="space-y-5">

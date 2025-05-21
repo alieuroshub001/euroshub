@@ -1,7 +1,6 @@
 'use client';
 
 import { useState, useEffect } from 'react';
-import { MapPin } from 'lucide-react';
 
 export default function ContactMap() {
   const [mapLoaded, setMapLoaded] = useState(false);
@@ -50,7 +49,7 @@ export default function ContactMap() {
           mapLoaded ? 'scale-100' : 'scale-0'
         } transition-transform duration-500 delay-300 z-10`}>
           <div className="relative">
-            
+            {/* You could add a custom map pin here if needed */}
           </div>
         </div>
       </div>

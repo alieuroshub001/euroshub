@@ -47,11 +47,11 @@ const Counter = () => {
     const increment = 10;
     const steps = duration / increment;
 
-    counters.forEach((counter, index) => {
+    const timers = counters.map((counter, index) => {
       const stepValue = counter.target / steps;
       let currentStep = 0;
 
-      const timer = setInterval(() => {
+      return setInterval(() => {
         currentStep++;
         const newValue = Math.round(stepValue * currentStep);
 
@@ -66,10 +66,16 @@ const Counter = () => {
           )
         );
 
-        if (currentStep >= steps) clearInterval(timer);
+        if (currentStep >= steps) {
+          clearInterval(timers[index]);
+        }
       }, increment);
     });
-  }, []);
+
+    return () => {
+      timers.forEach(timer => clearInterval(timer));
+    };
+  }, [counters]); // Added counters to dependency array
 
   return (
     <section className="relative py-20 bg-[var(--secondary)] text-[var(--foreground)] overflow-hidden">

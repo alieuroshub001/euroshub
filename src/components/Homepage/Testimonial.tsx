@@ -152,7 +152,7 @@ export default function Testimonials() {
                     </div>
 
                     <blockquote className="text-sm text-[var(--foreground)] italic">
-                      "{testimonial.content}"
+                     &apos;{testimonial.content}&apos;
                     </blockquote>
                   </div>
                 </motion.div>

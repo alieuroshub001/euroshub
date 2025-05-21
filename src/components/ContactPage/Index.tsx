@@ -21,7 +21,7 @@ export default function ContactPage() {
             Let&apos;s <span className="text-[var(--primary)]">Connect</span>
           </h1>
           <p className="text-lg max-w-2xl mx-auto opacity-80 mb-8">
-            Have a question or want to work together? We'd love to hear from you.
+            Have a question or want to work together? We&apos;d love to hear from you.
             Reach out to us and our team will get back to you shortly.
           </p>
         </div>

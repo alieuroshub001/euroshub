@@ -18,7 +18,7 @@ import {
   CpuIcon,
   CloudIcon
 } from 'lucide-react';
-import { motion } from 'framer-motion';
+import { motion, Variants } from 'framer-motion';
 
 interface Service {
   title: string;
@@ -109,7 +109,7 @@ const techServices: Service[] = [
 
 interface ServiceCardProps {
   service: Service;
-  variants?: any;
+  variants?: Variants;
   index?: number;
 }
 
