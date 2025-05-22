@@ -206,7 +206,7 @@ export default function MobileMenu() {
         {/* CTA Buttons */}
         <div className="flex flex-col items-center gap-4 w-full max-w-sm px-8 mt-8">
           <Link 
-            href="/careers" 
+            href="/career" 
             className="w-full"
             onClick={() => setIsOpen(false)}
           >

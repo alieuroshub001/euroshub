@@ -128,10 +128,13 @@ export default function Navbar() {
           )}
 
           {/* CTA Buttons */}
-          <div className="nav-right flex gap-3 items-center navbar-cta">
+
+          <div className="nav-right flex gap-3 items-center navbar-cta"> 
+            <Link href="/career">
             <button className="border border-[var(--primary)] text-[var(--primary)] px-4 py-3 rounded-full text-md font-medium hover:bg-[var(--primary)] hover:text-white transition-colors">
               Explore Careers
             </button>
+              </Link>
             <Link href="/contact">
               <button className="border border-[var(--primary)] text-[var(--primary)] px-4 py-3 rounded-full text-md font-medium hover:bg-[var(--primary)] hover:text-white transition-colors">
                 Let's Talk Business
