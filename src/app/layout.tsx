@@ -2,7 +2,7 @@ import type { Metadata } from "next";
 import { Geist, Geist_Mono } from "next/font/google";
 import "./globals.css";
 import '@fortawesome/fontawesome-free/css/all.min.css';
-
+import Chatbot from "@/components/Global/Chatbot"; // Add this import
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
@@ -30,6 +30,7 @@ export default function RootLayout({
         className={`${geistSans.variable} ${geistMono.variable} antialiased`}
       >
         {children}
+        <Chatbot /> {/* Add this line */}
       </body>
     </html>
   );

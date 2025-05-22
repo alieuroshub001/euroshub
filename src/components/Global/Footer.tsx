@@ -116,7 +116,7 @@ export default function Footer() {
             </li>
             <li className="flex items-start">
               <i className="fas fa-map-marker-alt mt-1 mr-3 text-[var(--primary)]"></i>
-              <span>Office 509, 5th Floor, Kohistan Tower, Saddar, Rawalpindi</span>
+            <span>Office 509, 5th Floor, Kohistan Tower, Saddar, Rawalpindi</span>
             </li>
           </ul>
           

@@ -15,15 +15,13 @@
     "lucide-react": "^0.511.0",
     "next": "15.3.2",
     "nodemailer": "^7.0.3",
+    "openai": "^4.102.0",
     "postcss": "^8.5.3",
     "react": "^19.0.0",
     "react-dom": "^19.0.0",
     "react-hook-form": "^7.56.4",
     "react-intersection-observer": "^9.16.0",
-<<<<<<< HEAD
     "react-tsparticles": "^2.12.2",
-=======
->>>>>>> a5407beb32693cae1d3940e576ab8fb84eb3daf2
     "sonner": "^2.0.3",
     "tsparticles-slim": "^2.12.0",
     "zod": "^3.25.7"

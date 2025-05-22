@@ -4,10 +4,28 @@ import { Menu, X } from 'lucide-react';
 import Image from 'next/image';
 import Link from 'next/link';
 import { useEffect, useState } from 'react';
+import {
+  HeadsetIcon,
+  ClipboardListIcon,
+  KeyboardIcon,
+  DatabaseIcon,
+  PhoneOutgoingIcon,
+  LayoutDashboardIcon,
+  HardDriveIcon,
+  SearchIcon,
+  BarChart2Icon,
+  ServerIcon,
+  CodeIcon,
+  SmartphoneIcon,
+  GlobeIcon,
+  CpuIcon,
+  CloudIcon
+} from 'lucide-react';
 
 export default function MobileMenu() {
   const [isOpen, setIsOpen] = useState(false);
   const [servicesOpen, setServicesOpen] = useState(false);
+  const [activeServiceTab, setActiveServiceTab] = useState<'business' | 'tech'>('business');
   
   // Lock body scroll when menu is open
   useEffect(() => {
@@ -21,13 +39,50 @@ export default function MobileMenu() {
     };
   }, [isOpen]);
 
-  const servicesItems = [
-    'Custom Software Development',
-    'UI/UX Design',
-    'Digital Transformation',
-    'Tech Consulting',
-    'Cloud Solutions',
-    'Mobile App Development'
+  const businessServices = [
+    {
+      title: 'Virtual Assistance',
+      icon: <HeadsetIcon className="w-6 h-6 text-[var(--primary)]" />,
+    },
+    {
+      title: 'Project Management',
+      icon: <ClipboardListIcon className="w-6 h-6 text-[var(--primary)]" />,
+    },
+    {
+      title: 'Data Entry & Transcription',
+      icon: <KeyboardIcon className="w-6 h-6 text-[var(--primary)]" />,
+    },
+    {
+      title: 'Data Extraction/ETL',
+      icon: <DatabaseIcon className="w-6 h-6 text-[var(--primary)]" />,
+    },
+    {
+      title: 'Lead Generation',
+      icon: <PhoneOutgoingIcon className="w-6 h-6 text-[var(--primary)]" />,
+    }
+  ];
+
+  const techServices = [
+    {
+      title: 'Web Development',
+      icon: <CodeIcon className="w-6 h-6 text-[var(--primary)]" />,
+    },
+    {
+      title: 'Mobile App Development',
+      icon: <SmartphoneIcon className="w-6 h-6 text-[var(--primary)]" />,
+    },
+    {
+      title: 'UI/UX Design',
+      icon: <GlobeIcon className="w-6 h-6 text-[var(--primary)]" />,
+    },
+    {
+      title: 'Cloud Solutions',
+      icon: <CloudIcon className="w-6 h-6 text-[var(--primary)]" />,
+    },
+    {
+      title: 'AI Solutions',
+      icon: <CpuIcon className="w-6 h-6 text-[var(--primary)]" />,
+    }
   ];
 
   return (
@@ -92,19 +147,48 @@ export default function MobileMenu() {
             
             {/* Services Dropdown */}
             {servicesOpen && (
-              <ul className="mt-2 pl-4 space-y-2">
-                {servicesItems.map((item) => (
-                  <li key={item}>
-                    <Link 
-                      href={`/services#${item.toLowerCase().replace(/\s+/g, '-')}`}
-                      className="block py-2 text-base hover:text-[var(--primary)] transition-colors"
+              <div className="w-full mt-4">
+                {/* Service Tabs */}
+                <div className="flex mb-4 rounded-lg bg-[var(--secondary)] p-1">
+                  <button
+                    onClick={() => setActiveServiceTab('business')}
+                    className={`flex-1 py-2 rounded-md text-sm font-medium transition-colors ${
+                      activeServiceTab === 'business'
+                        ? 'bg-[var(--primary)] text-white shadow'
+                        : 'hover:bg-[var(--secondary)]/60'
+                    }`}
+                  >
+                    Business
+                  </button>
+                  <button
+                    onClick={() => setActiveServiceTab('tech')}
+                    className={`flex-1 py-2 rounded-md text-sm font-medium transition-colors ${
+                      activeServiceTab === 'tech'
+                        ? 'bg-[var(--primary)] text-white shadow'
+                        : 'hover:bg-[var(--secondary)]/60'
+                    }`}
+                  >
+                    Technology
+                  </button>
+                </div>
+
+                {/* Service Items */}
+                <div className="space-y-2 pl-2">
+                  {(activeServiceTab === 'business' ? businessServices : techServices).map((service) => (
+                    <Link
+                      key={service.title}
+                      href={`/services#${service.title.toLowerCase().replace(/\s+/g, '-')}`}
+                      className="flex items-center py-2 px-3 rounded-lg hover:bg-[var(--secondary)] transition-colors"
                       onClick={() => setIsOpen(false)}
                     >
-                      {item}
+                      <div className="bg-[var(--primary)]/10 p-2 rounded-full mr-3">
+                        {service.icon}
+                      </div>
+                      <span className="text-base">{service.title}</span>
                     </Link>
-                  </li>
-                ))}
-              </ul>
+                  ))}
+                </div>
+              </div>
             )}
           </li>
           
@@ -121,24 +205,25 @@ export default function MobileMenu() {
 
         {/* CTA Buttons */}
         <div className="flex flex-col items-center gap-4 w-full max-w-sm px-8 mt-8">
-          <button 
-            className="border border-[var(--primary)] text-[var(--primary)] px-6 py-3 rounded-full font-medium w-full hover:bg-[var(--primary)] hover:text-white transition-all duration-300"
+          <Link 
+            href="/careers" 
+            className="w-full"
             onClick={() => setIsOpen(false)}
           >
-            Explore Careers
-          </button>
+            <button className="bg-[var(--primary)] text-white px-6 py-3 rounded-full font-medium w-full hover:opacity-90 transition">
+              Explore Careers
+            </button>
+          </Link>
           <Link 
-    href="/contact" 
-    className="w-full"
-    onClick={() => setIsOpen(false)}
-  >
-    <button 
-      className="border border-[var(--primary)] text-[var(--primary)] px-6 py-3 rounded-full font-medium w-full hover:bg-[var(--primary)] hover:text-white transition-all duration-300"
-    >
-      Let&apos;s Talk Business
-    </button>
-  </Link>
-</div>
+            href="/contact" 
+            className="w-full"
+            onClick={() => setIsOpen(false)}
+          >
+            <button className="border border-[var(--primary)] text-[var(--primary)] px-6 py-3 rounded-full font-medium w-full hover:bg-[var(--primary)] hover:text-white transition">
+              Let's Talk Business
+            </button>
+          </Link>
+        </div>
 
         {/* Social Icons */}
         <div className="flex justify-center gap-6 mt-12">
