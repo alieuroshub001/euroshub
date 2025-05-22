@@ -1,7 +1,7 @@
 'use client';
 
 import { useState, useEffect, useRef } from 'react';
-import { Send, X, Bot, MessageSquare, ChevronDown, ChevronUp, Mail, Phone, MapPin, Clock } from 'lucide-react';
+import { Send, X, Bot, MessageSquare, ChevronDown, ChevronUp } from 'lucide-react';
 import { motion, AnimatePresence } from 'framer-motion';
 
 export default function Chatbot() {

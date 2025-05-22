@@ -2,13 +2,13 @@
 
 import Image from 'next/image';
 import Link from 'next/link';
-import { useState, useEffect, useRef } from 'react';
+import { useState, useEffect, useRef, useMemo } from 'react';
 
 export default function Hero() {
   const [currentSlide, setCurrentSlide] = useState(0);
   const videoRefs = useRef<(HTMLVideoElement | null)[]>([]);
 
-  const slides = [
+  const slides = useMemo(() => [
     {
       title: "Empowering Global Innovation with",
       highlight: "Tailored Tech Solutions",
@@ -46,7 +46,7 @@ export default function Hero() {
       isVideo: true,
       hasTextGradient: true
     }
-  ];
+  ], []);
 
   // Auto-rotate slides and handle video playback
   useEffect(() => {

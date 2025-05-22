@@ -83,7 +83,7 @@ export default function TeamCulture() {
         >
           <h3 className="text-2xl md:text-3xl font-bold mb-4">Ready to join us?</h3>
           <p className="text-lg mb-6 max-w-3xl mx-auto">
-            We're always looking for talented individuals who share our passion for innovation and excellence.
+            We&#39;re always looking for talented individuals who share our passion for innovation and excellence.
           </p>
           <a href="#openings">
             <button className="bg-[var(--primary)] text-white px-8 py-3 rounded-full font-medium hover:opacity-90 transition">

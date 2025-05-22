@@ -2,7 +2,7 @@
 
 import { motion, useAnimation } from 'framer-motion';
 import { Aperture, CheckCircle, Clock, Globe, Users } from 'lucide-react';
-import { useEffect, useState } from 'react';
+import { useEffect, useState, useCallback } from 'react';
 import { useInView } from 'react-intersection-observer';
 
 const Counter = () => {
@@ -55,14 +55,8 @@ const Counter = () => {
     threshold: 0.1
   });
 
-  useEffect(() => {
-    if (inView) {
-      controls.start('visible');
-      animateCounters();
-    }
-  }, [inView, controls]);
 
-  const animateCounters = () => {
+  const animateCounters = useCallback(() => {
     const duration = 2000;
     const increment = 20;
 
@@ -94,7 +88,14 @@ const Counter = () => {
         }
       }, increment);
     });
-  };
+  }, [counters]);
+
+  useEffect(() => {
+    if (inView) {
+      controls.start('visible');
+      animateCounters();
+    }
+  }, [inView, controls, animateCounters]);
 
   return (
     <section 

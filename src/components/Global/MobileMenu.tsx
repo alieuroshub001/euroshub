@@ -10,11 +10,6 @@ import {
   KeyboardIcon,
   DatabaseIcon,
   PhoneOutgoingIcon,
-  LayoutDashboardIcon,
-  HardDriveIcon,
-  SearchIcon,
-  BarChart2Icon,
-  ServerIcon,
   CodeIcon,
   SmartphoneIcon,
   GlobeIcon,
@@ -109,7 +104,7 @@ export default function MobileMenu() {
             <Image
               src="/assets/images/logo.png"
               alt="Euroshub Logo"
-              width={60}
+              width={45}
               height={30}
               className="object-contain"
             />
@@ -220,12 +215,12 @@ export default function MobileMenu() {
             onClick={() => setIsOpen(false)}
           >
             <button className="border border-[var(--primary)] text-[var(--primary)] px-6 py-3 rounded-full font-medium w-full hover:bg-[var(--primary)] hover:text-white transition">
-              Let's Talk Business
+              Let&apos;s Talk Business
             </button>
           </Link>
         </div>
 
-        {/* Social Icons */}
+              Let&apos;s Talk Business
         <div className="flex justify-center gap-6 mt-12">
           {['linkedin', 'twitter', 'facebook'].map((platform) => (
             <a 
