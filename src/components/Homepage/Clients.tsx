@@ -125,7 +125,7 @@ export default function Clients() {
   };
 
   return (
-    <section className="py-16 bg-[var(--background)] text-[var(--foreground)] w-full">
+    <section className="py-16 text-[var(--foreground)] w-full bg-transparent">
       <div className="w-full mx-auto">
         <h2 className="text-3xl md:text-4xl font-bold text-center mb-12">
           Trusted by Global Brands
@@ -133,7 +133,7 @@ export default function Clients() {
 
         <div 
           ref={containerRef}
-          className="relative overflow-hidden w-full bg-[var(--secondary)]/20 dark:bg-transparent rounded-xl cursor-grab"
+          className="relative overflow-hidden w-full rounded-xl cursor-grab bg-transparent"
           onMouseEnter={handleMouseEnter}
           onMouseLeave={handleMouseLeave}
           onMouseDown={handleMouseDown}
@@ -159,8 +159,8 @@ export default function Clients() {
                     className={`
                       object-contain h-24 w-auto 
                       hover:scale-110 transition-transform duration-300
-                      dark:drop-shadow-none
                       [filter:drop-shadow(0_0_1px_rgba(0,0,0,0.3))_drop-shadow(0_0_1px_rgba(0,0,0,0.3))]
+                      dark:[filter:drop-shadow(0_0_1px_rgba(255,255,255,0.3))_drop-shadow(0_0_1px_rgba(255,255,255,0.3))]
                     `}
                   />
                 </div>
@@ -188,8 +188,8 @@ export default function Clients() {
                     className={`
                       object-contain h-24 w-auto 
                       hover:scale-110 transition-transform duration-300
-                      dark:drop-shadow-none
                       [filter:drop-shadow(0_0_1px_rgba(0,0,0,0.3))_drop-shadow(0_0_1px_rgba(0,0,0,0.3))]
+                      dark:[filter:drop-shadow(0_0_1px_rgba(255,255,255,0.3))_drop-shadow(0_0_1px_rgba(255,255,255,0.3))]
                     `}
                   />
                 </div>

@@ -4,6 +4,7 @@ import "./globals.css";
 import '@fortawesome/fontawesome-free/css/all.min.css';
 import Chatbot from "@/components/Global/Chatbot";
 import { SpeedInsights } from "@vercel/speed-insights/next"
+import SpaceBackground from '@/components/Global/SpaceBackground';
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
@@ -33,6 +34,7 @@ export default function RootLayout({
         {children}
         <Chatbot />
         <SpeedInsights /> {/* Add this line */}
+                <SpaceBackground />
       </body>
     </html>
   );

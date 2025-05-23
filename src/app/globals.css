@@ -136,3 +136,54 @@ body {
 .animate-marquee-reverse {
   animation: marquee 30s linear infinite reverse;
 }
+/* Space Background Styles */
+.space-star {
+  position: absolute;
+  background-color: var(--foreground);
+  border-radius: 50%;
+  opacity: 0.3;
+  pointer-events: none;
+  will-change: transform;
+}
+
+.space-star-large {
+  position: absolute;
+  background-color: var(--primary);
+  border-radius: 50%;
+  opacity: 0.5;
+  pointer-events: none;
+  will-change: transform, opacity;
+}
+
+@keyframes pulseStar {
+  0%, 100% {
+    opacity: 0.5;
+    transform: scale(1);
+  }
+  50% {
+    opacity: 1;
+    transform: scale(1.2);
+  }
+}
+
+.shooting-star {
+  position: absolute;
+  background: linear-gradient(90deg, 
+    rgba(255,255,255,0) 0%, 
+    var(--primary) 50%, 
+    rgba(255,255,255,0) 100%);
+  pointer-events: none;
+  will-change: transform, opacity;
+}
+
+.dust-cloud {
+  position: absolute;
+  background: radial-gradient(circle, 
+    var(--primary) 0%, 
+    transparent 70%);
+  border-radius: 50%;
+  opacity: 0.05;
+  pointer-events: none;
+  will-change: transform;
+  filter: blur(2px);
+}
