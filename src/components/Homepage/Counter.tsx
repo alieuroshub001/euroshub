@@ -55,7 +55,6 @@ const Counter = () => {
     threshold: 0.1
   });
 
-
   const animateCounters = useCallback(() => {
     const duration = 2000;
     const increment = 20;
@@ -145,37 +144,75 @@ const Counter = () => {
                   }
                 }}
                 whileHover={{ 
-                  y: -5,
-                  boxShadow: '0 10px 15px -3px rgba(0, 0, 0, 0.1)'
+                  y: -10,
+                  scale: 1.03,
+                  boxShadow: '0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04)',
+                  transition: {
+                    type: 'spring',
+                    stiffness: 300,
+                    damping: 15
+                  }
                 }}
-                className="bg-[var(--card-bg)] border border-[var(--secondary)]/20 rounded-xl p-6 shadow-sm transition-all duration-300"
+                className="bg-[var(--card-bg)] border border-[var(--secondary)]/20 rounded-xl p-6 shadow-sm transition-all duration-300 relative overflow-hidden group"
               >
-                <div className="flex items-center mb-4">
-                  <div className={`p-3 rounded-lg bg-[var(--primary)]/10`}>
-                    <Icon className={`w-6 h-6 text-[var(--primary)]`} />
+                {/* Hover effect background */}
+                <motion.div 
+                  className="absolute inset-0 bg-[var(--primary)]/5 opacity-0 group-hover:opacity-100"
+                  initial={{ opacity: 0 }}
+                  transition={{ duration: 0.3 }}
+                />
+                
+                <div className="relative z-10">
+                  <div className="flex items-center mb-4">
+                    <motion.div 
+                      whileHover={{
+                        rotate: 15,
+                        scale: 1.1
+                      }}
+                      className={`p-3 rounded-lg bg-[var(--primary)]/10`}
+                    >
+                      <Icon className={`w-6 h-6 text-[var(--primary)]`} />
+                    </motion.div>
+                    <h3 className="ml-3 text-lg font-medium">
+                      {counter.label}
+                    </h3>
                   </div>
-                  <h3 className="ml-3 text-lg font-medium">
-                    {counter.label}
-                  </h3>
-                </div>
-                
-                <div className="flex items-end mb-4">
-                  <span className={`text-3xl md:text-4xl font-bold text-[var(--primary)]`}>
-                    {counter.value}
-                  </span>
-                  <span className="text-xl md:text-2xl ml-1 text-[var(--primary)]">
-                    {counter.suffix}
-                  </span>
-                </div>
-                
-                {/* Progress bar */}
-                <div className="w-full h-2 bg-gray-200 dark:bg-gray-700 rounded-full overflow-hidden">
-                  <motion.div
-                    initial={{ width: '0%' }}
-                    animate={{ width: counter.progress }}
-                    transition={{ duration: 2, ease: 'easeOut' }}
-                    className={`h-full bg-[var(--primary)] rounded-full`}
-                  />
+                  
+                  <div className="flex items-end mb-4">
+                    <motion.span 
+                      whileHover={{
+                        scale: 1.05,
+                        transition: { delay: 0.1 }
+                      }}
+                      className={`text-3xl md:text-4xl font-bold text-[var(--primary)]`}
+                    >
+                      {counter.value}
+                    </motion.span>
+                    <motion.span 
+                      whileHover={{
+                        scale: 1.1,
+                        y: -2
+                      }}
+                      className="text-xl md:text-2xl ml-1 text-[var(--primary)]"
+                    >
+                      {counter.suffix}
+                    </motion.span>
+                  </div>
+                  
+                  {/* Progress bar */}
+                  <div className="w-full h-2 bg-gray-200 dark:bg-gray-700 rounded-full overflow-hidden">
+                    <motion.div
+                      initial={{ width: '0%' }}
+                      animate={{ width: counter.progress }}
+                      transition={{ duration: 2, ease: 'easeOut' }}
+                      className={`h-full bg-[var(--primary)] rounded-full`}
+                      whileHover={{
+                        scaleY: 1.5,
+                        originY: 'bottom',
+                        transition: { duration: 0.2 }
+                      }}
+                    />
+                  </div>
                 </div>
               </motion.div>
             );

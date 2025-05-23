@@ -220,7 +220,6 @@ export default function MobileMenu() {
           </Link>
         </div>
 
-              Let&apos;s Talk Business
         <div className="flex justify-center gap-6 mt-12">
           {['linkedin', 'twitter', 'facebook'].map((platform) => (
             <a 

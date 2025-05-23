@@ -5,7 +5,6 @@ import Clients from '@/components/Homepage/Clients';
 import Counter from '@/components/Homepage/Counter';
 import Hero from '@/components/Homepage/Hero';
 import Services from '@/components/Homepage/Services';
-import SpaceBackground from '@/components/Homepage/SpaceBackground';
 import Team from '@/components/Homepage/Team';
 import Testimonial from '@/components/Homepage/Testimonial';
 import '@fortawesome/fontawesome-free/css/all.min.css';
@@ -14,8 +13,6 @@ export default function Home() {
   return (
     <>
       <Navbar />
-      <SpaceBackground />
-      <div className="relative z-0">
         <Hero />
         <Services />
         <Clients />
@@ -23,7 +20,6 @@ export default function Home() {
         <Testimonial />
         <Team />
         <Footer />
-      </div>
     </>
   );
 }
