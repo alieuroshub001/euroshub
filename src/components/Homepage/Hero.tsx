@@ -104,12 +104,12 @@ export default function Hero() {
             At EurosHub, we partner with businesses worldwide to build scalable, smart, and sustainable technology that transforms vision into value.
           </p>
           <div className="flex gap-4 flex-wrap">
-            <Link href="#contact">
+            <Link href="contact">
               <button className="bg-[var(--primary)] text-white px-6 py-3 rounded-full font-medium hover:opacity-90 transition hover:shadow-lg hover:shadow-[var(--primary)]/30">
                 Let&apos;s Talk Business
               </button>
             </Link>
-            <Link href="#careers">
+            <Link href="career">
               <button className="border border-[var(--primary)] text-[var(--primary)] px-6 py-3 rounded-full font-medium hover:bg-[var(--primary)] hover:text-white transition hover:shadow-lg hover:shadow-[var(--primary)]/20">
                 Explore Careers
               </button>
