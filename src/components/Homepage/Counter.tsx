@@ -2,7 +2,7 @@
 
 import { motion, useAnimation } from 'framer-motion';
 import { Aperture, CheckCircle, Clock, Globe, Users } from 'lucide-react';
-import { useEffect, useState, useCallback } from 'react';
+import { useEffect, useState } from 'react';
 import { useInView } from 'react-intersection-observer';
 
 const Counter = () => {
@@ -55,7 +55,14 @@ const Counter = () => {
     threshold: 0.1
   });
 
-  const animateCounters = useCallback(() => {
+  useEffect(() => {
+    if (inView) {
+      controls.start('visible');
+      animateCounters();
+    }
+  }, [inView, controls]);
+
+  const animateCounters = () => {
     const duration = 2000;
     const increment = 20;
 
@@ -87,14 +94,7 @@ const Counter = () => {
         }
       }, increment);
     });
-  }, [counters]);
-
-  useEffect(() => {
-    if (inView) {
-      controls.start('visible');
-      animateCounters();
-    }
-  }, [inView, controls, animateCounters]);
+  };
 
   return (
     <section 
@@ -144,45 +144,73 @@ const Counter = () => {
                   }
                 }}
                 whileHover={{ 
-                  y: -10,
-                  scale: 1.03,
-                  boxShadow: '0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04)',
+                  scale: 1.05,
+                  zIndex: 10,
                   transition: {
                     type: 'spring',
-                    stiffness: 300,
-                    damping: 15
+                    stiffness: 400,
+                    damping: 10
                   }
                 }}
                 className="bg-[var(--card-bg)] border border-[var(--secondary)]/20 rounded-xl p-6 shadow-sm transition-all duration-300 relative overflow-hidden group"
               >
-                {/* Hover effect background */}
+                {/* Pulse animation background */}
                 <motion.div 
                   className="absolute inset-0 bg-[var(--primary)]/5 opacity-0 group-hover:opacity-100"
                   initial={{ opacity: 0 }}
-                  transition={{ duration: 0.3 }}
+                  whileHover={{
+                    opacity: 0.1,
+                    scale: 1.1,
+                    transition: { duration: 0.3 }
+                  }}
                 />
                 
                 <div className="relative z-10">
                   <div className="flex items-center mb-4">
                     <motion.div 
+                      animate={{
+                        scale: [1, 1.05, 1],
+                        transition: {
+                          repeat: Infinity,
+                          repeatType: "reverse",
+                          duration: 2,
+                          delay: index * 0.3
+                        }
+                      }}
                       whileHover={{
-                        rotate: 15,
-                        scale: 1.1
+                        rotate: 360,
+                        scale: 1.2,
+                        transition: { duration: 0.5 }
                       }}
                       className={`p-3 rounded-lg bg-[var(--primary)]/10`}
                     >
                       <Icon className={`w-6 h-6 text-[var(--primary)]`} />
                     </motion.div>
-                    <h3 className="ml-3 text-lg font-medium">
+                    <motion.h3 
+                      className="ml-3 text-lg font-medium"
+                      whileHover={{
+                        x: 5,
+                        transition: { type: 'spring', stiffness: 500 }
+                      }}
+                    >
                       {counter.label}
-                    </h3>
+                    </motion.h3>
                   </div>
                   
                   <div className="flex items-end mb-4">
                     <motion.span 
+                      animate={{
+                        scale: [1, 1.02, 1],
+                        transition: {
+                          repeat: Infinity,
+                          repeatType: "reverse",
+                          duration: 3,
+                          delay: index * 0.2
+                        }
+                      }}
                       whileHover={{
-                        scale: 1.05,
-                        transition: { delay: 0.1 }
+                        scale: 1.1,
+                        transition: { type: 'spring', stiffness: 500 }
                       }}
                       className={`text-3xl md:text-4xl font-bold text-[var(--primary)]`}
                     >
@@ -190,8 +218,9 @@ const Counter = () => {
                     </motion.span>
                     <motion.span 
                       whileHover={{
-                        scale: 1.1,
-                        y: -2
+                        scale: 1.3,
+                        y: -4,
+                        transition: { type: 'spring', stiffness: 500 }
                       }}
                       className="text-xl md:text-2xl ml-1 text-[var(--primary)]"
                     >
@@ -199,18 +228,29 @@ const Counter = () => {
                     </motion.span>
                   </div>
                   
-                  {/* Progress bar */}
+                  {/* Progress bar with bounce animation */}
                   <div className="w-full h-2 bg-gray-200 dark:bg-gray-700 rounded-full overflow-hidden">
                     <motion.div
                       initial={{ width: '0%' }}
-                      animate={{ width: counter.progress }}
-                      transition={{ duration: 2, ease: 'easeOut' }}
-                      className={`h-full bg-[var(--primary)] rounded-full`}
-                      whileHover={{
-                        scaleY: 1.5,
-                        originY: 'bottom',
-                        transition: { duration: 0.2 }
+                      animate={{ 
+                        width: counter.progress,
+                        transition: { 
+                          duration: 2, 
+                          ease: 'easeOut',
+                          type: 'spring',
+                          bounce: 0.5
+                        }
                       }}
+                      whileHover={{
+                        scaleY: 1.8,
+                        originY: 'bottom',
+                        transition: { 
+                          type: 'spring',
+                          stiffness: 500,
+                          damping: 10
+                        }
+                      }}
+                      className={`h-full bg-[var(--primary)] rounded-full`}
                     />
                   </div>
                 </div>
