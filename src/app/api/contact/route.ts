@@ -20,9 +20,9 @@ export async function POST(request: Request) {
   try {
     // Parse the request body
     const body = await request.json();
-    const { name, email, subject, message } = body;
+    const { name, email, subject, service, message } = body;
     
-    // Validate input data
+    // Validate required fields
     if (!name || !email || !subject || !message) {
       return NextResponse.json(
         { success: false, message: 'Missing required fields' },
@@ -42,6 +42,7 @@ export async function POST(request: Request) {
         Name: ${name}
         Email: ${email}
         Subject: ${subject}
+        ${service ? `Service Interested In: ${service}` : ''}
         
         Message:
         ${message}
@@ -52,6 +53,7 @@ export async function POST(request: Request) {
           <p><strong>Name:</strong> ${name}</p>
           <p><strong>Email:</strong> ${email}</p>
           <p><strong>Subject:</strong> ${subject}</p>
+          ${service ? `<p><strong>Service Interested In:</strong> ${service}</p>` : ''}
           <div style="margin-top: 20px; padding: 15px; background-color: #f7f7f7; border-left: 4px solid #17b6b2;">
             <h3 style="margin-top: 0;">Message:</h3>
             <p style="white-space: pre-line;">${message}</p>

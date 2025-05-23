@@ -7,11 +7,36 @@ import { zodResolver } from '@hookform/resolvers/zod';
 import { toast } from 'sonner';
 import { Send, Loader2 } from 'lucide-react';
 
+// Import service lists from Services component
+const businessServices = [
+  'Virtual Assistance',
+  'Project Management',
+  'Data Entry & Transcription',
+  'Data Extraction/ETL',
+  'Lead Generation',
+  'ERP/CRM Software',
+  'Data Mining',
+  'Market Research',
+  'Data Analysis',
+  'Database Management'
+];
+
+const techServices = [
+  'Web Development',
+  'Mobile App Development',
+  'UI/UX Design',
+  'Cloud Solutions',
+  'AI Solutions'
+];
+
+const allServices = [...businessServices, ...techServices];
+
 // Form validation schema
 const formSchema = z.object({
   name: z.string().min(2, { message: 'Name must be at least 2 characters' }),
   email: z.string().email({ message: 'Please enter a valid email address' }),
   subject: z.string().min(5, { message: 'Subject must be at least 5 characters' }),
+  service: z.string().optional(),
   message: z.string().min(10, { message: 'Message must be at least 10 characters' })
 });
 
@@ -31,6 +56,7 @@ export default function ContactForm() {
       name: '',
       email: '',
       subject: '',
+      service: '',
       message: ''
     }
   });
@@ -106,6 +132,34 @@ export default function ContactForm() {
           {errors.email && (
             <p className="mt-1 text-sm text-red-500">{errors.email.message}</p>
           )}
+        </div>
+        
+        {/* Service Field */}
+        <div>
+          <label htmlFor="service" className="block text-sm font-medium mb-1">
+            Service Interested In
+          </label>
+          <select
+            id="service"
+            {...register('service')}
+            className="w-full px-4 py-3 rounded-lg bg-[var(--secondary)] text-[var(--foreground)] border border-transparent focus:outline-none focus:ring-2 focus:ring-[var(--primary)] transition-colors"
+          >
+            <option value="">Select a service (optional)</option>
+            <optgroup label="Business Services">
+              {businessServices.map((service) => (
+                <option key={`biz-${service}`} value={service}>
+                  {service}
+                </option>
+              ))}
+            </optgroup>
+            <optgroup label="Technology Services">
+              {techServices.map((service) => (
+                <option key={`tech-${service}`} value={service}>
+                  {service}
+                </option>
+              ))}
+            </optgroup>
+          </select>
         </div>
         
         {/* Subject Field */}
