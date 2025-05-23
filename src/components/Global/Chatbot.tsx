@@ -110,18 +110,46 @@ You can also use the contact form on our website to send us a message directly.`
 
   return (
     <div className="fixed bottom-6 right-6 z-50">
-      {/* Floating Chat Button */}
-      {!isOpen && (
-        <motion.button
-          whileHover={{ scale: 1.1 }}
-          whileTap={{ scale: 0.9 }}
-          onClick={toggleChat}
-          className="bg-[var(--primary)] text-white p-4 rounded-full shadow-lg flex items-center justify-center"
-          aria-label="Open chat"
-        >
-          <MessageSquare className="w-6 h-6" />
-        </motion.button>
-      )}
+      {/* Floating Chat Button - Always visible */}
+      <motion.button
+        whileHover={{ scale: 1.1 }}
+        whileTap={{ scale: 0.95 }}
+        onClick={toggleChat}
+        className={`p-4 rounded-full shadow-xl flex items-center justify-center relative overflow-hidden ${
+          isOpen ? 'bg-white text-[var(--primary)] border border-[var(--primary)]' : 'bg-[var(--primary)] text-white'
+        }`}
+        aria-label={isOpen ? "Close chat" : "Open chat"}
+        initial={false}
+        animate={{
+          y: isOpen ? -10 : 0
+        }}
+        transition={{
+          type: 'spring',
+          stiffness: 500,
+          damping: 30
+        }}
+      >
+        {isOpen ? (
+          <X className="w-6 h-6" />
+        ) : (
+          <>
+            <MessageSquare className="w-6 h-6" />
+            {/* Pulse animation when closed */}
+            <motion.span
+              className="absolute inset-0 rounded-full bg-[var(--primary)] opacity-20"
+              animate={{
+                scale: [1, 1.5, 1],
+                opacity: [0, 0.3, 0]
+              }}
+              transition={{
+                duration: 2,
+                repeat: Infinity,
+                ease: 'easeInOut'
+              }}
+            />
+          </>
+        )}
+      </motion.button>
 
       {/* Chat Window */}
       <AnimatePresence>
@@ -130,21 +158,42 @@ You can also use the contact form on our website to send us a message directly.`
             initial={{ opacity: 0, scale: 0.8, y: 20 }}
             animate={{ opacity: 1, scale: 1, y: 0 }}
             exit={{ opacity: 0, scale: 0.8, y: 20 }}
-            transition={{ type: 'spring', damping: 20 }}
-            className={`bg-[var(--card-bg)] border border-[var(--secondary)] rounded-xl shadow-xl overflow-hidden ${isMinimized ? 'h-16' : 'h-[500px]'} w-[350px] flex flex-col`}
+            transition={{ 
+              type: 'spring', 
+              damping: 25,
+              stiffness: 300
+            }}
+            className={`absolute bottom-16 right-0 bg-[var(--card-bg)] border border-[var(--secondary)] rounded-xl shadow-2xl overflow-hidden ${
+              isMinimized ? 'h-16' : 'h-[500px]'
+            } w-[350px] flex flex-col`}
+            style={{
+              boxShadow: '0 10px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04)'
+            }}
           >
             {/* Chat Header */}
             <div 
-              className="bg-[var(--primary)] text-white p-4 flex justify-between items-center cursor-pointer"
+              className="bg-gradient-to-r from-[var(--primary)] to-[#0d9488] text-white p-4 flex justify-between items-center cursor-pointer"
               onClick={() => setIsMinimized(!isMinimized)}
             >
               <div className="flex items-center">
-                <Bot className="w-5 h-5 mr-2" />
+                <motion.div
+                  animate={{
+                    rotate: isMinimized ? 0 : 360,
+                    scale: isMinimized ? 1 : 1.1
+                  }}
+                  transition={{
+                    type: 'spring',
+                    stiffness: 500,
+                    damping: 15
+                  }}
+                >
+                  <Bot className="w-5 h-5 mr-2" />
+                </motion.div>
                 <h3 className="font-medium">EurosHub Assistant</h3>
               </div>
               <div className="flex items-center gap-2">
                 <button 
-                  className="p-1 rounded-full hover:bg-white/10"
+                  className="p-1 rounded-full hover:bg-white/10 transition-colors"
                   onClick={(e) => {
                     e.stopPropagation();
                     setIsMinimized(!isMinimized);
@@ -153,7 +202,7 @@ You can also use the contact form on our website to send us a message directly.`
                   {isMinimized ? <ChevronUp className="w-4 h-4" /> : <ChevronDown className="w-4 h-4" />}
                 </button>
                 <button 
-                  className="p-1 rounded-full hover:bg-white/10"
+                  className="p-1 rounded-full hover:bg-white/10 transition-colors"
                   onClick={(e) => {
                     e.stopPropagation();
                     toggleChat();
@@ -173,20 +222,28 @@ You can also use the contact form on our website to send us a message directly.`
                       key={index}
                       initial={{ opacity: 0, y: 10 }}
                       animate={{ opacity: 1, y: 0 }}
+                      transition={{ duration: 0.3 }}
                       className={`mb-4 flex ${message.isUser ? 'justify-end' : 'justify-start'}`}
                     >
-                      <div className={`max-w-[80%] p-3 rounded-lg ${message.isUser ? 'bg-[var(--primary)] text-white rounded-tr-none' : 'bg-[var(--secondary)] rounded-tl-none'}`}>
+                      <motion.div
+                        whileHover={{ scale: 1.02 }}
+                        className={`max-w-[80%] p-3 rounded-lg ${
+                          message.isUser 
+                            ? 'bg-[var(--primary)] text-white rounded-tr-none' 
+                            : 'bg-[var(--secondary)] rounded-tl-none'
+                        }`}
+                      >
                         {message.text.split('\n').map((paragraph, i) => (
                           <p key={i} className="mb-2 last:mb-0">{paragraph}</p>
                         ))}
-                      </div>
+                      </motion.div>
                     </motion.div>
                   ))}
                   <div ref={messagesEndRef} />
                 </div>
 
                 {/* Input Area */}
-                <div className="p-4 border-t border-[var(--secondary)]">
+                <div className="p-4 border-t border-[var(--secondary)] bg-[var(--background)]">
                   <div className="flex gap-2">
                     <input
                       type="text"
@@ -194,17 +251,19 @@ You can also use the contact form on our website to send us a message directly.`
                       onChange={(e) => setInputValue(e.target.value)}
                       onKeyPress={handleKeyPress}
                       placeholder="Type your message..."
-                      className="flex-1 p-2 border border-[var(--secondary)] rounded-lg focus:outline-none focus:ring-2 focus:ring-[var(--primary)] bg-[var(--background)]"
+                      className="flex-1 p-3 border border-[var(--secondary)] rounded-lg focus:outline-none focus:ring-2 focus:ring-[var(--primary)] bg-[var(--card-bg)]"
                     />
-                    <button
+                    <motion.button
                       onClick={handleSendMessage}
                       disabled={inputValue.trim() === ''}
-                      className="bg-[var(--primary)] text-white p-2 rounded-lg disabled:opacity-50"
+                      whileTap={{ scale: 0.95 }}
+                      whileHover={{ scale: 1.05 }}
+                      className="bg-[var(--primary)] text-white p-3 rounded-lg disabled:opacity-50 flex items-center justify-center"
                     >
                       <Send className="w-5 h-5" />
-                    </button>
+                    </motion.button>
                   </div>
-                  <p className="text-xs text-[var(--foreground)] opacity-50 mt-2">
+                  <p className="text-xs text-[var(--foreground)] opacity-50 mt-2 text-center">
                     AI assistant may produce inaccurate information.
                   </p>
                 </div>
