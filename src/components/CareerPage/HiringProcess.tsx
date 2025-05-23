@@ -45,15 +45,15 @@ export default function HiringProcess() {
           <div className="hidden md:block absolute left-1/2 top-0 h-full w-1 bg-[var(--primary)]/20 -translate-x-1/2"></div>
 
           <div className="space-y-12 md:space-y-0">
-            {steps.map((step, index) => (
-              <motion.div
-                key={index}
-                initial={{ opacity: 0, y: 20 }}
-                whileInView={{ opacity: 1, y: 0 }}
-                transition={{ duration: 0.5, delay: index * 0.1 }}
-                viewport={{ once: true }}
-                className={`flex flex-col md:flex-row items-center ${index % 2 === 0 ? 'md:flex-row-reverse' : ''}`}
-              >
+           {steps.map((step, index) => (
+  <motion.div
+    key={index}
+    initial={{ opacity: 0, y: 20 }}
+    whileInView={{ opacity: 1, y: 0 }}
+    transition={{ duration: 0.5, delay: index * 0.1 }}
+    viewport={{ once: true }}
+    className={`flex flex-col md:flex-row items-center ${index % 2 === 0 ? 'md:flex-row-reverse' : ''}`}
+  >
                 <div className={`md:w-1/2 p-6 ${index % 2 === 0 ? 'md:pr-12' : 'md:pl-12'}`}>
                   <div className="bg-[var(--card-bg)] border border-[var(--secondary)] p-6 rounded-xl shadow-sm">
                     <div className="flex items-center mb-4">
@@ -67,11 +67,17 @@ export default function HiringProcess() {
                 </div>
 
                 {/* Timeline dot */}
-                <div className="hidden md:flex w-1/2 justify-center relative">
-                  <div className="absolute top-1/2 -translate-y-1/2 w-6 h-6 rounded-full bg-[var(--primary)] border-4 border-[var(--background)] flex items-center justify-center">
-                    <span className="text-xs font-bold text-white">{index + 1}</span>
-                  </div>
-                </div>
+                 <div className="hidden md:flex w-1/2 justify-center relative">
+      <div className={`
+        absolute top-1/2 -translate-y-1/2 
+        w-7 h-7 rounded-full bg-[var(--primary)] 
+        border-4 border-[var(--background)] 
+        flex items-center justify-center
+        ${index % 2 === 0 ? 'translate-x-4' : '-translate-x-4'}
+      `}>
+        <span className="text-xs font-bold text-white">{index + 1}</span>
+      </div>
+    </div>
 
                 {/* Empty spacer for alternating sides */}
                 <div className={`hidden md:block w-1/2 ${index % 2 === 0 ? 'md:pl-12' : 'md:pr-12'}`}></div>
