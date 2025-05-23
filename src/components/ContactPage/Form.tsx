@@ -29,7 +29,6 @@ const techServices = [
   'AI Solutions'
 ];
 
-const allServices = [...businessServices, ...techServices];
 
 // Form validation schema
 const formSchema = z.object({
