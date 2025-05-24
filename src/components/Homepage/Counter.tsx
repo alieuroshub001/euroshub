@@ -99,10 +99,8 @@ const Counter = () => {
   return (
     <section 
       ref={ref}
-      className="relative py-20 bg-[var(--secondary)] text-[var(--foreground)] overflow-hidden"
+      className="relative py-20 text-[var(--foreground)] overflow-hidden" // Removed bg-[var(--secondary)]
     >
-      <div className="absolute inset-0 -z-10 bg-gradient-to-br from-white/50 to-[var(--secondary)] dark:from-[#0a0a0a] dark:to-[#1a1a1a]" />
-
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <motion.div
           initial="hidden"

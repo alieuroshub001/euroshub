@@ -113,6 +113,12 @@ interface ServiceCardProps {
   index?: number;
 }
 
+interface ServiceCardProps {
+  service: Service;
+  variants?: Variants;
+  index?: number;
+}
+
 function ServiceCard({ service, variants }: ServiceCardProps) {
   return (
     <motion.div 
@@ -155,7 +161,7 @@ export default function Services() {
   };
 
   return (
-    <section className="py-20 bg-[var(--secondary)] text-[var(--foreground)]">
+    <section className="py-20 text-[var(--foreground)]"> {/* Removed bg-[var(--secondary)] */}
       <div className="max-w-7xl mx-auto px-6">
         <div className="text-center mb-16">
           <motion.h2 
