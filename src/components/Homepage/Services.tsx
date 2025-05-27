@@ -161,7 +161,7 @@ export default function Services() {
   };
 
   return (
-    <section className="py-20 text-[var(--foreground)]"> {/* Removed bg-[var(--secondary)] */}
+    <section className="py-40 text-[var(--foreground)]"> {/* Removed bg-[var(--secondary)] */}
       <div className="max-w-7xl mx-auto px-6">
         <div className="text-center mb-16">
           <motion.h2 

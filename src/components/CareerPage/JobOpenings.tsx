@@ -1,69 +1,64 @@
 'use client';
 
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { motion } from 'framer-motion';
 import { ChevronDown, MapPin, Briefcase, Clock } from 'lucide-react';
+import { Job } from '@/types/job';
 
 const jobCategories = ['All', 'Technology', 'Business', 'Design', 'Marketing'];
 
-const jobOpenings = [
-  {
-    id: 1,
-    title: 'Frontend Developer',
-    type: 'Full-time',
-    location: 'Remote',
-    department: 'Technology',
-    description: 'Build responsive web applications using React, Next.js, and Tailwind CSS.'
-  },
-  {
-    id: 2,
-    title: 'Business Analyst',
-    type: 'Full-time',
-    location: 'Rawalpindi',
-    department: 'Business',
-    description: 'Analyze business processes and recommend improvements.'
-  },
-  {
-    id: 3,
-    title: 'UI/UX Designer',
-    type: 'Contract',
-    location: 'Hybrid',
-    department: 'Design',
-    description: 'Create beautiful and intuitive user interfaces.'
-  },
-  {
-    id: 4,
-    title: 'Backend Engineer',
-    type: 'Full-time',
-    location: 'Remote',
-    department: 'Technology',
-    description: 'Develop scalable backend services with Node.js and Python.'
-  },
-  {
-    id: 5,
-    title: 'Digital Marketer',
-    type: 'Part-time',
-    location: 'Rawalpindi',
-    department: 'Marketing',
-    description: 'Manage social media and digital advertising campaigns.'
-  },
-  {
-    id: 6,
-    title: 'DevOps Engineer',
-    type: 'Full-time',
-    location: 'Remote',
-    department: 'Technology',
-    description: 'Implement CI/CD pipelines and cloud infrastructure.'
-  }
-];
-
 export default function JobOpenings() {
   const [activeCategory, setActiveCategory] = useState('All');
-  const [expandedJob, setExpandedJob] = useState<number | null>(null);
+  const [expandedJob, setExpandedJob] = useState<string | null>(null);
+  const [jobs, setJobs] = useState<Job[]>([]);
+  const [isLoading, setIsLoading] = useState(true);
+  const [error, setError] = useState<string | null>(null);
+
+  useEffect(() => {
+    const fetchJobs = async () => {
+      try {
+        const response = await fetch('/api/jobs');
+        if (!response.ok) throw new Error('Failed to fetch jobs');
+        const data = await response.json();
+        setJobs(data);
+      } catch (error) {
+        console.error('Error fetching jobs:', error);
+        setError(error instanceof Error ? error.message : 'Failed to load jobs');
+      } finally {
+        setIsLoading(false);
+      }
+    };
+
+    fetchJobs();
+  }, []);
 
   const filteredJobs = activeCategory === 'All' 
-    ? jobOpenings 
-    : jobOpenings.filter(job => job.department === activeCategory);
+    ? jobs.filter(job => job.isLive) // Only show live jobs
+    : jobs.filter(job => job.department === activeCategory && job.isLive);
+
+  if (isLoading) {
+    return (
+      <section id="openings" className="py-20 bg-[var(--background)] text-[var(--foreground)]">
+        <div className="max-w-7xl mx-auto px-6">
+          <div className="flex justify-center items-center h-64">
+            <div className="animate-spin rounded-full h-12 w-12 border-t-2 border-b-2 border-[var(--primary)]"></div>
+          </div>
+        </div>
+      </section>
+    );
+  }
+
+  if (error) {
+    return (
+      <section id="openings" className="py-20 bg-[var(--background)] text-[var(--foreground)]">
+        <div className="max-w-7xl mx-auto px-6">
+          <div className="p-4 bg-red-100 border border-red-400 text-red-700 rounded text-center">
+            {error}
+          </div>
+        </div>
+      </section>
+    );
+  }
 
   return (
     <section id="openings" className="py-20 bg-[var(--background)] text-[var(--foreground)]">
@@ -86,51 +81,57 @@ export default function JobOpenings() {
         </div>
 
         <div className="space-y-4">
-          {filteredJobs.map(job => (
-            <motion.div
-              key={job.id}
-              initial={{ opacity: 0, y: 10 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ duration: 0.3 }}
-              className="bg-[var(--card-bg)] border border-[var(--secondary)] rounded-xl overflow-hidden shadow-sm"
-            >
-              <div 
-                className="p-6 cursor-pointer flex justify-between items-center"
-                onClick={() => setExpandedJob(expandedJob === job.id ? null : job.id)}
+          {filteredJobs.length > 0 ? (
+            filteredJobs.map(job => (
+              <motion.div
+                key={String(job._id)}
+                initial={{ opacity: 0, y: 10 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ duration: 0.3 }}
+                className="bg-[var(--card-bg)] border border-[var(--secondary)] rounded-xl overflow-hidden shadow-sm"
               >
-                <div>
-                  <h3 className="text-xl font-semibold">{job.title}</h3>
-                  <div className="flex flex-wrap gap-4 mt-2">
-                    <span className="flex items-center text-sm opacity-80">
-                      <Briefcase className="w-4 h-4 mr-1" /> {job.type}
-                    </span>
-                    <span className="flex items-center text-sm opacity-80">
-                      <MapPin className="w-4 h-4 mr-1" /> {job.location}
-                    </span>
-                    <span className="flex items-center text-sm opacity-80">
-                      <Clock className="w-4 h-4 mr-1" /> {job.department}
-                    </span>
-                  </div>
-                </div>
-                <ChevronDown className={`transition-transform ${expandedJob === job.id ? 'rotate-180' : ''}`} />
-              </div>
-
-              {expandedJob === job.id && (
-                <motion.div
-                  initial={{ height: 0, opacity: 0 }}
-                  animate={{ height: 'auto', opacity: 1 }}
-                  exit={{ height: 0, opacity: 0 }}
-                  transition={{ duration: 0.3 }}
-                  className="px-6 pb-6"
+                <div 
+                  className="p-6 cursor-pointer flex justify-between items-center"
+                  onClick={() => setExpandedJob(expandedJob === String(job._id) ? null : String(job._id))}
                 >
-                  <p className="mb-6">{job.description}</p>
-                  <button className="bg-[var(--primary)] text-white px-6 py-2 rounded-full font-medium hover:opacity-90 transition">
-                    Apply Now
-                  </button>
-                </motion.div>
-              )}
-            </motion.div>
-          ))}
+                  <div>
+                    <h3 className="text-xl font-semibold">{job.title}</h3>
+                    <div className="flex flex-wrap gap-4 mt-2">
+                      <span className="flex items-center text-sm opacity-80">
+                        <Briefcase className="w-4 h-4 mr-1" /> {job.type}
+                      </span>
+                      <span className="flex items-center text-sm opacity-80">
+                        <MapPin className="w-4 h-4 mr-1" /> {job.location}
+                      </span>
+                      <span className="flex items-center text-sm opacity-80">
+                        <Clock className="w-4 h-4 mr-1" /> {job.department}
+                      </span>
+                    </div>
+                  </div>
+                  <ChevronDown className={`transition-transform ${expandedJob === job._id ? 'rotate-180' : ''}`} />
+                </div>
+
+                {expandedJob === job._id && (
+                  <motion.div
+                    initial={{ height: 0, opacity: 0 }}
+                    animate={{ height: 'auto', opacity: 1 }}
+                    exit={{ height: 0, opacity: 0 }}
+                    transition={{ duration: 0.3 }}
+                    className="px-6 pb-6"
+                  >
+                    <p className="mb-6">{job.description}</p>
+                    <button className="bg-[var(--primary)] text-white px-6 py-2 rounded-full font-medium hover:opacity-90 transition">
+                      Apply Now
+                    </button>
+                  </motion.div>
+                )}
+              </motion.div>
+            ))
+          ) : (
+            <div className="text-center py-12 text-[var(--foreground)]/70">
+              No current openings in this category
+            </div>
+          )}
         </div>
       </div>
     </section>
