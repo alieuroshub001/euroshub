@@ -2,16 +2,14 @@ import AdminLayout from '@/components/adminpanel/AdminLayout';
 import JobForm from '@/components/adminpanel/JobForm';
 import { Metadata } from 'next';
 
+// Define proper type for page props
 type PageProps = {
-  params: {
-    id: string;
-  };
-  searchParams?: {
-    [key: string]: string | string[] | undefined;
-  };
+  params: { id: string };
+  searchParams?: Record<string, string | string[] | undefined>;
 };
 
-function AdminEditJobPage({ params }: PageProps) {
+// Main component with proper typing
+function EditJobContent({ params }: { params: { id: string } }) {
   return (
     <AdminLayout>
       <JobForm jobId={params.id} />
@@ -19,11 +17,11 @@ function AdminEditJobPage({ params }: PageProps) {
   );
 }
 
+// Page component that satisfies Next.js types
+export default function Page({ params }: PageProps) {
+  return <EditJobContent params={params} />;
+}
+
 export const metadata: Metadata = {
   title: 'Edit Job',
 };
-
-// Workaround for Next.js type expectation
-export default function Page(props: any) {
-  return <AdminEditJobPage {...props} />;
-}
