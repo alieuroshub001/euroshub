@@ -4,18 +4,21 @@ import { ObjectId } from 'mongodb';
 
 export async function GET(
   request: Request,
-  { params }: { params: { id: string } }
+  { params }: { params: Promise<{ id: string }> }
 ) {
   try {
+    // Await the params to get the actual values
+    const { id } = await params;
+
     // Validate ObjectId format
-    if (!ObjectId.isValid(params.id)) {
+    if (!ObjectId.isValid(id)) {
       return NextResponse.json(
         { message: 'Invalid job ID format' },
         { status: 400 }
       );
     }
 
-    const job = await getJobById(params.id);
+    const job = await getJobById(id);
     
     if (!job) {
       return NextResponse.json(
@@ -42,11 +45,14 @@ export async function GET(
 
 export async function PUT(
   request: Request,
-  { params }: { params: { id: string } }
+  { params }: { params: Promise<{ id: string }> }
 ) {
   try {
+    // Await the params to get the actual values
+    const { id } = await params;
+
     // Validate ObjectId format
-    if (!ObjectId.isValid(params.id)) {
+    if (!ObjectId.isValid(id)) {
       return NextResponse.json(
         { message: 'Invalid job ID format' },
         { status: 400 }
@@ -63,7 +69,7 @@ export async function PUT(
       );
     }
 
-    const updatedCount = await updateJob(params.id, jobData);
+    const updatedCount = await updateJob(id, jobData);
     
     if (updatedCount === 0) {
       return NextResponse.json(
@@ -87,18 +93,21 @@ export async function PUT(
 
 export async function DELETE(
   request: Request,
-  { params }: { params: { id: string } }
+  { params }: { params: Promise<{ id: string }> }
 ) {
   try {
+    // Await the params to get the actual values
+    const { id } = await params;
+
     // Validate ObjectId format
-    if (!ObjectId.isValid(params.id)) {
+    if (!ObjectId.isValid(id)) {
       return NextResponse.json(
         { message: 'Invalid job ID format' },
         { status: 400 }
       );
     }
 
-    const deletedCount = await deleteJob(params.id);
+    const deletedCount = await deleteJob(id);
     
     if (deletedCount === 0) {
       return NextResponse.json(

@@ -4,18 +4,20 @@ import { getJobById } from '@/models/job';
 
 export async function PATCH(
   request: Request,
-  { params }: { params: { id: string } }
+  { params }: { params: Promise<{ id: string }> }
 ) {
   try {
-    if (!ObjectId.isValid(params.id)) {
+    // Await the params to get the actual values
+    const { id } = await params;
+
+    if (!ObjectId.isValid(id)) {
       return NextResponse.json({ message: 'Invalid ID' }, { status: 400 });
     }
 
-    const job = await getJobById(params.id);
+    const job = await getJobById(id);
     if (!job) {
       return NextResponse.json({ message: 'Job not found' }, { status: 404 });
     }
-
 
     return NextResponse.json({ success: true, isLive: !job.isLive });
   } catch (error) {
