@@ -1,14 +1,20 @@
 import AdminLayout from '@/components/adminpanel/AdminLayout';
 import JobForm from '@/components/adminpanel/JobForm';
+import { Metadata } from 'next';
 
-export default function AdminEditJobPage({
-  params,
-}: {
+interface Props {
   params: { id: string };
-}) {
+}
+
+export default function AdminEditJobPage({ params }: Props) {
   return (
     <AdminLayout>
       <JobForm jobId={params.id} />
     </AdminLayout>
   );
 }
+
+// Optional: Add metadata if needed
+export const metadata: Metadata = {
+  title: 'Edit Job',
+};
