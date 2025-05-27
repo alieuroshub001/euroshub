@@ -1,7 +1,7 @@
 import { NextResponse } from 'next/server';
 import { createJob, getJobs } from '@/models/job';
 import { JobFormData } from '@/types/job';
-import { ObjectId } from 'mongodb';
+// Remove this line: import { ObjectId } from 'mongodb';
 
 export async function GET() {
   try {

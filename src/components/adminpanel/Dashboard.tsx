@@ -27,77 +27,32 @@ export default function Dashboard() {
   useEffect(() => {
     const fetchDashboardData = async () => {
       try {
-        // Fetch jobs data
         const jobsResponse = await fetch('/api/jobs');
         if (!jobsResponse.ok) throw new Error('Failed to fetch jobs');
         const jobsData = await jobsResponse.json();
 
-        // Fetch applications data (you'll need to implement this API)
-        const appsResponse = await fetch('/api/applications');
-        const appsData = appsResponse.ok ? await appsResponse.json() : [];
-
-        // Calculate stats
-        const totalJobs = jobsData.length;
-        const liveJobs = jobsData.filter((job: Job) => job.isLive).length;
-        const totalApplications = appsData.length;
-        const newCandidates = appsData.filter((app: any) => {
-          const appDate = new Date(app.createdAt);
-          return appDate > new Date(Date.now() - 7 * 24 * 60 * 60 * 1000); // Last 7 days
-        }).length;
-
         setStats([
           { 
             name: 'Total Jobs', 
-            value: totalJobs, 
+            value: jobsData.length, 
             icon: Briefcase, 
-            change: '+12%' // You can calculate this from historical data
+            change: '+12%'
           },
           { 
             name: 'Live Jobs', 
-            value: liveJobs, 
+            value: jobsData.filter((job: Job) => job.isLive).length, 
             icon: CheckCircle, 
             change: '+5%' 
-          },
-          { 
-            name: 'Applications', 
-            value: totalApplications, 
-            icon: FileText, 
-            change: '+23%' 
-          },
-          { 
-            name: 'New Candidates', 
-            value: newCandidates, 
-            icon: Users, 
-            change: '+8%' 
-          },
+          }
         ]);
 
-        // Generate activity feed (you might want to create a dedicated API for this)
-        const recentActivities: ActivityItem[] = [];
-        
-        // Add job creations/updates
-        jobsData.slice(0, 3).forEach((job: Job) => {
-          recentActivities.push({
-            type: job.updatedAt ? 'job_updated' : 'job_created',
-            title: `${job.updatedAt ? 'Updated' : 'Posted'} job: ${job.title}`,
-            timestamp: new Date(job.updatedAt || job.createdAt || Date.now()),
-            icon: Briefcase,
-            iconColor: 'purple'
-          });
-        });
-
-        // Add recent applications (if available)
-        if (appsData.length > 0) {
-          appsData.slice(0, 2).forEach((app: any) => {
-            recentActivities.push({
-              type: 'application_received',
-              title: `New application for ${app.jobTitle}`,
-              timestamp: new Date(app.createdAt),
-              icon: Users,
-              iconColor: 'blue'
-            });
-          });
-        }
+        const recentActivities: ActivityItem[] = jobsData.slice(0, 3).map((job: Job) => ({
+          type: job.updatedAt ? 'job_updated' : 'job_created',
+          title: `${job.updatedAt ? 'Updated' : 'Posted'} job: ${job.title}`,
+          timestamp: new Date(job.updatedAt || job.createdAt || Date.now()),
+          icon: Briefcase,
+          iconColor: 'purple'
+        }));
 
         setActivities(recentActivities.sort((a, b) => 
           b.timestamp.getTime() - a.timestamp.getTime()

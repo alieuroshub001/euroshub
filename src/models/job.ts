@@ -1,6 +1,21 @@
 import { Collection, Db, ObjectId } from 'mongodb';
 import clientPromise from '../lib/db';
 
+// Define your job types
+interface JobData {
+  title: string;
+  type: string;
+  location: string;
+  department: string;
+  description: string;
+  // Add other required fields as needed
+}
+
+interface JobUpdateData extends Partial<JobData> {
+  isLive?: boolean;
+  // Add other optional fields that can be updated
+}
+
 let cachedDb: Db;
 let cachedJobs: Collection;
 
@@ -31,18 +46,18 @@ export const getJobById = async (id: string) => {
   return jobsCollection.findOne({ _id: new ObjectId(id) });
 };
 
-export const createJob = async (jobData: any) => {
+export const createJob = async (jobData: JobData) => {
   const { jobsCollection } = await connectToDatabase();
   const result = await jobsCollection.insertOne({
     ...jobData,
-        isLive: true, 
+    isLive: true,
     createdAt: new Date(),
     updatedAt: new Date(),
   });
   return result.insertedId;
 };
 
-export const updateJob = async (id: string, jobData: any) => {
+export const updateJob = async (id: string, jobData: JobUpdateData) => {
   const { jobsCollection } = await connectToDatabase();
   const result = await jobsCollection.updateOne(
     { _id: new ObjectId(id) },
