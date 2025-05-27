@@ -11,7 +11,7 @@ type PageProps = {
   };
 };
 
-export default function AdminEditJobPage({ params }: PageProps) {
+function AdminEditJobPage({ params }: PageProps) {
   return (
     <AdminLayout>
       <JobForm jobId={params.id} />
