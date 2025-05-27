@@ -1,16 +1,11 @@
 import AdminLayout from '@/components/adminpanel/AdminLayout';
 import JobForm from '@/components/adminpanel/JobForm';
 
-interface PageProps {
-  params: {
-    id: string;
-  };
-  searchParams?: {
-    [key: string]: string | string[] | undefined;
-  };
-}
-
-export default function AdminEditJobPage({ params }: PageProps) {
+export default function AdminEditJobPage({
+  params,
+}: {
+  params: { id: string };
+}) {
   return (
     <AdminLayout>
       <JobForm jobId={params.id} />
