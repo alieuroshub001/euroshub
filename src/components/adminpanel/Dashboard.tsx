@@ -1,6 +1,6 @@
 'use client';
 
-import { Briefcase, CheckCircle, FileText, Users } from 'lucide-react';
+import { Briefcase, CheckCircle } from 'lucide-react';
 import { useEffect, useState } from 'react';
 import { Job } from '@/types/job';
 
