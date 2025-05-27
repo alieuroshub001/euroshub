@@ -1,6 +1,6 @@
 import { NextResponse } from 'next/server';
 import { ObjectId } from 'mongodb';
-import { getJobById, updateJob } from '@/models/job';
+import { getJobById } from '@/models/job';
 
 export async function PATCH(
   request: Request,
