@@ -111,7 +111,7 @@ const Counter = () => {
           }}
           className="text-center mb-16"
         >
-          <div className="inline-flex items-center justify-center px-4 py-2 rounded-full bg-[var(--primary)]/10 text-[var(--primary)] mb-4">
+          <div className="mt-65 inline-flex items-center justify-center px-4 py-2 rounded-full bg-[var(--primary)]/10 text-[var(--primary)] mb-4">
             <Aperture className="w-5 h-5 mr-2" />
             <span className="text-sm font-medium">OUR ACHIEVEMENTS</span>
           </div>

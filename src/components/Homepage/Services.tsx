@@ -1,168 +1,210 @@
 'use client';
-
-import { JSX, useState } from 'react';
+import Link from 'next/link';
+import { JSX, useState, useEffect, useRef, useCallback } from 'react';
 import { 
-  HeadsetIcon, 
-  ClipboardListIcon,
-  KeyboardIcon,
-  DatabaseIcon,
-  PhoneOutgoingIcon,
-  LayoutDashboardIcon,
-  HardDriveIcon,
-  SearchIcon,
-  BarChart2Icon,
-  ServerIcon,
-  CodeIcon,
-  SmartphoneIcon,
-  GlobeIcon,
-  CpuIcon,
-  CloudIcon
+  Headphones, 
+  ClipboardList,
+  Keyboard,
+  Database,
+  PhoneOutgoing,
+  LayoutDashboard,
+  HardDrive,
+  Search,
+  BarChart2,
+  Server,
+  Code,
+  Smartphone,
+  Globe,
+  Cpu,
+  Cloud
 } from 'lucide-react';
-import { motion, Variants } from 'framer-motion';
+import { motion, PanInfo, useAnimation } from 'framer-motion';
 
 interface Service {
+  id: number;
   title: string;
   icon: JSX.Element;
   description: string;
+  category: 'business' | 'tech';
+  slug: string;
 }
 
-const businessServices: Service[] = [
+const allServices: Service[] = [
   {
+    id: 1,
     title: 'Virtual Assistance',
-    icon: <HeadsetIcon className="w-10 h-10 text-[var(--primary)]" />,
+    icon: <Headphones className="w-10 h-10 text-[var(--primary)]" />,
     description: 'Professional remote support for administrative tasks and customer service.',
+    category: 'business',
+    slug: 'virtual-assistance'
   },
   {
+    id: 2,
     title: 'Project Management',
-    icon: <ClipboardListIcon className="w-10 h-10 text-[var(--primary)]" />,
+    icon: <ClipboardList className="w-10 h-10 text-[var(--primary)]" />,
     description: 'End-to-end project coordination to keep initiatives on track.',
+    category: 'business',
+    slug: 'project-management'
   },
   {
+    id: 3,
     title: 'Data Entry & Transcription',
-    icon: <KeyboardIcon className="w-10 h-10 text-[var(--primary)]" />,
+    icon: <Keyboard className="w-10 h-10 text-[var(--primary)]" />,
     description: 'Accurate data processing and document conversion services.',
+    category: 'business',
+    slug: 'data-entry-transcription'
   },
   {
+    id: 4,
     title: 'Data Extraction/ETL',
-    icon: <DatabaseIcon className="w-10 h-10 text-[var(--primary)]" />,
+    icon: <Database className="w-10 h-10 text-[var(--primary)]" />,
     description: 'Structured data extraction from various sources and formats.',
+    category: 'business',
+    slug: 'data-extraction-etl'
   },
   {
+    id: 5,
     title: 'Lead Generation',
-    icon: <PhoneOutgoingIcon className="w-10 h-10 text-[var(--primary)]" />,
+    icon: <PhoneOutgoing className="w-10 h-10 text-[var(--primary)]" />,
     description: 'Targeted prospect identification for sales pipelines.',
+    category: 'business',
+    slug: 'lead-generation'
   },
   {
+    id: 6,
     title: 'ERP/CRM Software',
-    icon: <LayoutDashboardIcon className="w-10 h-10 text-[var(--primary)]" />,
+    icon: <LayoutDashboard className="w-10 h-10 text-[var(--primary)]" />,
     description: 'Business system implementation and optimization.',
+    category: 'business',
+    slug: 'erp-crm-software'
   },
   {
+    id: 7,
     title: 'Data Mining',
-    icon: <HardDriveIcon className="w-10 h-10 text-[var(--primary)]" />,
+    icon: <HardDrive className="w-10 h-10 text-[var(--primary)]" />,
     description: 'Extract valuable insights from large datasets.',
+    category: 'business',
+    slug: 'data-mining'
   },
   {
+    id: 8,
     title: 'Market Research',
-    icon: <SearchIcon className="w-10 h-10 text-[var(--primary)]" />,
+    icon: <Search className="w-10 h-10 text-[var(--primary)]" />,
     description: 'Competitive analysis and product evaluation.',
+    category: 'business',
+    slug: 'market-research'
   },
   {
+    id: 9,
     title: 'Data Analysis',
-    icon: <BarChart2Icon className="w-10 h-10 text-[var(--primary)]" />,
+    icon: <BarChart2 className="w-10 h-10 text-[var(--primary)]" />,
     description: 'Statistical analysis for business data.',
+    category: 'business',
+    slug: 'data-analysis'
   },
   {
+    id: 10,
     title: 'Database Management',
-    icon: <ServerIcon className="w-10 h-10 text-[var(--primary)]" />,
+    icon: <Server className="w-10 h-10 text-[var(--primary)]" />,
     description: 'Full database administration and optimization.',
+    category: 'business',
+    slug: 'database-management'
   },
-];
-
-const techServices: Service[] = [
   {
+    id: 11,
     title: 'Web Development',
-    icon: <CodeIcon className="w-10 h-10 text-[var(--primary)]" />,
+    icon: <Code className="w-10 h-10 text-[var(--primary)]" />,
     description: 'Custom web applications built with modern technologies.',
+    category: 'tech',
+    slug: 'web-development'
   },
   {
+    id: 12,
     title: 'Mobile App Development',
-    icon: <SmartphoneIcon className="w-10 h-10 text-[var(--primary)]" />,
+    icon: <Smartphone className="w-10 h-10 text-[var(--primary)]" />,
     description: 'iOS and Android apps with seamless user experiences.',
+    category: 'tech',
+    slug: 'mobile-app-development'
   },
   {
+    id: 13,
     title: 'UI/UX Design',
-    icon: <GlobeIcon className="w-10 h-10 text-[var(--primary)]" />,
+    icon: <Globe className="w-10 h-10 text-[var(--primary)]" />,
     description: 'Beautiful, intuitive interfaces that engage users.',
+    category: 'tech',
+    slug: 'ui-ux-design'
   },
   {
+    id: 14,
     title: 'Cloud Solutions',
-    icon: <CloudIcon className="w-10 h-10 text-[var(--primary)]" />,
+    icon: <Cloud className="w-10 h-10 text-[var(--primary)]" />,
     description: 'Scalable cloud infrastructure and migration.',
+    category: 'tech',
+    slug: 'cloud-solutions'
   },
   {
+    id: 15,
     title: 'AI Solutions',
-    icon: <CpuIcon className="w-10 h-10 text-[var(--primary)]" />,
+    icon: <Cpu className="w-10 h-10 text-[var(--primary)]" />,
     description: 'Intelligent automation and machine learning.',
+    category: 'tech',
+    slug: 'ai-solutions'
   },
 ];
-
-interface ServiceCardProps {
-  service: Service;
-  variants?: Variants;
-  index?: number;
-}
-
-interface ServiceCardProps {
-  service: Service;
-  variants?: Variants;
-  index?: number;
-}
-
-function ServiceCard({ service, variants }: ServiceCardProps) {
-  return (
-    <motion.div 
-      variants={variants}
-      whileHover={{ 
-        y: -8,
-        boxShadow: "0 10px 25px -5px rgba(0, 0, 0, 0.1), 0 8px 10px -6px rgba(0, 0, 0, 0.1)"
-      }}
-      className="bg-[var(--card-bg)] p-6 rounded-xl shadow-sm transition flex flex-col items-center h-full"
-    >
-      <motion.div 
-        className="mb-4 bg-[var(--primary)]/10 p-3 rounded-full"
-        whileHover={{ scale: 1.1, rotate: 5 }}
-        transition={{ type: "spring", stiffness: 400, damping: 10 }}
-      >
-        {service.icon}
-      </motion.div>
-      <h3 className="text-lg font-semibold mb-2 text-center">{service.title}</h3>
-      <p className="text-sm text-[var(--foreground)] opacity-70 text-center">{service.description}</p>
-    </motion.div>
-  );
-}
 
 export default function Services() {
   const [activeTab, setActiveTab] = useState<'business' | 'tech'>('business');
-  
-  const container = {
-    hidden: { opacity: 0 },
-    show: {
-      opacity: 1,
-      transition: {
-        staggerChildren: 0.1
+  const containerRef = useRef<HTMLDivElement>(null);
+  const controls = useAnimation();
+  const [isHovered, setIsHovered] = useState(false);
+  const animationRef = useRef<number | null>(null);
+  const positionRef = useRef(0);
+  const speedRef = useRef(1);
+  const lastTimeRef = useRef(0);
+
+  const filteredServices = allServices.filter(service => service.category === activeTab);
+  const duplicatedServices = [...filteredServices, ...filteredServices, ...filteredServices];
+
+  const animate = useCallback((time: number) => {
+    if (!lastTimeRef.current) lastTimeRef.current = time;
+    const delta = time - lastTimeRef.current;
+    lastTimeRef.current = time;
+
+    if (!isHovered && containerRef.current) {
+      positionRef.current -= (delta * 0.08 * speedRef.current);
+      const containerWidth = containerRef.current.scrollWidth / 3;
+      
+      if (Math.abs(positionRef.current) >= containerWidth) {
+        positionRef.current = 0;
       }
+
+      controls.set({ x: positionRef.current });
     }
-  };
-  
-  const item = {
-    hidden: { y: 20, opacity: 0 },
-    show: { y: 0, opacity: 1, transition: { duration: 0.5 } }
+    
+    animationRef.current = requestAnimationFrame(animate);
+  }, [isHovered, controls]);
+
+  useEffect(() => {
+    // Reset position when tab changes
+    positionRef.current = 0;
+    controls.set({ x: 0 });
+    
+    animationRef.current = requestAnimationFrame(animate);
+    return () => {
+      if (animationRef.current) {
+        cancelAnimationFrame(animationRef.current);
+      }
+    };
+  }, [animate, activeTab]);
+
+  const handleDrag = (event: MouseEvent | TouchEvent | PointerEvent, info: PanInfo) => {
+    positionRef.current += info.delta.x;
   };
 
   return (
-    <section className="py-40 text-[var(--foreground)]"> {/* Removed bg-[var(--secondary)] */}
-      <div className="max-w-7xl mx-auto px-6">
+    <section className="py-50 text-[var(--foreground)]">
+      {/* Header section with container */}
+      <div className="max-w-7xl mx-auto px-6 mb-16">
         <div className="text-center mb-16">
           <motion.h2 
             initial={{ opacity: 0, y: -20 }}
@@ -182,7 +224,7 @@ export default function Services() {
           </motion.p>
         </div>
 
-        <div className="flex justify-center mb-12">
+        <div className="flex justify-center">
           <div className="inline-flex bg-[var(--card-bg)]/30 rounded-lg p-1">
             <button
               onClick={() => setActiveTab('business')}
@@ -206,22 +248,51 @@ export default function Services() {
             </button>
           </div>
         </div>
+      </div>
 
-        <motion.div 
-          key={activeTab}
-          variants={container}
-          initial="hidden"
-          animate="show"
-          className="grid md:grid-cols-2 lg:grid-cols-5 gap-6"
+      {/* Full width marquee section */}
+      <div 
+        ref={containerRef}
+        className="relative w-full overflow-x-hidden py-8"
+        onMouseEnter={() => setIsHovered(true)}
+        onMouseLeave={() => setIsHovered(false)}
+      >
+        <motion.div
+          className="flex gap-6 w-max items-stretch pl-6"
+          drag="x"
+          dragConstraints={containerRef}
+          onDrag={handleDrag}
+          animate={controls}
+          dragElastic={0}
         >
-          {activeTab === 'business' && 
-            businessServices.map((service, index) => (
-              <ServiceCard key={`biz-${index}`} service={service} variants={item} index={index} />
-            ))}
-          {activeTab === 'tech' && 
-            techServices.map((service, index) => (
-              <ServiceCard key={`tech-${index}`} service={service} variants={item} index={index} />
-            ))}
+          {duplicatedServices.map((service, index) => (
+            <Link 
+              key={`${service.id}-${index}`}
+              href={`/services#${service.slug}`}
+              passHref
+            >
+              <motion.div
+                className="flex-shrink-0 w-[300px] h-[280px] cursor-pointer"
+                whileHover={{ scale: 1.03 }}
+              >
+                <div className="bg-[var(--card-bg)] p-6 h-full w-full flex flex-col items-center justify-between rounded-xl shadow-sm transition-all duration-300 hover:shadow-xl hover:bg-[var(--card-bg)]/80">
+                  <div className="flex flex-col items-center flex-grow justify-center">
+                    <motion.div 
+                      className="mb-4 bg-[var(--primary)]/10 p-3 rounded-full"
+                      whileHover={{ scale: 1.1, rotate: 5 }}
+                      transition={{ type: "spring", stiffness: 400, damping: 10 }}
+                    >
+                      {service.icon}
+                    </motion.div>
+                    <h3 className="text-lg font-semibold mb-3 text-center">{service.title}</h3>
+                    <p className="text-sm text-[var(--foreground)] opacity-70 text-center leading-relaxed">
+                      {service.description}
+                    </p>
+                  </div>
+                </div>
+              </motion.div>
+            </Link>
+          ))}
         </motion.div>
       </div>
     </section>

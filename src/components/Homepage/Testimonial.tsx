@@ -164,7 +164,7 @@ export default function Testimonials() {
   };
 
   return (
-    <section className="py-16 w-full overflow-hidden relative"> {/* Removed bg-[var(--background)] */}
+    <section className="py-76 w-full overflow-hidden relative"> {/* Removed bg-[var(--background)] */}
       <div className="w-full mx-auto px-0">
         <motion.h2 
           initial={{ opacity: 0, y: -20 }}

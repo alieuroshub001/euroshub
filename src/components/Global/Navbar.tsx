@@ -5,16 +5,17 @@ import Link from 'next/link';
 import { useEffect, useState } from 'react';
 import MobileMenu from './MobileMenu';
 import {
-  HeadsetIcon,
+    HeadsetIcon,
   ClipboardListIcon,
   KeyboardIcon,
   DatabaseIcon,
   PhoneOutgoingIcon,
   LayoutDashboardIcon,
-  HardDriveIcon,
-  SearchIcon,
-  BarChart2Icon,
-  ServerIcon,
+  // Removed unused icons:
+  // HardDriveIcon,
+  // SearchIcon,
+  // BarChart2Icon,
+  // ServerIcon,
   CodeIcon,
   SmartphoneIcon,
   GlobeIcon,
@@ -29,7 +30,6 @@ export default function Navbar() {
   const [showMobileMenu, setShowMobileMenu] = useState(false);
   const [servicesOpen, setServicesOpen] = useState(false);
   const [isScrolled, setIsScrolled] = useState(false);
-  const [activeCategory, setActiveCategory] = useState('Business Services');
 
   const allServices = [
     { 
@@ -41,10 +41,10 @@ export default function Navbar() {
         { name: 'Data Extraction/ETL', icon: <DatabaseIcon className="w-4 h-4" /> },
         { name: 'Lead Generation', icon: <PhoneOutgoingIcon className="w-4 h-4" /> },
         { name: 'ERP/CRM Software', icon: <LayoutDashboardIcon className="w-4 h-4" /> },
-        { name: 'Data Mining', icon: <HardDriveIcon className="w-4 h-4" /> },
-        { name: 'Market Research', icon: <SearchIcon className="w-4 h-4" /> },
-        { name: 'Data Analysis', icon: <BarChart2Icon className="w-4 h-4" /> },
-        { name: 'Database Management', icon: <ServerIcon className="w-4 h-4" /> }
+     //   { name: 'Data Mining', icon: <HardDriveIcon className="w-4 h-4" /> },
+     //   { name: 'Market Research', icon: <SearchIcon className="w-4 h-4" /> },
+     //   { name: 'Data Analysis', icon: <BarChart2Icon className="w-4 h-4" /> },
+     //   { name: 'Database Management', icon: <ServerIcon className="w-4 h-4" /> }
       ]
     },
     { 
@@ -175,58 +175,6 @@ export default function Navbar() {
                   )}
                   <span className="absolute bottom-0 left-0 w-0 h-0.5 bg-[var(--primary)] transition-all duration-300 group-hover:w-full"></span>
                 </div>
-                
-                {/* Compact Services Dropdown */}
-                {servicesOpen && (
-                  <div 
-                    className="absolute left-0 mt-2 w-[500px] bg-[var(--background)] border border-[var(--secondary)] rounded-lg shadow-xl z-50 overflow-hidden"
-                    onMouseEnter={() => setServicesOpen(true)}
-                    onMouseLeave={() => setServicesOpen(false)}
-                  >
-                    <div className="flex border-b border-[var(--secondary)]">
-                      {allServices.map((category) => (
-                        <button
-                          key={category.category}
-                          className={`px-4 py-3 text-sm font-medium flex-1 text-center ${
-                            activeCategory === category.category
-                              ? 'text-[var(--primary)] border-b-2 border-[var(--primary)]'
-                              : 'hover:bg-[var(--primary)/5]'
-                          }`}
-                          onClick={() => setActiveCategory(category.category)}
-                        >
-                          {category.category}
-                        </button>
-                      ))}
-                    </div>
-                    <div className="p-4">
-                      <div className="grid grid-cols-2 gap-4">
-                        {allServices
-                          .find(cat => cat.category === activeCategory)
-                          ?.services.map((service) => (
-                            <Link
-                              key={service.name}
-                              href={`/services#${service.name.toLowerCase().replace(/\s+/g, '-')}`}
-                              className="flex items-center gap-3 p-3 rounded-lg hover:bg-[var(--primary)/10] transition-colors duration-200"
-                            >
-                              <div className="bg-[var(--primary)/10] p-2 rounded-full">
-                                {service.icon}
-                              </div>
-                              <span className="text-sm">{service.name}</span>
-                            </Link>
-                          ))}
-                      </div>
-                    </div>
-                    <div className="p-4 border-t border-[var(--secondary)] bg-[var(--primary)/5]">
-                      <Link 
-                        href="/services" 
-                        className="text-[var(--primary)] font-medium text-sm hover:underline flex items-center justify-center gap-2"
-                      >
-                        View all services
-                        <ChevronDownIcon className="w-4 h-4 rotate-90" />
-                      </Link>
-                    </div>
-                  </div>
-                )}
               </li>
               
               <li className="relative group">
@@ -261,6 +209,53 @@ export default function Navbar() {
           {showMobileMenu && <MobileMenu />}
         </div>
       </nav>
+
+      {/* Full Width Horizontal Services Dropdown - Matches Navbar Width */}
+      {servicesOpen && (
+        <div 
+          className="absolute left-0 right-0 top-full w-full bg-[var(--background)] border-t border-[var(--secondary)] shadow-xl z-40"
+          onMouseEnter={() => setServicesOpen(true)}
+          onMouseLeave={() => setServicesOpen(false)}
+        >
+          {/* Match navbar's exact padding and layout */}
+          <div className="px-6 py-4">
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+              {allServices.map((category) => (
+                <div key={category.category} className="space-y-2">
+                  <h3 className="text-base font-semibold text-[var(--primary)] border-b border-[var(--primary)/20] pb-1">
+                    {category.category}
+                  </h3>
+                  <div className="grid grid-cols-1 lg:grid-cols-2 gap-1">
+                    {category.services.map((service) => (
+                      <Link
+                        key={service.name}
+                        href={`/services#${service.name.toLowerCase().replace(/\s+/g, '-')}`}
+                        className="flex items-center gap-2 p-2 rounded-lg hover:bg-[var(--primary)/10] transition-all duration-200 group"
+                      >
+                        <div className="bg-[var(--primary)/10] p-1.5 rounded-full group-hover:bg-[var(--primary)] group-hover:text-white transition-colors">
+                          {service.icon}
+                        </div>
+                        <span className="text-sm font-medium group-hover:text-[var(--primary)]">{service.name}</span>
+                      </Link>
+                    ))}
+                  </div>
+                </div>
+              ))}
+            </div>
+            
+            {/* View All Services Button */}
+            <div className="mt-4 pt-3 border-t border-[var(--secondary)] text-center">
+              <Link 
+                href="/services" 
+                className="inline-flex items-center gap-2 bg-[var(--primary)] text-white px-4 py-2 rounded-full text-sm font-medium hover:bg-[var(--primary)]/90 transition-colors"
+              >
+                View All Services
+                <ChevronDownIcon className="w-3 h-3 rotate-90" />
+              </Link>
+            </div>
+          </div>
+        </div>
+      )}
     </header>
   );
 }
