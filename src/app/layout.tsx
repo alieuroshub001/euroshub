@@ -33,8 +33,8 @@ export default function RootLayout({
       >
         {children}
         <Chatbot />
-        <SpeedInsights /> {/* Add this line */}
-                <SpaceBackground />
+        <SpeedInsights /> 
+        <SpaceBackground />
       </body>
     </html>
   );
