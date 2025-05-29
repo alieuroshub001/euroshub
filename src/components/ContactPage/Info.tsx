@@ -7,9 +7,9 @@ const contactInfo = [
   {
     icon: <Mail className="h-6 w-6" />,
     title: 'Email Us',
-    details: 'contact@euroshub.com',
+    details: 'hello@euroshub.com',
     description: 'For general inquiries',
-    link: 'mailto:contact@euroshub.com'
+    link: 'mailto:hello@euroshub.com'
   },
   {
     icon: <Phone className="h-6 w-6" />,

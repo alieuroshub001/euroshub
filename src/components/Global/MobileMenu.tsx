@@ -1,23 +1,16 @@
 'use client';
 
-import { Menu, X } from 'lucide-react';
+import { HeadsetIcon, ClipboardListIcon, KeyboardIcon, DatabaseIcon, PhoneOutgoingIcon, CodeIcon, SmartphoneIcon, GlobeIcon, CpuIcon, CloudIcon, SunIcon, MoonIcon } from 'lucide-react';
 import Image from 'next/image';
 import Link from 'next/link';
 import { useEffect, useState } from 'react';
-import {
-  HeadsetIcon,
-  ClipboardListIcon,
-  KeyboardIcon,
-  DatabaseIcon,
-  PhoneOutgoingIcon,
-  CodeIcon,
-  SmartphoneIcon,
-  GlobeIcon,
-  CpuIcon,
-  CloudIcon
-} from 'lucide-react';
 
-export default function MobileMenu() {
+interface MobileMenuProps {
+  darkMode: boolean;
+  toggleDarkMode: () => void;
+}
+
+export default function MobileMenu({ darkMode, toggleDarkMode }: MobileMenuProps) {
   const [isOpen, setIsOpen] = useState(false);
   const [servicesOpen, setServicesOpen] = useState(false);
   const [activeServiceTab, setActiveServiceTab] = useState<'business' | 'tech'>('business');
@@ -82,13 +75,15 @@ export default function MobileMenu() {
 
   return (
     <div>
-      {/* Hamburger Button */}
+      {/* Animated Hamburger Button */}
       <button
         onClick={() => setIsOpen(true)}
-        className="text-[var(--foreground)] p-2 rounded-lg hover:bg-[var(--secondary)] transition-colors"
+        className="relative w-8 h-8 flex flex-col items-center justify-center gap-1.5 p-1 rounded-lg hover:bg-[var(--secondary)] transition-colors"
         aria-label="Open Mobile Menu"
       >
-        <Menu className="w-6 h-6" />
+        <span className={`block w-6 h-0.5 bg-[var(--foreground)] transition-all duration-300 ${isOpen ? 'rotate-45 translate-y-1.5' : ''}`}></span>
+        <span className={`block w-6 h-0.5 bg-[var(--foreground)] transition-all duration-300 ${isOpen ? 'opacity-0' : 'opacity-100'}`}></span>
+        <span className={`block w-6 h-0.5 bg-[var(--foreground)] transition-all duration-300 ${isOpen ? '-rotate-45 -translate-y-1.5' : ''}`}></span>
       </button>
 
       {/* Mobile Menu */}
@@ -112,14 +107,17 @@ export default function MobileMenu() {
           </Link>
         </div>
 
+        {/* Animated Close Button */}
         <button
           onClick={() => setIsOpen(false)}
-          className="absolute top-4 right-4 text-[var(--foreground)] p-2 rounded-full hover:bg-[var(--secondary)] transition-colors"
+          className="absolute top-4 right-4 w-10 h-10 flex flex-col items-center justify-center gap-1.5 p-1 rounded-full hover:bg-[var(--secondary)] transition-colors"
           aria-label="Close Menu"
         >
-          <X className="h-6 w-6" />
+          <span className={`block w-6 h-0.5 bg-[var(--foreground)] transition-all duration-300 rotate-45 translate-y-1.5`}></span>
+          <span className={`block w-6 h-0.5 bg-[var(--foreground)] transition-all duration-300 -rotate-45 -translate-y-1.5`}></span>
         </button>
 
+        {/* Rest of the mobile menu content remains the same */}
         <ul className="flex flex-col items-center w-full max-w-sm px-8 mt-6">
           <li className="w-full py-3 border-b border-[var(--secondary)] text-center">
             <Link 
@@ -198,8 +196,31 @@ export default function MobileMenu() {
           </li>
         </ul>
 
+        {/* Theme Toggle */}
+        <div className="flex items-center justify-center w-full mt-6 mb-4">
+          <button
+            onClick={toggleDarkMode}
+            className="flex items-center gap-2 p-2 rounded-full border border-[var(--primary)/20] hover:bg-[var(--primary)/10] transition-all duration-300"
+            aria-label="Toggle Dark Mode"
+          >
+            <SunIcon className={`w-5 h-5 transition-all duration-300 ${darkMode ? 'text-gray-400' : 'text-yellow-500'}`} />
+            <div className={`w-8 h-4 rounded-full border flex items-center px-1 transition-colors ${
+              darkMode ? 'bg-[var(--foreground)]' : 'bg-[var(--secondary)]'
+            }`}>
+              <div
+                className={`w-3 h-3 rounded-full transition-transform duration-300 ${
+                  darkMode
+                    ? 'translate-x-4 bg-[var(--background)]'
+                    : 'bg-[var(--foreground)]'
+                }`}
+              />
+            </div>
+            <MoonIcon className={`w-5 h-5 transition-all duration-300 ${darkMode ? 'text-blue-400' : 'text-gray-400'}`} />
+          </button>
+        </div>
+
         {/* CTA Buttons */}
-        <div className="flex flex-col items-center gap-4 w-full max-w-sm px-8 mt-8">
+        <div className="flex flex-col items-center gap-4 w-full max-w-sm px-8 mt-4">
           <Link 
             href="/career" 
             className="w-full"

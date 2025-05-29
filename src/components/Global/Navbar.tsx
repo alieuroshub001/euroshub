@@ -11,18 +11,15 @@ import {
   DatabaseIcon,
   PhoneOutgoingIcon,
   LayoutDashboardIcon,
-  // Removed unused icons:
-  // HardDriveIcon,
-  // SearchIcon,
-  // BarChart2Icon,
-  // ServerIcon,
   CodeIcon,
   SmartphoneIcon,
   GlobeIcon,
   CpuIcon,
   CloudIcon,
   ChevronDownIcon,
-  ChevronUpIcon
+  ChevronUpIcon,
+  SunIcon,
+  MoonIcon
 } from 'lucide-react';
 
 export default function Navbar() {
@@ -41,10 +38,6 @@ export default function Navbar() {
         { name: 'Data Extraction/ETL', icon: <DatabaseIcon className="w-4 h-4" /> },
         { name: 'Lead Generation', icon: <PhoneOutgoingIcon className="w-4 h-4" /> },
         { name: 'ERP/CRM Software', icon: <LayoutDashboardIcon className="w-4 h-4" /> },
-     //   { name: 'Data Mining', icon: <HardDriveIcon className="w-4 h-4" /> },
-     //   { name: 'Market Research', icon: <SearchIcon className="w-4 h-4" /> },
-     //   { name: 'Data Analysis', icon: <BarChart2Icon className="w-4 h-4" /> },
-     //   { name: 'Database Management', icon: <ServerIcon className="w-4 h-4" /> }
       ]
     },
     { 
@@ -103,14 +96,20 @@ export default function Navbar() {
     return () => window.removeEventListener('resize', handleResize);
   }, []);
 
+  const toggleServices = () => {
+    setServicesOpen(!servicesOpen);
+  };
+
   return (
     <header className={`w-full text-[var(--foreground)] sticky top-0 z-50 transition-all duration-300 ${
-      isScrolled 
-        ? 'backdrop-blur-md bg-[var(--background)/80]' 
-        : 'bg-transparent'
-    }`}>
-      <nav className="relative flex items-center justify-between px-6 py-4 w-full">
-        {/* Left: Logo and Theme Toggle */}
+  isScrolled && !showMobileMenu // Only apply blur when not in mobile view
+    ? 'backdrop-blur-md bg-[var(--background)/80]' 
+    : isScrolled 
+      ? 'bg-[var(--background)]' // Solid background for mobile when scrolled
+      : 'bg-transparent'
+}`}>
+      <nav className="relative flex items-center justify-between px-6 py-2 w-full">
+        {/* Left: Logo with Hover Animation and Theme Toggle */}
         <div className="nav-left flex items-center gap-6">
           <Link href="/" className="flex items-center gap-1">
             <Image
@@ -123,22 +122,28 @@ export default function Navbar() {
             <span className="text-xl font-bold tracking-tight">EurosHub</span>
           </Link>
 
-          {/* Theme Toggle Button */}
-          <button
-            className={`w-10 h-5 rounded-full border flex items-center px-0.5 transition-colors ml-3 ${
-              darkMode ? 'bg-[var(--foreground)]' : 'bg-[var(--secondary)]'
-            }`}
-            onClick={toggleDarkMode}
-            aria-label="Toggle Dark Mode"
-          >
-            <div
-              className={`w-4 h-4 rounded-full transition-transform duration-300 ${
-                darkMode
-                  ? 'translate-x-5 bg-[var(--background)]'
-                  : 'bg-[var(--foreground)]'
-              }`}
-            />
-          </button>
+          {/* Theme Toggle Button - Only shown in desktop view */}
+          {!showMobileMenu && (
+            <button
+              className="flex items-center gap-2 p-2 rounded-full border border-[var(--primary)/20] hover:bg-[var(--primary)/10] transition-all duration-300 hover:scale-105"
+              onClick={toggleDarkMode}
+              aria-label="Toggle Dark Mode"
+            >
+              <SunIcon className={`w-4 h-4 transition-all duration-300 ${darkMode ? 'text-gray-400' : 'text-yellow-500'}`} />
+              <div className={`w-6 h-3 rounded-full border flex items-center px-0.5 transition-colors ${
+                darkMode ? 'bg-[var(--foreground)]' : 'bg-[var(--secondary)]'
+              }`}>
+                <div
+                  className={`w-2 h-2 rounded-full transition-transform duration-300 ${
+                    darkMode
+                      ? 'translate-x-3 bg-[var(--background)]'
+                      : 'bg-[var(--foreground)]'
+                  }`}
+                />
+              </div>
+              <MoonIcon className={`w-4 h-4 transition-all duration-300 ${darkMode ? 'text-blue-400' : 'text-gray-400'}`} />
+            </button>
+          )}
         </div>
 
         {/* Navigation and Actions */}
@@ -163,9 +168,7 @@ export default function Navbar() {
                   className="flex items-center px-3 py-2 rounded-lg font-medium cursor-pointer transition-all duration-300
                     hover:bg-[var(--primary)/10] hover:text-[var(--primary)] 
                     hover:shadow-[0_4px_12px_rgba(0,0,0,0.1)]"
-                  onClick={() => setServicesOpen(!servicesOpen)}
-                  onMouseEnter={() => setServicesOpen(true)}
-                  onMouseLeave={() => setServicesOpen(false)}
+                  onClick={toggleServices}
                 >
                   Services
                   {servicesOpen ? (
@@ -206,7 +209,7 @@ export default function Navbar() {
           </div>
 
           {/* Hamburger Menu */}
-          {showMobileMenu && <MobileMenu />}
+          {showMobileMenu && <MobileMenu darkMode={darkMode} toggleDarkMode={toggleDarkMode} />}
         </div>
       </nav>
 
@@ -214,8 +217,6 @@ export default function Navbar() {
       {servicesOpen && (
         <div 
           className="absolute left-0 right-0 top-full w-full bg-[var(--background)] border-t border-[var(--secondary)] shadow-xl z-40"
-          onMouseEnter={() => setServicesOpen(true)}
-          onMouseLeave={() => setServicesOpen(false)}
         >
           {/* Match navbar's exact padding and layout */}
           <div className="px-6 py-4">

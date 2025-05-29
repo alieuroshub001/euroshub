@@ -2,12 +2,11 @@
 'use client';
 
 import { useEffect, useRef } from 'react';
+import { SpaceMovement, SpaceElement } from './spacemovement';
 
 export default function SpaceBackground() {
   const containerRef = useRef<HTMLDivElement>(null);
-  const animationRef = useRef<number | null>(null);
-  const starsRef = useRef<Array<{ element: HTMLElement; speed: number; direction: { x: number; y: number } }>>([]);
-  const lastTimeRef = useRef<number>(0);
+  const movementRef = useRef<SpaceMovement | null>(null);
 
   useEffect(() => {
     if (!containerRef.current) return;
@@ -20,7 +19,10 @@ export default function SpaceBackground() {
 
     // Clear existing elements
     container.innerHTML = '';
-    starsRef.current = [];
+    
+    // Initialize movement system
+    movementRef.current = new SpaceMovement(container);
+    const movableElements: SpaceElement[] = [];
 
     // Create small moving stars
     for (let i = 0; i < starsCount; i++) {
@@ -47,7 +49,7 @@ export default function SpaceBackground() {
       star.style.opacity = `${opacity}`;
       
       container.appendChild(star);
-      starsRef.current.push({ element: star, speed, direction });
+      movableElements.push({ element: star, speed, direction });
     }
 
     // Create larger twinkling stars
@@ -77,7 +79,7 @@ export default function SpaceBackground() {
       star.style.animation = `pulseStar ${pulseSpeed}s ease-in-out infinite`;
       
       container.appendChild(star);
-      starsRef.current.push({ element: star, speed, direction });
+      movableElements.push({ element: star, speed, direction });
     }
 
     // Create shooting stars
@@ -106,27 +108,10 @@ export default function SpaceBackground() {
       star.style.transform = `rotate(${angle}deg)`;
       star.style.opacity = '0';
       
-      // Shooting animation
-      const shoot = () => {
-        star.style.transition = 'none';
-        star.style.opacity = '0';
-        star.style.left = `${Math.random() * 100}%`;
-        star.style.top = `${Math.random() * 100}%`;
-        
-        setTimeout(() => {
-          star.style.transition = `opacity 0.5s ease-out, transform ${speed}s linear`;
-          star.style.opacity = '1';
-          star.style.transform = `translateX(${500 * direction.x}px) translateY(${500 * direction.y}px) rotate(${angle}deg)`;
-          
-          setTimeout(() => {
-            star.style.opacity = '0';
-            setTimeout(shoot, Math.random() * 10000 + 5000);
-          }, speed * 1000);
-        }, 50);
-      };
-      
       container.appendChild(star);
-      shoot();
+      
+      // Use the movement system's shooting star method
+      movementRef.current.createShootingStar(star, speed, direction);
     }
 
     // Create cosmic dust clouds
@@ -154,45 +139,19 @@ export default function SpaceBackground() {
       cloud.style.opacity = `${opacity}`;
       
       container.appendChild(cloud);
-      starsRef.current.push({ element: cloud, speed, direction });
+      movableElements.push({ element: cloud, speed, direction });
     }
 
-    // Animation loop
-    const animate = (time: number) => {
-      if (!lastTimeRef.current) lastTimeRef.current = time;
-      const deltaTime = time - lastTimeRef.current;
-      lastTimeRef.current = time;
-
-      starsRef.current.forEach((star) => {
-        const rect = star.element.getBoundingClientRect();
-        const containerRect = container.getBoundingClientRect();
-        
-        // Calculate current position in percentages
-        let x = (rect.left - containerRect.left) / containerRect.width * 100;
-        let y = (rect.top - containerRect.top) / containerRect.height * 100;
-        
-        // Update position based on direction and speed
-        x += star.direction.x * star.speed * (deltaTime / 16);
-        y += star.direction.y * star.speed * (deltaTime / 16);
-        
-        // Wrap around when going off screen
-        if (x > 100) x = -5;
-        if (x < -5) x = 100;
-        if (y > 100) y = -5;
-        if (y < -5) y = 100;
-        
-        star.element.style.left = `${x}%`;
-        star.element.style.top = `${y}%`;
-      });
-
-      animationRef.current = requestAnimationFrame(animate);
-    };
-
-    animationRef.current = requestAnimationFrame(animate);
+    // Add all movable elements to the movement system
+    movementRef.current.addElements(movableElements);
+    
+    // Start the animation
+    movementRef.current.start();
 
     return () => {
-      if (animationRef.current) {
-        cancelAnimationFrame(animationRef.current);
+      if (movementRef.current) {
+        movementRef.current.stop();
+        movementRef.current = null;
       }
     };
   }, []);

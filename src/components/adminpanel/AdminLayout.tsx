@@ -1,6 +1,6 @@
 'use client';
 
-import { Briefcase, FileText, Home, LogOut } from 'lucide-react';
+import { Briefcase, FileText, Home, Settings, LogOut } from 'lucide-react';
 import Link from 'next/link';
 import { useRouter } from 'next/navigation';
 import { useEffect, useState } from 'react';
@@ -56,6 +56,15 @@ export default function AdminLayout({ children }: { children: React.ReactNode })
               <FileText className="w-5 h-5 mr-3" />
               Applications
             </Link>
+
+             <Link
+              href="/admin/settings"
+              className="flex items-center p-3 rounded-lg hover:bg-[var(--secondary)]/20 text-[var(--foreground)] transition-colors"
+            >
+              <Settings className="w-5 h-5 mr-3" />
+              Settings
+            </Link>
+
           </nav>
 
           <button
