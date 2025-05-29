@@ -1,5 +1,5 @@
 "use client";
-import React, { useRef, useEffect, useState } from 'react';
+import React, { useRef, useEffect, useState, useCallback, useMemo } from 'react';
 
 interface MarqueeProps {
   direction: 'left' | 'right';
@@ -8,7 +8,7 @@ interface MarqueeProps {
   children: React.ReactNode;
 }
 
-const Marquee: React.FC<MarqueeProps> = ({
+const Marquee: React.FC<MarqueeProps> = React.memo(({
   children,
   direction = 'left',
   speed = 25,
@@ -17,72 +17,89 @@ const Marquee: React.FC<MarqueeProps> = ({
   const containerRef = useRef<HTMLDivElement>(null);
   const scrollerRef = useRef<HTMLDivElement>(null);
   const [isHovered, setIsHovered] = useState(false);
+  const resizeObserverRef = useRef<ResizeObserver | null>(null);
+
+  // Memoize animation styles
+  const animationName = useMemo(() => `marquee-${direction}`, [direction]);
+  
+  const updateAnimationDuration = useCallback(() => {
+    if (!scrollerRef.current) return;
+    
+    const scrollerWidth = scrollerRef.current.offsetWidth / 3;
+    const duration = scrollerWidth / speed;
+    
+    scrollerRef.current.style.animationDuration = `${duration}s`;
+  }, [speed]);
 
   useEffect(() => {
     if (!scrollerRef.current || !containerRef.current) return;
     
-    // Clone the content multiple times (3 copies total) for seamless looping
+    // Use DocumentFragment for better performance
+    const fragment = document.createDocumentFragment();
     const content = Array.from(scrollerRef.current.children);
+    
+    // Clone content twice
     for (let i = 0; i < 2; i++) {
       content.forEach(item => {
-        const clone = item.cloneNode(true);
-        scrollerRef.current?.appendChild(clone);
+        const clone = item.cloneNode(true) as Element;
+        fragment.appendChild(clone);
       });
     }
-
-    const updateAnimationDuration = () => {
-      if (!scrollerRef.current) return;
-      
-      // Calculate duration based on one set of content (original + 2 clones = 3 sets)
-      const scrollerWidth = scrollerRef.current.offsetWidth / 3;
-      const duration = scrollerWidth / speed;
-      
-      scrollerRef.current.style.animationDuration = `${duration}s`;
-    };
-
+    
+    scrollerRef.current.appendChild(fragment);
     updateAnimationDuration();
-    window.addEventListener('resize', updateAnimationDuration);
+
+    // Use ResizeObserver for better performance than resize event
+    resizeObserverRef.current = new ResizeObserver(updateAnimationDuration);
+    resizeObserverRef.current.observe(containerRef.current);
 
     return () => {
-      window.removeEventListener('resize', updateAnimationDuration);
+      if (resizeObserverRef.current) {
+        resizeObserverRef.current.disconnect();
+      }
     };
-  }, [speed]);
+  }, [updateAnimationDuration]);
 
-  const marqueeStyles: React.CSSProperties = {
+  // Memoize styles to prevent recalculation
+  const marqueeStyles = useMemo((): React.CSSProperties => ({
     display: 'inline-flex',
     gap: '1rem',
     flexWrap: 'nowrap',
     whiteSpace: 'nowrap',
     willChange: 'transform',
-    animation: `marquee-${direction} linear infinite`,
+    animation: `${animationName} linear infinite`,
     animationPlayState: isHovered ? 'paused' : 'running',
-  };
+  }), [animationName, isHovered]);
 
-  const containerStyles: React.CSSProperties = {
+  const containerStyles = useMemo((): React.CSSProperties => ({
     overflow: 'hidden',
     position: 'relative',
-  };
+  }), []);
+
+  // Memoize keyframes to prevent recreation
+  const keyframes = useMemo(() => `
+    @keyframes marquee-left {
+      0% { transform: translateX(0); }
+      100% { transform: translateX(-33.333%); }
+    }
+    @keyframes marquee-right {
+      0% { transform: translateX(-33.333%); }
+      100% { transform: translateX(0); }
+    }
+  `, []);
+
+  const handleMouseEnter = useCallback(() => setIsHovered(true), []);
+  const handleMouseLeave = useCallback(() => setIsHovered(false), []);
 
   return (
     <div 
       ref={containerRef}
       style={containerStyles}
       className={className}
-      onMouseEnter={() => setIsHovered(true)}
-      onMouseLeave={() => setIsHovered(false)}
+      onMouseEnter={handleMouseEnter}
+      onMouseLeave={handleMouseLeave}
     >
-      <style>
-        {`
-          @keyframes marquee-left {
-            0% { transform: translateX(0); }
-            100% { transform: translateX(-33.333%); }
-          }
-          @keyframes marquee-right {
-            0% { transform: translateX(-33.333%); }
-            100% { transform: translateX(0); }
-          }
-        `}
-      </style>
+      <style>{keyframes}</style>
       <div
         ref={scrollerRef}
         style={marqueeStyles}
@@ -91,6 +108,8 @@ const Marquee: React.FC<MarqueeProps> = ({
       </div>
     </div>
   );
-};
+});
+
+Marquee.displayName = 'Marquee';
 
 export default Marquee;
