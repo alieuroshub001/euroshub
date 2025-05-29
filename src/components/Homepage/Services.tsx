@@ -1,13 +1,12 @@
 'use client';
-import { JSX, useState, useEffect, useRef, useCallback, useMemo } from 'react';
-import Image from 'next/image';
+import { JSX, useState, useEffect, useRef, useCallback } from 'react';
+import Image from 'next/image'; // Added import
 import { 
   Headphones, ClipboardList, Keyboard, Database,
   PhoneOutgoing, LayoutDashboard, HardDrive, Search,
   BarChart2, Server, Code, Smartphone, Globe, Cpu, Cloud
 } from 'lucide-react';
 import { motion, useMotionValue } from 'framer-motion';
-import React from 'react';
 
 interface Service {
   id: number;
@@ -19,7 +18,6 @@ interface Service {
   image: string;
 }
 
-// Move services data outside component to prevent recreation
 const allServices: Service[] = [
   {
     id: 1,
@@ -158,62 +156,16 @@ const allServices: Service[] = [
   }
 ];
 
-// Memoized service card component
-const ServiceCard = React.memo(({ service, index }: { service: Service, index: number }) => (
-  <motion.div
-    key={`${service.id}-${index}`}
-    className="flex-shrink-0 w-[300px] h-[400px] cursor-pointer relative"
-    whileHover={{ scale: 1.03 }}
-    transition={{ type: "spring", stiffness: 400, damping: 30 }}
-  >
-    <div className="h-full bg-[var(--card-bg)] rounded-xl overflow-hidden shadow-sm transition-all duration-300 hover:shadow-xl hover:bg-[var(--card-bg)]/80 flex flex-col relative">
-      <div className="absolute inset-0 z-0">
-        <Image
-          src={service.image}
-          alt={service.title}
-          fill
-          sizes="300px"
-          className="w-full h-full object-cover"
-          quality={75}
-          loading="lazy"
-        />
-        <div className="absolute inset-0 bg-gradient-to-t from-black/70 via-black/40 to-transparent"></div>
-      </div>
-      
-      <div className="mt-auto p-6 flex flex-col relative z-10">
-        <div className="flex items-center mb-4">
-          <motion.div 
-            className="bg-[var(--primary)]/10 p-3 rounded-full mr-3"
-            whileHover={{ scale: 1.1, rotate: 5 }}
-            transition={{ type: "spring", stiffness: 400, damping: 10 }}
-          >
-            {service.icon}
-          </motion.div>
-          <h3 className="text-lg font-semibold text-white">{service.title}</h3>
-        </div>
-        <p className="text-sm text-white opacity-90 leading-relaxed">
-          {service.description}
-        </p>
-      </div>
-    </div>
-  </motion.div>
-));
-
-ServiceCard.displayName = 'ServiceCard';
-
 export default function Services() {
   const [activeTab, setActiveTab] = useState<'business' | 'tech'>('business');
   const containerRef = useRef<HTMLDivElement>(null);
   const [isHovered, setIsHovered] = useState(false);
   const [isDragging, setIsDragging] = useState(false);
   const x = useMotionValue(0);
-  const animationFrameRef = useRef<number | null>(null);
+  const animationRef = useRef<number | null>(null);
   
-  // Memoize duplicated services for infinite marquee effect
-  const duplicatedServices = useMemo(() => {
-    const filtered = allServices.filter(service => service.category === activeTab);
-    return [...filtered, ...filtered, ...filtered];
-  }, [activeTab]);
+  const filteredServices = allServices.filter(service => service.category === activeTab);
+  const duplicatedServices = [...filteredServices, ...filteredServices, ...filteredServices];
 
   const moveMarquee = useCallback(() => {
     if (isHovered || isDragging || !containerRef.current) return;
@@ -227,15 +179,15 @@ export default function Services() {
       x.set(currentX - 1);
     }
     
-    animationFrameRef.current = requestAnimationFrame(moveMarquee);
+    animationRef.current = requestAnimationFrame(moveMarquee);
   }, [isHovered, isDragging, x]);
 
   useEffect(() => {
-    animationFrameRef.current = requestAnimationFrame(moveMarquee);
+    animationRef.current = requestAnimationFrame(moveMarquee);
     
     return () => {
-      if (animationFrameRef.current) {
-        cancelAnimationFrame(animationFrameRef.current);
+      if (animationRef.current) {
+        cancelAnimationFrame(animationRef.current);
       }
     };
   }, [moveMarquee]);
@@ -243,16 +195,6 @@ export default function Services() {
   useEffect(() => {
     x.set(0);
   }, [activeTab, x]);
-
-  // Memoize event handlers
-  const handleMouseEnter = useCallback(() => setIsHovered(true), []);
-  const handleMouseLeave = useCallback(() => setIsHovered(false), []);
-  const handleDragStart = useCallback(() => setIsDragging(true), []);
-  const handleDragEnd = useCallback(() => setIsDragging(false), []);
-
-  const handleTabChange = useCallback((tab: 'business' | 'tech') => {
-    setActiveTab(tab);
-  }, []);
 
   return (
     <section className="py-38 text-[var(--foreground)]">
@@ -279,7 +221,7 @@ export default function Services() {
         <div className="flex justify-center mb-12">
           <div className="inline-flex bg-[var(--card-bg)]/30 rounded-lg p-1">
             <button
-              onClick={() => handleTabChange('business')}
+              onClick={() => setActiveTab('business')}
               className={`px-6 py-3 rounded-lg font-medium transition-all duration-200 ${
                 activeTab === 'business'
                   ? 'bg-[var(--primary)] text-white shadow-md'
@@ -289,7 +231,7 @@ export default function Services() {
               Business Services
             </button>
             <button
-              onClick={() => handleTabChange('tech')}
+              onClick={() => setActiveTab('tech')}
               className={`px-6 py-3 rounded-lg font-medium transition-all duration-200 ${
                 activeTab === 'tech'
                   ? 'bg-[var(--primary)] text-white shadow-md'
@@ -302,23 +244,60 @@ export default function Services() {
         </div>
       </div>
 
-      <div 
+     <div 
         ref={containerRef}
         className="relative w-full overflow-hidden py-8"
-        onMouseEnter={handleMouseEnter}
-        onMouseLeave={handleMouseLeave}
+        onMouseEnter={() => setIsHovered(true)}
+        onMouseLeave={() => setIsHovered(false)}
       >
         <motion.div
           className="flex gap-6 w-max pl-6"
           style={{ x }}
           drag="x"
           dragConstraints={containerRef}
-          onDragStart={handleDragStart}
-          onDragEnd={handleDragEnd}
+          onDragStart={() => setIsDragging(true)}
+          onDragEnd={() => setIsDragging(false)}
           dragElastic={0.1}
         >
           {duplicatedServices.map((service, index) => (
-            <ServiceCard key={`${service.id}-${index}`} service={service} index={index} />
+ // In the duplicatedServices map section, replace the card structure with this:
+<motion.div
+  key={`${service.id}-${index}`}
+  className="flex-shrink-0 w-[300px] h-[400px] cursor-pointer relative" // Added relative
+  whileHover={{ scale: 1.03 }}
+  transition={{ type: "spring", stiffness: 400, damping: 30 }}
+>
+  <div className="h-full bg-[var(--card-bg)] rounded-xl overflow-hidden shadow-sm transition-all duration-300 hover:shadow-xl hover:bg-[var(--card-bg)]/80 flex flex-col relative">
+    {/* Background image covering whole card */}
+     <div className="absolute inset-0 z-0">
+        <Image
+          src={service.image}
+          alt={service.title}
+          fill
+          className="w-full h-full object-cover"
+          quality={80}
+        />
+        <div className="absolute inset-0 bg-gradient-to-t from-black/70 via-black/40 to-transparent"></div>
+      </div>
+    
+    {/* Content positioned at bottom */}
+    <div className="mt-auto p-6 flex flex-col relative z-10"> {/* Changed to mt-auto */}
+      <div className="flex items-center mb-4">
+        <motion.div 
+          className="bg-[var(--primary)]/10 p-3 rounded-full mr-3"
+          whileHover={{ scale: 1.1, rotate: 5 }}
+          transition={{ type: "spring", stiffness: 400, damping: 10 }}
+        >
+          {service.icon}
+        </motion.div>
+        <h3 className="text-lg font-semibold text-white">{service.title}</h3>
+      </div>
+      <p className="text-sm text-white opacity-90 leading-relaxed">
+        {service.description}
+      </p>
+    </div>
+  </div>
+</motion.div>
           ))}
         </motion.div>
       </div>
