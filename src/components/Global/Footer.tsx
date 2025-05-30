@@ -1,151 +1,75 @@
 'use client';
-
-import Link from 'next/link';
+import React from 'react';
 import Image from 'next/image';
+import Link from 'next/link';
+import { FaGithub, FaTwitter, FaLinkedin, FaInstagram } from 'react-icons/fa';
+import CosmicConnectionText from './AnimatedText';
 
-export default function Footer() {
+const Footer: React.FC = () => {
   return (
-    <footer className="text-[var(--foreground)] border-t border-[var(--secondary)] pt-12 pb-6 px-4 sm:px-6 md:px-12 lg:px-16">
-      <div className="max-w-7xl mx-auto grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-8 lg:gap-10">
-        {/* Logo and Description */}
-        <div className="md:col-span-1">
-          <Link href="/" className="flex items-center gap-2 mb-4 group">
+    <footer className="w-full bg-[var(--background)] text-[var(--foreground)] font-sans border-t border-white/20">
+      <div className="flex flex-col md:flex-row">
+        {/* Logo and description section */}
+        <div className="ml-5 md:w-1/3 p-4 md:p-8 flex flex-col justify-center">
+          <div className="flex items-center gap-2">
             <Image
               src="/assets/images/logo.png"
               alt="EurosHub Logo"
-              width={80}
+              width={140}
               height={40}
-              className="object-contain transition-transform duration-300 group-hover:scale-105"
+              className="object-contain"
             />
-            <span className="text-xl font-bold">EurosHub</span>
-          </Link>
-          <p className="text-sm opacity-80 leading-relaxed">
-            Empowering businesses worldwide with innovative, scalable, and future-ready tech solutions that drive growth and digital transformation.
+          </div>
+          <p className="ml-5 mt-2 md:mt-4 text-base md:text-xl leading-snug max-w-md text-[var(--muted-foreground)]">
+            Your trusted partner for innovative business and technology solutions.
           </p>
-          
-          {/* Social Icons */}
-          <div className="flex gap-5 mt-5">
-            {[
-              { name: 'linkedin', label: 'LinkedIn' },
-              { name: 'twitter', label: 'Twitter' },
-              { name: 'facebook', label: 'Facebook' },
-              { name: 'instagram', label: 'Instagram' }
-            ].map((social) => (
-              <a 
-                key={social.name} 
-                href="#" 
-                aria-label={social.label}
-                className="text-[var(--foreground)] hover:text-[var(--primary)] transition-all duration-300 hover:-translate-y-1"
-              >
-                <i className={`fab fa-${social.name} text-lg`}></i>
-              </a>
-            ))}
-          </div>
         </div>
 
-        {/* Services Links */}
-        <div>
-          <h4 className="text-md font-semibold mb-4 relative inline-block">
-            Services
-            <span className="absolute left-0 bottom-0 w-10 h-0.5 bg-[var(--primary)]"></span>
-          </h4>
-          <ul className="space-y-2.5 text-sm">
-            {[
-              'Custom Software Development',
-              'UI/UX Design',
-              'Digital Transformation',
-              'Tech Consulting',
-              'Cloud Solutions',
-              'Mobile App Development'
-            ].map((item) => (
-              <li key={item} className="opacity-90 hover:opacity-100">
-                <Link 
-                  href="#" 
-                  className="hover:text-[var(--primary)] transition-colors group flex items-center"
-                >
-                  <span className="transform transition-transform duration-300 group-hover:translate-x-1">→</span>
-                  <span className="ml-2">{item}</span>
-                </Link>
-              </li>
-            ))}
-          </ul>
+        {/* Social icons section */}
+        <div className="md:w-1/8 mx-auto md:ml-5 border-t md:border-t-0 border-white/20 flex flex-row md:flex-col text-center">
+          {[
+            { icon: FaGithub, label: 'Github' },
+            { icon: FaTwitter, label: 'Twitter' },
+            { icon: FaLinkedin, label: 'LinkedIn' },
+            { icon: FaInstagram, label: 'Instagram' },
+          ].map(({ icon: Icon, label }, index, arr) => (
+            <a
+              key={label}
+              href="#"
+              className={`hover:text-[var(--primary)] transition-colors text-xs uppercase tracking-wide flex items-center justify-center px-4 py-4 md:px-6 md:py-6 border-l border-r border-white/20 ${
+                index !== arr.length - 1 ? 'border-b md:border-b' : ''
+              }`}
+            >
+              <Icon className="w-4 h-4 md:w-5 md:h-5 mr-2" /> 
+              <span className="hidden md:inline">{label}</span>
+            </a>
+          ))}
         </div>
 
-        {/* Company Links */}
-        <div>
-          <h4 className="text-md font-semibold mb-4 relative inline-block">
-            Company
-            <span className="absolute left-0 bottom-0 w-10 h-0.5 bg-[var(--primary)]"></span>
-          </h4>
-          <ul className="space-y-2.5 text-sm">
-            {[
-              'About Us',
-              'Careers',
-              'Case Studies',
-              'Testimonials',
-              'Blog',
-              'Partners'
-            ].map((item) => (
-              <li key={item} className="opacity-90 hover:opacity-100">
-                <Link 
-                  href="#" 
-                  className="hover:text-[var(--primary)] transition-colors group flex items-center"
-                >
-                  <span className="transform transition-transform duration-300 group-hover:translate-x-1">→</span>
-                  <span className="ml-2">{item}</span>
-                </Link>
-              </li>
-            ))}
-          </ul>
-        </div>
-
-        {/* Contact & Newsletter */}
-        <div>
-          <h4 className="text-md font-semibold mb-4 relative inline-block">
-            Contact Us
-            <span className="absolute left-0 bottom-0 w-10 h-0.5 bg-[var(--primary)]"></span>
-          </h4>
-          <ul className="space-y-2.5 text-sm opacity-90 mb-5">
-            <li className="flex items-start">
-              <i className="fas fa-envelope mt-1 mr-3 text-[var(--primary)]"></i>
-              <a href="mailto:contact@euroshub.com" className="hover:text-[var(--primary)] transition-colors">contact@euroshub.com</a>
-            </li>
-            <li className="flex items-start">
-              <i className="fas fa-phone-alt mt-1 mr-3 text-[var(--primary)]"></i>
-              <a href="tel:+923345678900" className="hover:text-[var(--primary)] transition-colors">+92 334 5678900</a>
-            </li>
-            <li className="flex items-start">
-              <i className="fas fa-map-marker-alt mt-1 mr-3 text-[var(--primary)]"></i>
-            <span>Office 509, 5th Floor, Kohistan Tower, Saddar, Rawalpindi</span>
-            </li>
-          </ul>
-          
-          {/* Newsletter Signup */}
-          <div className="mt-5">
-            <h5 className="text-sm font-semibold mb-2">Subscribe to our newsletter</h5>
-            <div className="flex">
-              <input 
-                type="email" 
-                placeholder="Your email" 
-                className="bg-[var(--secondary)] text-[var(--foreground)] rounded-l-full py-2 px-4 text-sm w-full focus:outline-none"
-              />
-              <button className="bg-[var(--primary)] text-white rounded-r-full px-4 text-sm hover:opacity-90 transition-opacity">
-                <i className="fas fa-paper-plane"></i>
-              </button>
-            </div>
-          </div>
+        {/* Let's Connect section */}
+        <div className="md:w-1/2 flex items-center justify-center p-4 md:p-8">
+          <Link href="/contact">
+            <h2 className="cursor-pointer text-2xl md:text-4xl lg:text-5xl">
+              <CosmicConnectionText text="Let's Connect" />
+            </h2>
+          </Link>
         </div>
       </div>
 
-      {/* Bottom line */}
-      <div className="mt-10 pt-5 border-t border-[var(--secondary)] flex flex-col md:flex-row md:justify-between text-sm opacity-70 text-center md:text-left">
-        <div>© {new Date().getFullYear()} EurosHub. All rights reserved.</div>
-        <div className="mt-2 md:mt-0 space-x-3">
-          <Link href="#" className="hover:text-[var(--primary)] transition-colors">Privacy Policy</Link>
-          <Link href="#" className="hover:text-[var(--primary)] transition-colors">Terms of Service</Link>
-          <Link href="#" className="hover:text-[var(--primary)] transition-colors">Cookies</Link>
-        </div>
+      {/* Bottom section */}
+      <div className="flex flex-col md:flex-row justify-between items-center px-4 md:px-10 py-4 md:py-6 text-xs md:text-sm border-t border-white/20">
+        <p className="text-[var(--muted-foreground)] text-center md:text-left">
+          © 2024 | All rights reserved by EurosHub
+        </p>
+        <nav className="flex flex-wrap justify-center gap-2 md:gap-6 mt-2 md:mt-0">
+          <Link href="/about" className="hover:text-[var(--primary)] transition-colors">About</Link>
+          <Link href="/contact" className="hover:text-[var(--primary)] transition-colors">Contact</Link>
+          <Link href="/career" className="hover:text-[var(--primary)] transition-colors">Career</Link>
+          <Link href="/pricing" className="hover:text-[var(--primary)] transition-colors">Pricing</Link>
+        </nav>
       </div>
     </footer>
   );
-}
+};
+
+export default Footer;
