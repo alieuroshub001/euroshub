@@ -36,12 +36,27 @@ body {
   background-color: var(--background);
   color: var(--foreground);
   font-family: system-ui, -apple-system, sans-serif;
-  transition: background-color 0.3s, color 0.3s;
+  transition: background-color 0.2s ease-out, color 0.2s ease-out;
 }
 
-/* Smooth transitions */
-* {
-  transition: background-color 0.3s ease, color 0.3s ease;
+/* Performance optimizations */
+html {
+  scroll-behavior: smooth;
+}
+
+/* Optimized transitions - only apply to specific elements that need them */
+.smooth-transition {
+  transition: background-color 0.2s ease-out, 
+              color 0.2s ease-out, 
+              transform 0.2s ease-out,
+              opacity 0.2s ease-out;
+}
+
+/* Hardware acceleration for animated elements */
+.hw-accelerated {
+  transform: translateZ(0);
+  backface-visibility: hidden;
+  perspective: 1000px;
 }
 
 /* Responsive navbar styles */
@@ -87,14 +102,18 @@ body {
   }
 }
 
-/* Navigation spacing */
+/* Navigation spacing - optimized transitions */
 .nav-item {
   white-space: nowrap;
   padding: 0.5rem 0.75rem;
-  transition: color 0.2s ease;
+  transition: color 0.15s ease-out;
 }
 
-/* Mobile menu styles */
+.nav-item:hover {
+  transition: color 0.1s ease-out;
+}
+
+/* Mobile menu styles - optimized for performance */
 .mobile-menu {
   position: fixed;
   top: 0;
@@ -104,6 +123,7 @@ body {
   background-color: var(--background);
   z-index: 50;
   padding: 1.5rem;
+  transform: translateZ(0); /* Hardware acceleration */
 }
 
 /* Footer responsive grid */
@@ -123,20 +143,25 @@ body {
   display: none;
 }
 
-/* Animation keyframes */
+/* Optimized animation keyframes */
 @keyframes marquee {
-  from { transform: translateX(0); }
-  to { transform: translateX(-50%); }
+  0% { transform: translate3d(0, 0, 0); }
+  100% { transform: translate3d(-50%, 0, 0); }
 }
 
 .animate-marquee {
   animation: marquee 30s linear infinite;
+  will-change: transform;
+  transform: translateZ(0); /* Hardware acceleration */
 }
 
 .animate-marquee-reverse {
   animation: marquee 30s linear infinite reverse;
+  will-change: transform;
+  transform: translateZ(0); /* Hardware acceleration */
 }
-/* Space Background Styles */
+
+/* Optimized Space Background Styles */
 .space-star {
   position: absolute;
   background-color: var(--foreground);
@@ -144,6 +169,7 @@ body {
   opacity: 0.3;
   pointer-events: none;
   will-change: transform;
+  transform: translateZ(0); /* Hardware acceleration */
 }
 
 .space-star-large {
@@ -153,17 +179,23 @@ body {
   opacity: 0.5;
   pointer-events: none;
   will-change: transform, opacity;
+  transform: translateZ(0); /* Hardware acceleration */
 }
 
+/* Optimized pulse animation */
 @keyframes pulseStar {
   0%, 100% {
     opacity: 0.5;
-    transform: scale(1);
+    transform: translate3d(0, 0, 0) scale(1);
   }
   50% {
     opacity: 1;
-    transform: scale(1.2);
+    transform: translate3d(0, 0, 0) scale(1.2);
   }
+}
+
+.pulsing-star {
+  animation: pulseStar 3s ease-in-out infinite;
 }
 
 .shooting-star {
@@ -174,6 +206,7 @@ body {
     rgba(255,255,255,0) 100%);
   pointer-events: none;
   will-change: transform, opacity;
+  transform: translateZ(0); /* Hardware acceleration */
 }
 
 .dust-cloud {
@@ -186,4 +219,54 @@ body {
   pointer-events: none;
   will-change: transform;
   filter: blur(2px);
+  transform: translateZ(0); /* Hardware acceleration */
+}
+
+/* Performance optimizations for smooth scrolling */
+* {
+  box-sizing: border-box;
+}
+
+/* Optimized container queries for better performance */
+@container (min-width: 768px) {
+  .container-responsive {
+    padding: 2rem;
+  }
+}
+
+/* Reduce motion for users who prefer it */
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
+  }
+  
+  .animate-marquee,
+  .animate-marquee-reverse {
+    animation: none;
+  }
+}
+
+/* GPU layer optimization for heavy elements */
+.gpu-layer {
+  transform: translateZ(0);
+  backface-visibility: hidden;
+  perspective: 1000px;
+  -webkit-font-smoothing: antialiased;
+}
+
+/* Optimized focus states */
+.focus-optimized:focus {
+  outline: 2px solid var(--primary);
+  outline-offset: 2px;
+  transition: outline-color 0.1s ease-out;
+}
+
+/* Contain layout shifts */
+.layout-contained {
+  contain: layout style paint;
 }
