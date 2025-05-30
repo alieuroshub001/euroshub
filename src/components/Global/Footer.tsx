@@ -26,7 +26,7 @@ const Footer: React.FC = () => {
         </div>
 
         {/* Social icons section */}
-        <div className="md:w-1/8 mx-auto md:ml-5 border-t md:border-t-0 border-white/20 flex flex-row md:flex-col text-center">
+        <div className="md:w-1/8 mx-auto md:ml-10 border-t md:border-t-0 border-white/20 flex flex-row md:flex-col text-center">
           {[
             { icon: FaGithub, label: 'Github' },
             { icon: FaTwitter, label: 'Twitter' },
@@ -47,7 +47,7 @@ const Footer: React.FC = () => {
         </div>
 
         {/* Let's Connect section */}
-        <div className="md:w-1/2 flex items-center justify-center p-4 md:p-8">
+        <div className="md:w-1/2 mr-50 flex items-center justify-center p-4 md:p-8">
           <Link href="/contact">
             <h2 className="cursor-pointer text-2xl md:text-4xl lg:text-5xl">
               <CosmicConnectionText text="Let's Connect" />
@@ -57,7 +57,7 @@ const Footer: React.FC = () => {
       </div>
 
       {/* Bottom section */}
-      <div className="flex flex-col md:flex-row justify-between items-center px-4 md:px-10 py-4 md:py-6 text-xs md:text-sm border-t border-white/20">
+      <div className="flex flex-col md:flex-row justify-between items-center px-4 md:px-30 py-4 md:py-6 text-xs md:text-sm border-t border-white/20">
         <p className="text-[var(--muted-foreground)] text-center md:text-left">
           © 2024 | All rights reserved by EurosHub
         </p>

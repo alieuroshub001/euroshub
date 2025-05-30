@@ -111,21 +111,22 @@ export default function Navbar() {
       <nav className="relative flex items-center justify-between px-6 py-2 w-full">
         {/* Left: Logo with Hover Animation and Theme Toggle */}
         <div className="nav-left flex items-center gap-6">
-          <Link href="/" className="flex items-center gap-1">
-            <Image
-              src="/assets/images/logo.png"
-              alt="Euroshub Logo"
-              width={75}
-              height={40}
-              className="object-contain"
-            />
-            <span className="text-xl font-bold tracking-tight">EurosHub</span>
-          </Link>
-
+  <Link href="/" className="flex items-center gap-1 group overflow-hidden">
+  <Image
+    src="/assets/images/logo.png"
+    alt="Euroshub Logo"
+    width={75}
+    height={40}
+    className="object-contain"
+  />
+  <span className="text-xl font-bold tracking-tight transition-all duration-300 transform group-hover:translate-x-0 translate-x-[150%]">
+    EurosHub
+  </span>
+</Link>
           {/* Theme Toggle Button - Only shown in desktop view */}
           {!showMobileMenu && (
             <button
-              className="flex items-center gap-2 p-2 rounded-full border border-[var(--primary)/20] hover:bg-[var(--primary)/10] transition-all duration-300 hover:scale-105"
+              className="ml-15 flex items-center gap-3 p-2 rounded-full border border-[var(--primary)/20] hover:bg-[var(--primary)/10] transition-all duration-300 hover:scale-105"
               onClick={toggleDarkMode}
               aria-label="Toggle Dark Mode"
             >

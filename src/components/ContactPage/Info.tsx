@@ -14,9 +14,9 @@ const contactInfo = [
   {
     icon: <Phone className="h-6 w-6" />,
     title: 'Call Us',
-    details: '+92 334 5678900',
+    details: '+92 300 0369622',
     description: 'Mon-Sat, 9am-6pm',
-    link: 'tel:+923345678900'
+    link: 'tel:+923000369622'
   },
   {
     icon: <MapPin className="h-6 w-6" />,

@@ -27,14 +27,14 @@ const CosmicConnectionText: React.FC<{ text: string }> = ({ text }) => {
     
     for (let i = 0; i < 15; i++) {
       // Simple pseudo-random generator using the seed
-      const x = Math.sin(i + seed) * 10000;
+      const x = Math.sin(i + seed) * 8000;
       const rand = x - Math.floor(x);
       
       stars.push({
         width: `${rand * 3 + 1}px`,
         height: `${rand * 3 + 1}px`,
         top: `${rand * 100}%`,
-        left: `${(Math.sin(i * 10 + seed) * 10000 - Math.floor(Math.sin(i * 10 + seed) * 10000)) * 100}%`,
+        left: `${(Math.sin(i * 10 + seed) * 8000 - Math.floor(Math.sin(i * 10 + seed) * 8000)) * 100}%`,
       });
     }
     
@@ -126,7 +126,7 @@ const CosmicConnectionText: React.FC<{ text: string }> = ({ text }) => {
     
     const interval = setInterval(() => {
       startAnimation();
-    }, 10000);
+    }, 8000);
 
     return () => clearInterval(interval);
   }, [startAnimation]); // Added startAnimation as a dependency
