@@ -2,104 +2,76 @@
 
 import { motion, useAnimation } from 'framer-motion';
 import { Aperture, CheckCircle, Clock, Globe, Users } from 'lucide-react';
-import { useEffect, useState } from 'react';
+import { useCallback, useEffect, useRef, useState, memo } from 'react';
 import { useInView } from 'react-intersection-observer';
 
+const ICONS = [CheckCircle, Globe, Clock, Users];
+const TARGETS = [150, 50, 10, 20];
+const LABELS = [
+  'Projects Completed',
+  'Global Clients',
+  'Years Experience',
+  'Team Experts',
+];
+
 const Counter = () => {
-  const [counters, setCounters] = useState([
-    {
+  const [counters, setCounters] = useState(
+    TARGETS.map((target, i) => ({
       value: 0,
-      target: 150,
-      label: 'Projects Completed',
+      target,
+      label: LABELS[i],
       suffix: '+',
-      icon: CheckCircle,
-      color: 'text-[var(--primary)]',
-      bg: 'bg-[var(--primary)]',
-      progress: '0%'
-    },
-    {
-      value: 0,
-      target: 50,
-      label: 'Global Clients',
-      suffix: '+',
-      icon: Globe,
-      color: 'text-[var(--primary)]',
-      bg: 'bg-[var(--primary)]',
-      progress: '0%'
-    },
-    {
-      value: 0,
-      target: 10,
-      label: 'Years Experience',
-      suffix: '+',
-      icon: Clock,
-      color: 'text-[var(--primary)]',
-      bg: 'bg-[var(--primary)]',
-      progress: '0%'
-    },
-    {
-      value: 0,
-      target: 20,
-      label: 'Team Experts',
-      suffix: '+',
-      icon: Users,
-      color: 'text-[var(--primary)]',
-      bg: 'bg-[var(--primary)]',
-      progress: '0%'
-    }
-  ]);
+      icon: ICONS[i],
+      progress: '0%',
+    }))
+  );
 
   const controls = useAnimation();
-  const [ref, inView] = useInView({
-    triggerOnce: true,
-    threshold: 0.1
-  });
+  const [ref, inView] = useInView({ triggerOnce: true, threshold: 0.1 });
+  const rafRef = useRef<number | null>(null);
+
+  const animateCounters = useCallback(() => {
+    const startTime = performance.now();
+    const duration = 2000;
+
+    const step = (timestamp: number) => {
+      const progress = Math.min((timestamp - startTime) / duration, 1);
+
+      setCounters(prev =>
+        prev.map(counter => {
+          const newValue = Math.round(counter.target * progress);
+          return {
+            ...counter,
+            value: newValue,
+            progress: `${Math.min(100, (newValue / counter.target) * 100)}%`,
+          };
+        })
+      );
+
+      if (progress < 1) {
+        rafRef.current = requestAnimationFrame(step);
+      } else {
+        if (rafRef.current) cancelAnimationFrame(rafRef.current);
+      }
+    };
+
+    rafRef.current = requestAnimationFrame(step);
+  }, []);
 
   useEffect(() => {
     if (inView) {
       controls.start('visible');
       animateCounters();
     }
-  }, [inView, controls]);
-
-  const animateCounters = () => {
-    const duration = 2000;
-    const increment = 20;
-
-    counters.forEach((counter, index) => {
-      const steps = duration / increment;
-      const stepValue = counter.target / steps;
-      let currentStep = 0;
-
-      const timer = setInterval(() => {
-        currentStep++;
-        const newValue = Math.min(
-          Math.round(stepValue * currentStep),
-          counter.target
-        );
-        const newProgress = `${Math.min(100, (newValue / counter.target) * 100)}%`;
-
-        setCounters(prev =>
-          prev.map((item, i) =>
-            i === index ? { 
-              ...item, 
-              value: newValue,
-              progress: newProgress
-            } : item
-          )
-        );
-
-        if (currentStep >= steps) {
-          clearInterval(timer);
-        }
-      }, increment);
-    });
-  };
+    return () => {
+      if (rafRef.current) cancelAnimationFrame(rafRef.current);
+    };
+  }, [inView, controls, animateCounters]);
 
   return (
-    <section 
+    <section
       ref={ref}
-      className="relative py-35 text-[var(--foreground)] overflow-hidden" // Removed bg-[var(--secondary)]
+      className="relative py-35 text-[var(--foreground)] overflow-hidden"
     >
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <motion.div
@@ -107,7 +79,7 @@ const Counter = () => {
           animate={controls}
           variants={{
             hidden: { opacity: 0, y: 20 },
-            visible: { opacity: 1, y: 0, transition: { duration: 0.6 } }
+            visible: { opacity: 1, y: 0, transition: { duration: 0.6 } },
           }}
           className="text-center mb-16"
         >
@@ -130,123 +102,93 @@ const Counter = () => {
                 initial={{ opacity: 0, y: 30 }}
                 animate={controls}
                 variants={{
-                  visible: { 
-                    opacity: 1, 
+                  visible: {
+                    opacity: 1,
                     y: 0,
-                    transition: { 
+                    transition: {
                       delay: index * 0.1,
                       type: 'spring',
                       stiffness: 100,
-                      damping: 10
-                    }
-                  }
+                      damping: 10,
+                    },
+                  },
                 }}
-                whileHover={{ 
+                whileHover={{
                   scale: 1.05,
                   zIndex: 10,
                   transition: {
                     type: 'spring',
                     stiffness: 400,
-                    damping: 10
-                  }
+                    damping: 10,
+                  },
                 }}
                 className="bg-[var(--card-bg)] border border-[var(--secondary)]/20 rounded-xl p-6 shadow-sm transition-all duration-300 relative overflow-hidden group"
               >
-                {/* Pulse animation background */}
-                <motion.div 
-                  className="absolute inset-0 bg-[var(--primary)]/5 opacity-0 group-hover:opacity-100"
-                  initial={{ opacity: 0 }}
-                  whileHover={{
-                    opacity: 0.1,
-                    scale: 1.1,
-                    transition: { duration: 0.3 }
-                  }}
-                />
-                
+                <div className="absolute inset-0 bg-[var(--primary)]/5 opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
+
                 <div className="relative z-10">
                   <div className="flex items-center mb-4">
-                    <motion.div 
-                      animate={{
-                        scale: [1, 1.05, 1],
-                        transition: {
-                          repeat: Infinity,
-                          repeatType: "reverse",
-                          duration: 2,
-                          delay: index * 0.3
-                        }
-                      }}
+                    <motion.div
                       whileHover={{
                         rotate: 360,
                         scale: 1.2,
-                        transition: { duration: 0.5 }
+                        transition: { duration: 0.5 },
                       }}
                       className={`p-3 rounded-lg bg-[var(--primary)]/10`}
                     >
                       <Icon className={`w-6 h-6 text-[var(--primary)]`} />
                     </motion.div>
-                    <motion.h3 
+                    <motion.h3
                       className="ml-3 text-lg font-medium"
                       whileHover={{
                         x: 5,
-                        transition: { type: 'spring', stiffness: 500 }
+                        transition: { type: 'spring', stiffness: 500 },
                       }}
                     >
                       {counter.label}
                     </motion.h3>
                   </div>
-                  
+
                   <div className="flex items-end mb-4">
-                    <motion.span 
-                      animate={{
-                        scale: [1, 1.02, 1],
-                        transition: {
-                          repeat: Infinity,
-                          repeatType: "reverse",
-                          duration: 3,
-                          delay: index * 0.2
-                        }
-                      }}
+                    <motion.span
                       whileHover={{
                         scale: 1.1,
-                        transition: { type: 'spring', stiffness: 500 }
+                        transition: { type: 'spring', stiffness: 500 },
                       }}
                       className={`text-3xl md:text-4xl font-bold text-[var(--primary)]`}
                     >
                       {counter.value}
                     </motion.span>
-                    <motion.span 
+                    <motion.span
                       whileHover={{
                         scale: 1.3,
                         y: -4,
-                        transition: { type: 'spring', stiffness: 500 }
+                        transition: { type: 'spring', stiffness: 500 },
                       }}
                       className="text-xl md:text-2xl ml-1 text-[var(--primary)]"
                     >
                       {counter.suffix}
                     </motion.span>
                   </div>
-                  
-                  {/* Progress bar with bounce animation */}
+
                   <div className="w-full h-2 bg-gray-200 dark:bg-gray-700 rounded-full overflow-hidden">
                     <motion.div
                       initial={{ width: '0%' }}
-                      animate={{ 
+                      animate={{
                         width: counter.progress,
-                        transition: { 
-                          duration: 2, 
+                        transition: {
+                          duration: 2,
                           ease: 'easeOut',
-                          type: 'spring',
-                          bounce: 0.5
-                        }
+                        },
                       }}
                       whileHover={{
                         scaleY: 1.8,
                         originY: 'bottom',
-                        transition: { 
+                        transition: {
                           type: 'spring',
                           stiffness: 500,
-                          damping: 10
-                        }
+                          damping: 10,
+                        },
                       }}
                       className={`h-full bg-[var(--primary)] rounded-full`}
                     />
@@ -261,4 +203,4 @@ const Counter = () => {
   );
 };
 
-export default Counter;
+export default memo(Counter);
