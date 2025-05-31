@@ -75,19 +75,31 @@ export default function JobsManagement() {
       <div className="mb-4 flex space-x-2">
         <button 
           onClick={() => setStatusFilter('all')}
-          className={`px-3 py-1 rounded ${statusFilter === 'all' ? 'bg-[var(--primary)] text-white' : 'bg-gray-200'}`}
+          className={`px-3 py-1 rounded transition ${
+            statusFilter === 'all' 
+              ? 'bg-[var(--primary)] text-white' 
+              : 'bg-[var(--secondary)]/20 text-[var(--foreground)] hover:bg-[var(--secondary)]/30'
+          }`}
         >
           All
         </button>
         <button 
           onClick={() => setStatusFilter('live')}
-          className={`px-3 py-1 rounded ${statusFilter === 'live' ? 'bg-green-600 text-white' : 'bg-gray-200'}`}
+          className={`px-3 py-1 rounded transition ${
+            statusFilter === 'live' 
+              ? 'bg-green-600 text-white' 
+              : 'bg-[var(--secondary)]/20 text-[var(--foreground)] hover:bg-[var(--secondary)]/30'
+          }`}
         >
           Live
         </button>
         <button 
           onClick={() => setStatusFilter('draft')}
-          className={`px-3 py-1 rounded ${statusFilter === 'draft' ? 'bg-gray-600 text-white' : 'bg-gray-200'}`}
+          className={`px-3 py-1 rounded transition ${
+            statusFilter === 'draft' 
+              ? 'bg-gray-600 text-white' 
+              : 'bg-[var(--secondary)]/20 text-[var(--foreground)] hover:bg-[var(--secondary)]/30'
+          }`}
         >
           Draft
         </button>
@@ -119,8 +131,10 @@ export default function JobsManagement() {
                     <td className="px-6 py-4 whitespace-nowrap">
                       <button 
                         onClick={() => handleToggleStatus(String(job._id), job.isLive)}
-                        className={`flex items-center gap-1 px-2 py-1 rounded-md text-sm ${
-                          job.isLive ? 'bg-green-100 text-green-800' : 'bg-gray-100 text-gray-800'
+                        className={`flex items-center gap-1 px-2 py-1 rounded-md text-sm transition ${
+                          job.isLive 
+                            ? 'bg-green-100 dark:bg-green-900/50 text-green-800 dark:text-green-200' 
+                            : 'bg-gray-100 dark:bg-gray-800/50 text-gray-800 dark:text-gray-200'
                         }`}
                       >
                         {job.isLive ? (
@@ -133,10 +147,16 @@ export default function JobsManagement() {
                     </td>
                     <td className="px-6 py-4 whitespace-nowrap text-right">
                       <div className="flex justify-end space-x-2">
-                        <Link href={`/admin/jobs/edit/${job._id}`} className="text-[var(--primary)] hover:text-[var(--primary)]/80 p-1 rounded">
+                        <Link 
+                          href={`/admin/jobs/edit/${job._id}`} 
+                          className="text-[var(--primary)] hover:text-[var(--primary)]/80 p-1 rounded transition"
+                        >
                           <Edit className="w-5 h-5" />
                         </Link>
-                        <button onClick={() => handleDelete(String(job._id))} className="text-red-500 hover:text-red-700 p-1 rounded">
+                        <button 
+                          onClick={() => handleDelete(String(job._id))} 
+                          className="text-red-500 hover:text-red-700 dark:hover:text-red-400 p-1 rounded transition"
+                        >
                           <Trash className="w-5 h-5" />
                         </button>
                       </div>

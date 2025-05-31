@@ -42,25 +42,43 @@ export default function Clients() {
   const extendedLogos = [...logos, ...logos, ...logos];
 
   return (
-    <section className="mt-20 relative py-0 text-[var(--foreground)] w-full bg-transparent">
+<section className="-mt-[5rem] relative py-20 text-[var(--foreground)] w-full bg-transparent">
       <div className="w-full mx-auto">
-        <h2 className="text-3xl md:text-4xl font-bold text-center mb-26"> {/* Increased margin-bottom from mb-12 to mb-16 */}
-          Trusted by Global Brands
-        </h2>
-
-        {/* First marquee with margin-bottom */}
-        <div className="mb-10"> {/* Added margin-bottom */}
-          <Marquee direction="left" speed={30}>
+        {/* First marquee above heading */}
+        <div className="mb-8">
+          <Marquee direction="left" speed={35}>
             {extendedLogos.map((logo, index) => (
-              <ClientLogo key={`left-${index}`} logo={logo} />
+              <ClientLogo key={`top-left-${index}`} logo={logo} />
             ))}
           </Marquee>
         </div>
 
-        {/* Second marquee moving in opposite direction */}
+        {/* Second marquee above heading */}
+        <div className="mb-16">
+          <Marquee direction="right" speed={28}>
+            {extendedLogos.map((logo, index) => (
+              <ClientLogo key={`top-right-${index}`} logo={logo} />
+            ))}
+          </Marquee>
+        </div>
+
+        <h2 className="text-3xl md:text-4xl font-bold text-center mb-16">
+          Trusted by Global Brands
+        </h2>
+
+        {/* Third marquee below heading */}
+        <div className="mb-10">
+          <Marquee direction="left" speed={30}>
+            {extendedLogos.map((logo, index) => (
+              <ClientLogo key={`bottom-left-${index}`} logo={logo} />
+            ))}
+          </Marquee>
+        </div>
+
+        {/* Fourth marquee below heading */}
         <Marquee direction="right" speed={25}>
           {extendedLogos.map((logo, index) => (
-            <ClientLogo key={`right-${index}`} logo={logo} />
+            <ClientLogo key={`bottom-right-${index}`} logo={logo} />
           ))}
         </Marquee>
       </div>

@@ -123,50 +123,74 @@ const testimonials: Testimonial[] = [
 export default function Testimonials() {
   const containerRef = useRef<HTMLDivElement>(null);
   const controls = useAnimation();
-  const [isHovered, setIsHovered] = useState(false);
-  const animationRef = useRef<number | null>(null);
+
   const positionRef = useRef(0);
-  const speedRef = useRef(1);
   const lastTimeRef = useRef(0);
+  const animationFrameRef = useRef<number | null>(null);
+
+  const [isHovered, setIsHovered] = useState(false);
+  const [isDragging, setIsDragging] = useState(false);
+
+  // Cursor state
+  const mousePosRef = useRef({ x: 0, y: 0 });
+  const [mousePos, setMousePos] = useState({ x: 0, y: 0 });
+  const [showCursor, setShowCursor] = useState(false);
+
+  // Throttle mouse move with RAF
+  const requestMousePosUpdate = useRef(false);
 
   const duplicatedTestimonials = [...testimonials, ...testimonials];
 
+  // Animation loop for auto-scroll
   const animate = useCallback((time: number) => {
     if (!lastTimeRef.current) lastTimeRef.current = time;
     const delta = time - lastTimeRef.current;
     lastTimeRef.current = time;
 
-    if (!isHovered && containerRef.current) {
-      positionRef.current -= (delta * 0.1 * speedRef.current);
+    if (!isHovered && !isDragging && containerRef.current) {
+      positionRef.current -= delta * 0.1; // speed factor
       const containerWidth = containerRef.current.scrollWidth / 2;
-      
+
       if (Math.abs(positionRef.current) >= containerWidth) {
         positionRef.current = 0;
       }
 
       controls.set({ x: positionRef.current });
     }
-    
-    animationRef.current = requestAnimationFrame(animate);
-  }, [isHovered, controls]);
+
+    animationFrameRef.current = requestAnimationFrame(animate);
+  }, [controls, isHovered, isDragging]);
 
   useEffect(() => {
-    animationRef.current = requestAnimationFrame(animate);
+    animationFrameRef.current = requestAnimationFrame(animate);
     return () => {
-      if (animationRef.current) {
-        cancelAnimationFrame(animationRef.current);
-      }
+      if (animationFrameRef.current) cancelAnimationFrame(animationFrameRef.current);
     };
   }, [animate]);
 
-  const handleDrag = (event: MouseEvent | TouchEvent | PointerEvent, info: PanInfo) => {
+  // Drag handler: update positionRef only
+  const handleDrag = useCallback((_: any, info: PanInfo) => {
     positionRef.current += info.delta.x;
-  };
+    controls.set({ x: positionRef.current });
+  }, [controls]);
+
+  // Mouse move with throttling for smooth cursor
+  const handleMouseMove = useCallback((e: React.MouseEvent) => {
+    mousePosRef.current = { x: e.clientX, y: e.clientY };
+
+    if (!requestMousePosUpdate.current) {
+      requestMousePosUpdate.current = true;
+      requestAnimationFrame(() => {
+        setMousePos(mousePosRef.current);
+        requestMousePosUpdate.current = false;
+      });
+    }
+  }, []);
 
   return (
-    <section className="py-76 w-full overflow-hidden relative"> {/* Removed bg-[var(--background)] */}
+    <section className="-mt-[10rem] py-76 w-full overflow-hidden relative">
       <div className="w-full mx-auto px-0">
-        <motion.h2 
+        <motion.h2
           initial={{ opacity: 0, y: -20 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.6 }}
@@ -175,16 +199,25 @@ export default function Testimonials() {
           What Our Clients Say
         </motion.h2>
 
-        <div 
+        <div
           ref={containerRef}
           className="relative w-full overflow-x-hidden py-8"
-          onMouseEnter={() => setIsHovered(true)}
-          onMouseLeave={() => setIsHovered(false)}
+          onMouseEnter={() => {
+            setIsHovered(true);
+            setShowCursor(true);
+          }}
+          onMouseLeave={() => {
+            setIsHovered(false);
+            setShowCursor(false);
+          }}
+          onMouseMove={handleMouseMove}
         >
           <motion.div
-            className="flex gap-4 w-max items-stretch pl-4"
+            className="flex gap-4 w-max items-stretch pl-4 cursor-grab"
             drag="x"
             dragConstraints={containerRef}
+            onDragStart={() => setIsDragging(true)}
+            onDragEnd={() => setIsDragging(false)}
             onDrag={handleDrag}
             animate={controls}
             dragElastic={0}
@@ -203,9 +236,7 @@ export default function Testimonials() {
                       </div>
                       <div>
                         <h3 className="text-lg font-semibold text-[var(--foreground)]">{testimonial.name}</h3>
-                        <p className="text-sm text-[var(--foreground)]/80">
-                          {testimonial.role}
-                        </p>
+                        <p className="text-sm text-[var(--foreground)]/80">{testimonial.role}</p>
                       </div>
                     </div>
 
@@ -218,9 +249,7 @@ export default function Testimonials() {
                     {[...Array(5)].map((_, i) => (
                       <svg
                         key={i}
-                        className={`w-4 h-4 ${
-                          i < testimonial.rating ? 'text-yellow-400' : 'text-gray-300'
-                        }`}
+                        className={`w-4 h-4 ${i < testimonial.rating ? 'text-yellow-400' : 'text-gray-300'}`}
                         fill="currentColor"
                         viewBox="0 0 20 20"
                       >
@@ -232,6 +261,36 @@ export default function Testimonials() {
               </motion.div>
             ))}
           </motion.div>
+
+          {/* Custom cursor */}
+         {showCursor && !isDragging && (
+  <motion.div
+    className="fixed pointer-events-none z-50 w-16 h-16 rounded-full border border-white bg-transparent"
+    style={{
+      top: mousePos.y - 32,
+      left: mousePos.x - 32,
+    }}
+    initial={{ opacity: 0 }}
+    animate={{ opacity: 1 }}
+    exit={{ opacity: 0 }}
+    transition={{ type: 'spring', stiffness: 300, damping: 20 }}
+  >
+    {/* Left arrow outside */}
+    <span 
+      className="absolute -left-6 top-1/2 -translate-y-1/2 text-white select-none text-xl"
+      aria-hidden="true"
+    >
+      &larr;
+    </span>
+    {/* Right arrow outside */}
+    <span
+      className="absolute -right-6 top-1/2 -translate-y-1/2 text-white select-none text-xl"
+      aria-hidden="true"
+    >
+      &rarr;
+    </span>
+  </motion.div>
+)}
         </div>
       </div>
     </section>

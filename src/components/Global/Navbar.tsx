@@ -3,6 +3,7 @@
 import Image from 'next/image';
 import Link from 'next/link';
 import { useEffect, useState } from 'react';
+import { motion, useAnimation } from 'framer-motion';
 import MobileMenu from './MobileMenu';
 import {
     HeadsetIcon,
@@ -22,12 +23,93 @@ import {
   MoonIcon
 } from 'lucide-react';
 
+// Animated Logo Text Component
+const AnimatedLogoText: React.FC<{ text: string; isHovered: boolean }> = ({ text, isHovered }) => {
+  const letters = text.split('');
+  const controls = useAnimation();
+
+  useEffect(() => {
+    if (isHovered) {
+      // Start animation when hovered - letters rise up
+      controls.start(i => ({
+        opacity: 1,
+        y: 0,
+        rotate: 0,
+        scale: 1,
+        textShadow: [
+          '0 0 0px rgba(255,255,255,0)',
+          '0 0 15px rgba(23, 182, 178, 0.8)',
+          '0 0 30px rgba(23, 182, 178, 0.5)',
+          '0 0 15px rgba(23, 182, 178, 0.8)',
+        ],
+        transition: {
+          delay: i * 0.05,
+          duration: 0.8,
+          type: 'spring',
+          damping: 12,
+          stiffness: 150,
+          textShadow: {
+            duration: 2,
+            repeat: Infinity,
+            repeatType: 'reverse',
+            ease: 'easeInOut',
+          }
+        }
+      }));
+    } else {
+      // Fall down animation when not hovered
+      controls.start(i => ({
+        opacity: 0,
+        y: 50,
+        rotate: 10,
+        scale: 0.8,
+        textShadow: '0 0 0px rgba(255,255,255,0)',
+        transition: {
+          delay: i * 0.02,
+          duration: 0.4,
+          ease: 'easeIn'
+        }
+      }));
+    }
+  }, [isHovered, controls]);
+
+  return (
+    <div className="flex items-center">
+      {letters.map((letter, index) => (
+        <motion.span
+          key={index}
+          className="inline-block text-3xl font-bold tracking-tight"
+          custom={index}
+          initial={{ 
+            opacity: 0,
+            y: 50,
+            rotate: 10,
+            scale: 0.8,
+            textShadow: '0 0 0px rgba(255,255,255,0)'
+          }}
+          animate={controls}
+          style={{
+            background: 'linear-gradient(135deg, #17b6b2, #17b6b2)',
+            backgroundClip: 'text',
+            WebkitBackgroundClip: 'text',
+            color: 'transparent',
+            display: 'inline-block',
+          }}
+        >
+          {letter === ' ' ? '\u00A0' : letter}
+        </motion.span>
+      ))}
+    </div>
+  );
+};
+
 export default function Navbar() {
   const [darkMode, setDarkMode] = useState(false);
   const [showMobileMenu, setShowMobileMenu] = useState(false);
   const [servicesOpen, setServicesOpen] = useState(false);
   const [isScrolled, setIsScrolled] = useState(false);
-
+  const [logoHovered, setLogoHovered] = useState(false);
+  
   const allServices = [
     { 
       category: 'Business Services',
@@ -111,18 +193,27 @@ export default function Navbar() {
       <nav className="relative flex items-center justify-between px-6 py-2 w-full">
         {/* Left: Logo with Hover Animation and Theme Toggle */}
         <div className="nav-left flex items-center gap-6">
-  <Link href="/" className="flex items-center gap-1 group overflow-hidden">
-  <Image
-    src="/assets/images/logo.png"
-    alt="Euroshub Logo"
-    width={75}
-    height={40}
-    className="object-contain"
-  />
-  <span className="text-xl font-bold tracking-tight transition-all duration-300 transform group-hover:translate-x-0 translate-x-[150%]">
-    EurosHub
-  </span>
-</Link>
+          <Link 
+            href="/" 
+            className="flex items-center gap-1 group overflow-hidden relative"
+            onMouseEnter={() => setLogoHovered(true)}
+            onMouseLeave={() => setLogoHovered(false)}
+          >
+            <Image
+              src="/assets/images/logo.png"
+              alt="Euroshub Logo"
+              width={75}
+              height={40}
+              className="object-contain"
+            />
+            {/* Animated text only appears on hover */}
+            <div className={`transition-all duration-300 ${
+              logoHovered ? 'opacity-100' : 'opacity-0 pointer-events-none'
+            }`}>
+              {logoHovered && <AnimatedLogoText text="EurosHub" isHovered={logoHovered} />}
+            </div>
+          </Link>
+          
           {/* Theme Toggle Button - Only shown in desktop view */}
           {!showMobileMenu && (
             <button

@@ -7,10 +7,10 @@ import CosmicConnectionText from './AnimatedText';
 
 const Footer: React.FC = () => {
   return (
-    <footer className="w-full bg-[var(--background)] text-[var(--foreground)] font-sans border-t border-white/20">
+    <footer className="-mt-[15rem] sw-full bg-[var(--background)] text-[var(--foreground)] font-sans border-t border-white/20">
       <div className="flex flex-col md:flex-row">
         {/* Logo and description section */}
-        <div className="ml-5 md:w-1/3 p-4 md:p-8 flex flex-col justify-center">
+        <div className="-ml-[1rem] md:w-1/3 p-4 md:p-8 flex flex-col justify-center">
           <div className="flex items-center gap-2">
             <Image
               src="/assets/images/logo.png"
@@ -47,7 +47,7 @@ const Footer: React.FC = () => {
         </div>
 
         {/* Let's Connect section */}
-        <div className="md:w-1/2 mr-50 flex items-center justify-center p-4 md:p-8">
+        <div className="md:w-1/2 mr-1 flex items-center justify-center p-4 md:p-8">
           <Link href="/contact">
             <h2 className="cursor-pointer text-2xl md:text-4xl lg:text-5xl">
               <CosmicConnectionText text="Let's Connect" />

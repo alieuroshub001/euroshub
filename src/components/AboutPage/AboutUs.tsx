@@ -243,10 +243,11 @@ export default function AboutUs() {
       <Team />
 
       {/* Testimonials */}
+
       <Testimonials />
 
       {/* CTA Section */}
-      <section className="py-20 bg-[var(--primary)] text-white">
+      <section className="-mt-[15rem] mb-60 py-20 bg-[var(--primary)] text-white">
         <div className="max-w-7xl mx-auto px-6 text-center">
           <motion.h2
             initial={{ opacity: 0, y: 20 }}

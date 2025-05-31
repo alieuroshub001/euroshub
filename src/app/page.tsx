@@ -44,8 +44,8 @@ export default function Home() {
       <Services />
       <Clients />
       <Counter />
+            <Team />
       <Testimonial />
-      <Team />
       
       <Footer />
     </main>

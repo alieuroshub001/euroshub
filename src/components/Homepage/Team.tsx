@@ -3,14 +3,23 @@
 import Image from 'next/image';
 import { useRef, useEffect, useState } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
-import { Linkedin, ChevronLeft, ChevronRight } from 'lucide-react';
+import { Linkedin, Twitter, Mail, MapPin, Calendar, Award, X, ExternalLink } from 'lucide-react';
 
 interface TeamMember {
   name: string;
   role: string;
   image: string;
   bio?: string;
-  social?: string;
+  longBio?: string;
+  social?: {
+    linkedin?: string;
+    twitter?: string;
+    email?: string;
+  };
+  location?: string;
+  experience?: string;
+  achievements?: string[];
+  skills?: string[];
 }
 
 const teamMembers: TeamMember[] = [
@@ -19,42 +28,68 @@ const teamMembers: TeamMember[] = [
     role: 'Founder & CEO',
     image: '/assets/team1/Sheikh Nabeel (CEO & Founder).png',
     bio: 'Visionary leader with 15+ years in tech entrepreneurship',
-    social: 'https://linkedin.com'
+    longBio: 'Sheikh Nabeel is a visionary entrepreneur with over 15 years of experience in building and scaling technology companies. He has led multiple successful ventures and is passionate about innovation and digital transformation.',
+    social: {
+      linkedin: 'https://linkedin.com',
+      twitter: 'https://twitter.com',
+      email: 'nabeel@company.com'
+    },
+    location: 'San Francisco, CA',
+    experience: '15+ Years',
+    achievements: ['Forbes 30 Under 30', 'Tech Entrepreneur of the Year', 'Multiple Successful Exits'],
+    skills: ['Strategic Leadership', 'Product Vision', 'Venture Capital', 'Team Building']
   },
   {
     name: 'Muhammad Awais',
     role: 'Co-Founder & CTO',
     image: '/assets/team1/Muhammad Awais (Co-Founder).png',
     bio: 'Technology architect specializing in scalable systems',
-    social: 'https://linkedin.com'
+    longBio: 'Muhammad Awais is a seasoned technology leader with expertise in building scalable, high-performance systems. He has architected solutions that serve millions of users worldwide.',
+    social: {
+      linkedin: 'https://linkedin.com',
+      email: 'awais@company.com'
+    },
+    location: 'London, UK',
+    experience: '12+ Years',
+    achievements: ['AWS Solutions Architect', 'Google Cloud Expert', 'Open Source Contributor'],
+    skills: ['System Architecture', 'Cloud Computing', 'DevOps', 'Machine Learning']
   },
   {
     name: 'Saira Ali',
     role: 'Managing Director',
     image: '/assets/team1/Saira Ali (Managing Director).png',
     bio: 'Operations expert driving business growth',
-    social: 'https://linkedin.com'
-  },
-  {
-    name: 'Humayoun Mussawar',
-    role: 'Marketing Head',
-    image: '/assets/team1/Humayoun Mussawar (Marketing Head).png',
-    bio: 'Digital marketing strategist and brand builder',
-    social: 'https://linkedin.com'
+    longBio: 'Saira Ali brings exceptional operational expertise and strategic thinking to drive business growth. She has successfully scaled operations across multiple markets.',
+    social: {
+      linkedin: 'https://linkedin.com',
+      email: 'saira@company.com'
+    },
+    location: 'Dubai, UAE',
+    experience: '10+ Years',
+    achievements: ['MBA from Wharton', 'Operations Excellence Award', 'International Expansion Lead'],
+    skills: ['Operations Management', 'Strategic Planning', 'International Business', 'Team Leadership']
   },
   {
     name: 'Hamza Badar',
     role: 'Team Lead',
     image: '/assets/team1/Hamza Badar (Team Lead).png',
     bio: 'Engineering manager focused on team excellence',
-    social: 'https://linkedin.com'
+    longBio: 'Hamza Badar is a dedicated engineering leader who focuses on building high-performing teams and delivering exceptional software solutions.',
+    social: {
+      linkedin: 'https://linkedin.com',
+      email: 'hamza@company.com'
+    },
+    location: 'Toronto, CA',
+    experience: '7+ Years',
+    achievements: ['Certified Scrum Master', 'Team Excellence Award', 'Mentor of the Year'],
+    skills: ['Team Management', 'Agile Development', 'Software Engineering', 'Mentoring']
   },
 ];
 
 export default function Team() {
   const [selectedMember, setSelectedMember] = useState<TeamMember | null>(null);
   const [isModalOpen, setIsModalOpen] = useState(false);
-  const containerRef = useRef<HTMLDivElement>(null);
+  const [hoveredIndex, setHoveredIndex] = useState<number | null>(null);
 
   const openModal = (member: TeamMember) => {
     setSelectedMember(member);
@@ -64,231 +99,314 @@ export default function Team() {
 
   const closeModal = () => {
     setIsModalOpen(false);
+    setSelectedMember(null);
     document.body.style.overflow = 'auto';
   };
 
-  useEffect(() => {
-    const slider = containerRef.current;
-    if (!slider) return;
-
-    let isDown = false;
-    let startX: number;
-    let scrollLeft: number;
-    let velocity = 0;
-    let animationFrame: number;
-
-    const onMouseDown = (e: MouseEvent) => {
-      isDown = true;
-      startX = e.pageX - slider.offsetLeft;
-      scrollLeft = slider.scrollLeft;
-      slider.style.cursor = 'grabbing';
-      slider.style.scrollBehavior = 'auto';
-      cancelAnimationFrame(animationFrame);
-    };
-
-    const onMouseLeave = () => {
-      isDown = false;
-      slider.style.cursor = 'grab';
-    };
-
-    const onMouseUp = () => {
-      isDown = false;
-      slider.style.cursor = 'grab';
-      beginMomentumTracking();
-    };
-
-    const onMouseMove = (e: MouseEvent) => {
-      if (!isDown) return;
-      e.preventDefault();
-      const x = e.pageX - slider.offsetLeft;
-      const walk = (x - startX) * 2;
-      slider.scrollLeft = scrollLeft - walk;
-    };
-
-    const beginMomentumTracking = () => {
-      cancelAnimationFrame(animationFrame);
-      momentumLoop();
-    };
-
-    const momentumLoop = () => {
-      if (!isDown) {
-        velocity *= 0.95;
-        slider.scrollLeft += velocity;
-        
-        if (Math.abs(velocity) > 0.5) {
-          animationFrame = requestAnimationFrame(momentumLoop);
-        }
+  const containerVariants = {
+    hidden: { opacity: 0 },
+    visible: {
+      opacity: 1,
+      transition: {
+        staggerChildren: 0.15,
+        delayChildren: 0.2
       }
-    };
+    }
+  };
 
-    slider.addEventListener('mousedown', onMouseDown);
-    slider.addEventListener('mouseleave', onMouseLeave);
-    slider.addEventListener('mouseup', onMouseUp);
-    slider.addEventListener('mousemove', onMouseMove);
-
-    return () => {
-      slider.removeEventListener('mousedown', onMouseDown);
-      slider.removeEventListener('mouseleave', onMouseLeave);
-      slider.removeEventListener('mouseup', onMouseUp);
-      slider.removeEventListener('mousemove', onMouseMove);
-      cancelAnimationFrame(animationFrame);
-    };
-  }, []);
+  const cardVariants = {
+    hidden: { 
+      opacity: 0, 
+      y: 50,
+      scale: 0.9
+    },
+    visible: {
+      opacity: 1,
+      y: 0,
+      scale: 1,
+      transition: {
+        type: "spring",
+        damping: 20,
+        stiffness: 100
+      }
+    }
+  };
 
   return (
-    <section className="py-20 px-6">
-      <div className="max-w-7xl mx-auto">
-        <motion.div
-          initial={{ opacity: 0, y: 20 }}
-          whileInView={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.6 }}
-          viewport={{ once: true, margin: "0px 0px -100px 0px" }}
-          className="text-center mb-16"
-        >
-          <h2 className="text-4xl md:text-5xl font-bold mb-6">
-            Meet Our <span className="text-[var(--primary)]">Leadership</span>
-          </h2>
-          <p className="text-lg md:text-xl opacity-80 max-w-2xl mx-auto">
-            A team of passionate innovators driving digital transformation
-          </p>
-        </motion.div>
-
-        <div className="relative">
-          <div
-            ref={containerRef}
-            className="flex overflow-x-auto scroll-smooth space-x-8 pb-8 -mx-4 px-4 no-scrollbar"
-          >
-            {teamMembers.map((member, index) => (
-              <motion.div
-                key={index}
-                initial={{ opacity: 0, x: 20 }}
-                whileInView={{ opacity: 1, x: 0 }}
-                transition={{ duration: 0.5, delay: index * 0.1 }}
-                viewport={{ once: true, margin: "0px 0px -100px 0px" }}
-                className="flex-shrink-0 w-72"
-              >
-                <div 
-                  className="bg-[var(--card-bg)] rounded-2xl overflow-hidden shadow-lg hover:shadow-xl transition-all duration-300 cursor-pointer group"
-                  onClick={() => openModal(member)}
-                >
-                  <div className="relative h-80 overflow-hidden">
-                    <Image
-                      src={member.image}
-                      alt={member.name}
-                      fill
-                      className="object-cover object-top transition-transform duration-500 group-hover:scale-105"
-                    />
-                    <div className="absolute inset-0 bg-gradient-to-t from-black/60 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300 flex items-end p-6">
-                      <div>
-                        <h3 className="text-white text-xl font-bold">{member.name}</h3>
-                        <p className="text-[var(--primary)]">{member.role}</p>
-                      </div>
-                    </div>
-                  </div>
-                  <div className="p-6">
-                    <h3 className="text-lg font-bold">{member.name}</h3>
-                    <p className="text-sm text-[var(--foreground)]/70">{member.role}</p>
-                    <div className="mt-4 flex justify-between items-center">
-                      <button className="text-xs font-medium text-[var(--primary)] hover:underline">
-                        View Profile
-                      </button>
-                      <a 
-                        href={member.social} 
-                        target="_blank" 
-                        rel="noopener noreferrer"
-                        className="text-[var(--foreground)] hover:text-[var(--primary)] transition-colors"
-                        onClick={(e) => e.stopPropagation()}
-                      >
-                        <Linkedin className="w-5 h-5" />
-                      </a>
-                    </div>
-                  </div>
-                </div>
-              </motion.div>
-            ))}
-          </div>
-
-          <button 
-            className="absolute left-0 top-1/2 -translate-y-1/2 -translate-x-4 bg-[var(--card-bg)] p-3 rounded-full shadow-md hover:bg-[var(--primary)] hover:text-white transition-all z-10 hidden md:block"
-            onClick={() => {
-              if (containerRef.current) {
-                containerRef.current.scrollBy({ left: -300, behavior: 'smooth' });
-              }
-            }}
-          >
-            <ChevronLeft className="w-6 h-6" />
-          </button>
-          <button 
-            className="absolute right-0 top-1/2 -translate-y-1/2 translate-x-4 bg-[var(--card-bg)] p-3 rounded-full shadow-md hover:bg-[var(--primary)] hover:text-white transition-all z-10 hidden md:block"
-            onClick={() => {
-              if (containerRef.current) {
-                containerRef.current.scrollBy({ left: 300, behavior: 'smooth' });
-              }
-            }}
-          >
-            <ChevronRight className="w-6 h-6" />
-          </button>
-        </div>
+    <section className="-mt-[9rem] py-24 px-6 relative overflow-hidden" style={{ backgroundColor: 'var(--background)', color: 'var(--foreground)' }}>
+      {/* Background Elements */}
+      <div className="absolute inset-0 pointer-events-none">
+        <div className="absolute top-20 left-10 w-72 h-72 bg-gradient-to-br from-[var(--primary)]/10 to-purple-500/10 rounded-full blur-3xl"></div>
+        <div className="absolute bottom-20 right-10 w-96 h-96 bg-gradient-to-br from-blue-500/10 to-[var(--primary)]/10 rounded-full blur-3xl"></div>
       </div>
 
+      <div className="max-w-7xl mx-auto relative z-10">
+        {/* Header Section */}
+        <motion.div
+          initial={{ opacity: 0, y: 30 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.8, ease: "easeOut" }}
+          viewport={{ once: true, margin: "-100px" }}
+          className="text-center mb-20"
+        >
+          <div className="inline-block">
+            <motion.span 
+              initial={{ opacity: 0, scale: 0.8 }}
+              whileInView={{ opacity: 1, scale: 1 }}
+              transition={{ duration: 0.6, delay: 0.2 }}
+              className="inline-block px-4 py-2 bg-gradient-to-r from-[var(--primary)]/20 to-purple-500/20 rounded-full text-sm font-medium text-[var(--primary)] mb-6 border border-[var(--primary)]/20"
+            >
+              Meet Our Team
+            </motion.span>
+          </div>
+          
+          <motion.h2 
+            initial={{ opacity: 0, y: 20 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.8, delay: 0.3 }}
+            className="text-5xl md:text-7xl font-bold mb-8 leading-tight"
+          >
+            The Minds Behind
+            <br />
+            <span className="bg-gradient-to-r from-[#17b6b2] to-[#0d8f8c] bg-clip-text text-transparent">
+  Innovation
+</span>
+          </motion.h2>
+          
+          <motion.p 
+            initial={{ opacity: 0, y: 20 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.8, delay: 0.4 }}
+            className="text-xl md:text-2xl opacity-70 max-w-3xl mx-auto font-light"
+          >
+            A diverse group of passionate innovators, dreamers, and builders who are 
+            reshaping the future of technology
+          </motion.p>
+        </motion.div>
+
+        {/* Updated Team Grid */}
+        <motion.div
+          variants={containerVariants}
+          initial="hidden"
+          whileInView="visible"
+          viewport={{ once: true, margin: "-100px" }}
+          className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6"
+        >
+          {teamMembers.map((member, index) => (
+            <motion.div
+              key={index}
+              variants={cardVariants}
+              className="group cursor-pointer"
+              onMouseEnter={() => setHoveredIndex(index)}
+              onMouseLeave={() => setHoveredIndex(null)}
+              onClick={() => openModal(member)}
+            >
+              <div className="relative h-full rounded-2xl overflow-hidden border border-white/10 transition-all duration-500 hover:border-[var(--primary)]/30"
+                style={{ backgroundColor: 'var(--card-bg)' }}>
+                
+                {/* Floating Corner Accent */}
+                <div className="absolute top-0 right-0 w-16 h-16 overflow-hidden">
+                  <div className="absolute -right-8 -top-8 w-16 h-16 rotate-45 bg-gradient-to-r from-[var(--primary)] to-[var(--primary)]/20 opacity-20 group-hover:opacity-40 transition-opacity duration-300"></div>
+                </div>
+                
+                {/* Image Container */}
+                <div className="relative h-60 overflow-hidden">
+                  <div className="absolute inset-0 bg-gradient-to-b from-transparent via-transparent to-black/30 z-10"></div>
+                  <Image
+                    src={member.image}
+                    alt={member.name}
+                    fill
+                    className="object-cover object-top transition-all duration-500 group-hover:scale-105"
+                  />
+                  
+                  {/* Role Badge */}
+                  <div className="absolute bottom-4 left-4 z-20">
+                    <span className="px-3 py-1 bg-[var(--primary)] text-white text-xs font-medium rounded-full">
+                      {member.role}
+                    </span>
+                  </div>
+                </div>
+                
+                {/* Content */}
+                <div className="p-6">
+                  <h3 className="text-xl font-bold mb-2 group-hover:text-[var(--primary)] transition-colors duration-300">
+                    {member.name}
+                  </h3>
+                  
+                  <p className="text-sm mb-4" style={{ color: 'var(--foreground)', opacity: 0.8 }}>
+                    {member.bio}
+                  </p>
+                  
+                  {/* Minimal Stats */}
+                  <div className="flex items-center justify-between text-xs">
+                    <div className="flex items-center space-x-1" style={{ color: 'var(--foreground)', opacity: 0.6 }}>
+                      <MapPin className="w-3 h-3" />
+                      <span>{member.location}</span>
+                    </div>
+                    <div className="flex items-center space-x-1" style={{ color: 'var(--foreground)', opacity: 0.6 }}>
+                      <Calendar className="w-3 h-3" />
+                      <span>{member.experience}</span>
+                    </div>
+                  </div>
+                  
+               
+                </div>
+                
+                {/* Hover Overlay */}
+                <div className="absolute inset-0 bg-gradient-to-t from-[var(--primary)]/10 via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
+              </div>
+            </motion.div>
+          ))}
+        </motion.div>
+      </div>
+
+      {/* Modal - keep existing */}
       <AnimatePresence>
         {isModalOpen && selectedMember && (
           <motion.div
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
             exit={{ opacity: 0 }}
-            className="fixed inset-0 bg-black/70 z-50 flex items-center justify-center p-4"
+            className="fixed inset-0 bg-black/80 backdrop-blur-sm z-50 flex items-center justify-center p-4"
             onClick={closeModal}
           >
             <motion.div
-              initial={{ scale: 0.9, y: 50 }}
-              animate={{ scale: 1, y: 0 }}
-              exit={{ scale: 0.9, y: 50 }}
-              transition={{ type: 'spring', damping: 25 }}
-              className="bg-[var(--card-bg)] rounded-2xl max-w-4xl w-full max-h-[90vh] overflow-y-auto"
+              initial={{ scale: 0.8, opacity: 0, y: 50 }}
+              animate={{ scale: 1, opacity: 1, y: 0 }}
+              exit={{ scale: 0.8, opacity: 0, y: 50 }}
+              transition={{ type: 'spring', damping: 25, stiffness: 300 }}
+              className="rounded-3xl max-w-5xl w-full max-h-[90vh] overflow-y-auto border border-white/20 shadow-2xl"
+              style={{ backgroundColor: 'var(--card-bg)' }}
               onClick={(e) => e.stopPropagation()}
             >
-              <div className="grid md:grid-cols-2 gap-8">
-                <div className="relative h-96 md:h-full">
+              <div className="grid md:grid-cols-5 gap-0">
+                {/* Image Section */}
+                <div className="md:col-span-2 relative h-96 md:h-full">
                   <Image
                     src={selectedMember.image}
                     alt={selectedMember.name}
                     fill
-                    className="object-cover object-top rounded-t-2xl md:rounded-l-2xl md:rounded-tr-none"
+                    className="object-cover object-top rounded-t-3xl md:rounded-l-3xl md:rounded-tr-none"
                   />
+                  <div className="absolute inset-0 bg-gradient-to-t from-black/60 to-transparent"></div>
                 </div>
-                <div className="p-8">
-                  <div className="flex justify-between items-start mb-6">
+
+                {/* Content Section */}
+                <div className="md:col-span-3 p-8 md:p-12">
+                  {/* Header */}
+                  <div className="flex justify-between items-start mb-8">
                     <div>
-                      <h3 className="text-2xl font-bold">{selectedMember.name}</h3>
-                      <p className="text-[var(--primary)] font-medium">{selectedMember.role}</p>
+                      <h3 className="text-3xl font-bold mb-2">{selectedMember.name}</h3>
+                      <p className="text-[var(--primary)] font-medium text-xl mb-4">{selectedMember.role}</p>
+                      
+                      <div className="flex items-center space-x-6 text-sm" style={{ color: 'var(--foreground)', opacity: 0.6 }}>
+                        <div className="flex items-center space-x-2">
+                          <MapPin className="w-4 h-4" />
+                          <span>{selectedMember.location}</span>
+                        </div>
+                        <div className="flex items-center space-x-2">
+                          <Calendar className="w-4 h-4" />
+                          <span>{selectedMember.experience}</span>
+                        </div>
+                      </div>
                     </div>
-                    <button 
+                    
+                    <motion.button
+                      whileHover={{ scale: 1.1, rotate: 90 }}
+                      whileTap={{ scale: 0.9 }}
                       onClick={closeModal}
-                      className="text-[var(--foreground)]/50 hover:text-[var(--foreground)] transition-colors"
+                      className="w-10 h-10 rounded-full flex items-center justify-center transition-colors"
+                      style={{ backgroundColor: 'var(--foreground)', opacity: 0.1 }}
                     >
-                      <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-                        <line x1="18" y1="6" x2="6" y2="18"></line>
-                        <line x1="6" y1="6" x2="18" y2="18"></line>
-                      </svg>
-                    </button>
+                      <X className="w-5 h-5" />
+                    </motion.button>
                   </div>
-                  
-                  <div className="mb-6">
-                    <h4 className="text-sm font-semibold uppercase tracking-wider text-[var(--foreground)]/50 mb-2">About</h4>
-                    <p className="text-[var(--foreground)]/80">{selectedMember.bio}</p>
+
+                  {/* Bio */}
+                  <div className="mb-8">
+                    <h4 className="text-sm font-semibold uppercase tracking-wider mb-3" style={{ color: 'var(--foreground)', opacity: 0.5 }}>About</h4>
+                    <p className="leading-relaxed text-lg" style={{ color: 'var(--foreground)', opacity: 0.8 }}>
+                      {selectedMember.longBio}
+                    </p>
                   </div>
-                  
+
+                  {/* Skills */}
+                  {selectedMember.skills && (
+                    <div className="mb-8">
+                      <h4 className="text-sm font-semibold uppercase tracking-wider mb-3" style={{ color: 'var(--foreground)', opacity: 0.5 }}>Expertise</h4>
+                      <div className="flex flex-wrap gap-3">
+                        {selectedMember.skills.map((skill, idx) => (
+                          <motion.span
+                            key={idx}
+                            initial={{ opacity: 0, scale: 0.8 }}
+                            animate={{ opacity: 1, scale: 1 }}
+                            transition={{ delay: idx * 0.1 }}
+                            className="px-4 py-2 bg-gradient-to-r from-[var(--primary)]/20 to-purple-500/20 text-[var(--primary)] rounded-full text-sm font-medium border border-[var(--primary)]/20"
+                          >
+                            {skill}
+                          </motion.span>
+                        ))}
+                      </div>
+                    </div>
+                  )}
+
+                  {/* Achievements */}
+                  {selectedMember.achievements && (
+                    <div className="mb-8">
+                      <h4 className="text-sm font-semibold uppercase tracking-wider mb-3" style={{ color: 'var(--foreground)', opacity: 0.5 }}>Achievements</h4>
+                      <div className="space-y-3">
+                        {selectedMember.achievements.map((achievement, idx) => (
+                          <motion.div
+                            key={idx}
+                            initial={{ opacity: 0, x: -20 }}
+                            animate={{ opacity: 1, x: 0 }}
+                            transition={{ delay: idx * 0.1 }}
+                            className="flex items-center space-x-3"
+                          >
+                            <Award className="w-5 h-5 text-[var(--primary)]" />
+                            <span style={{ color: 'var(--foreground)', opacity: 0.8 }}>{achievement}</span>
+                          </motion.div>
+                        ))}
+                      </div>
+                    </div>
+                  )}
+
+                  {/* Social Links */}
                   <div className="flex items-center space-x-4">
-                    <a 
-                      href={selectedMember.social} 
-                      target="_blank" 
-                      rel="noopener noreferrer"
-                      className="inline-flex items-center justify-center p-2 bg-[var(--primary)]/10 text-[var(--primary)] rounded-full hover:bg-[var(--primary)]/20 transition-colors"
-                    >
-                      <Linkedin className="w-5 h-5" />
-                    </a>
-                    <span className="text-sm text-[var(--foreground)]/50">Connect on LinkedIn</span>
+                    {selectedMember.social?.linkedin && (
+                      <motion.a
+                        whileHover={{ scale: 1.1 }}
+                        whileTap={{ scale: 0.9 }}
+                        href={selectedMember.social.linkedin}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        className="w-12 h-12 bg-gradient-to-r from-[var(--primary)] to-purple-500 rounded-full flex items-center justify-center text-white hover:shadow-lg transition-all duration-300"
+                      >
+                        <Linkedin className="w-6 h-6" />
+                      </motion.a>
+                    )}
+                    {selectedMember.social?.twitter && (
+                      <motion.a
+                        whileHover={{ scale: 1.1 }}
+                        whileTap={{ scale: 0.9 }}
+                        href={selectedMember.social.twitter}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        className="w-12 h-12 bg-gradient-to-r from-blue-500 to-cyan-500 rounded-full flex items-center justify-center text-white hover:shadow-lg transition-all duration-300"
+                      >
+                        <Twitter className="w-6 h-6" />
+                      </motion.a>
+                    )}
+                    {selectedMember.social?.email && (
+                      <motion.a
+                        whileHover={{ scale: 1.1 }}
+                        whileTap={{ scale: 0.9 }}
+                        href={`mailto:${selectedMember.social.email}`}
+                        className="w-12 h-12 bg-gradient-to-r from-green-500 to-emerald-500 rounded-full flex items-center justify-center text-white hover:shadow-lg transition-all duration-300"
+                      >
+                        <Mail className="w-6 h-6" />
+                      </motion.a>
+                    )}
                   </div>
                 </div>
               </div>

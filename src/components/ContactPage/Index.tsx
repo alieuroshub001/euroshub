@@ -37,7 +37,7 @@ export default function ContactPage() {
       <ContactInfo />
 
       {/* Form and map section */}
-      <section className="py-16 px-4 sm:px-6 md:px-8 lg:px-16">
+      <section className="mb-60 py-16 px-4 sm:px-6 md:px-8 lg:px-16">
         <div className="max-w-7xl mx-auto grid md:grid-cols-2 gap-8 lg:gap-16">
           <ContactForm />
           <ContactMap />
