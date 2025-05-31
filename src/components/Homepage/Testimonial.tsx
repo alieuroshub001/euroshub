@@ -169,7 +169,7 @@ export default function Testimonials() {
   }, [animate]);
 
   // Drag handler: update positionRef only
-  const handleDrag = useCallback((_: any, info: PanInfo) => {
+  const handleDrag = useCallback((_: unknown, info: PanInfo) => {
     positionRef.current += info.delta.x;
     controls.set({ x: positionRef.current });
   }, [controls]);

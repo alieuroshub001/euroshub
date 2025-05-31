@@ -1,6 +1,6 @@
 'use client';
 
-import { Briefcase, FileText, Home, Settings, LogOut, Sun, Moon, Menu, X } from 'lucide-react';
+import { Briefcase, Home, LogOut, Sun, Moon, Menu, X } from 'lucide-react';
 import Link from 'next/link';
 import { useRouter } from 'next/navigation';
 import { useEffect, useState } from 'react';

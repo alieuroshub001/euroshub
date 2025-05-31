@@ -109,7 +109,6 @@ export default function Services() {
 
     const dx = Math.abs(e.clientX - pointerDownPos.current.x);
     const dy = Math.abs(e.clientY - pointerDownPos.current.y);
-    const elapsed = Date.now() - pointerDownTime.current;
 
     const dragThreshold = 10; // pixels
     const clickDelay = 150;   // milliseconds to wait before navigating

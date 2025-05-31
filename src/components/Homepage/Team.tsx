@@ -1,9 +1,9 @@
 'use client';
 
 import Image from 'next/image';
-import { useRef, useEffect, useState } from 'react';
+import { useState } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
-import { Linkedin, Twitter, Mail, MapPin, Calendar, Award, X, ExternalLink } from 'lucide-react';
+import { Linkedin, Twitter, Mail, MapPin, Calendar, Award, X } from 'lucide-react';
 
 interface TeamMember {
   name: string;
@@ -89,7 +89,7 @@ const teamMembers: TeamMember[] = [
 export default function Team() {
   const [selectedMember, setSelectedMember] = useState<TeamMember | null>(null);
   const [isModalOpen, setIsModalOpen] = useState(false);
-  const [hoveredIndex, setHoveredIndex] = useState<number | null>(null);
+  const [, setHoveredIndex] = useState<number | null>(null);
 
   const openModal = (member: TeamMember) => {
     setSelectedMember(member);
