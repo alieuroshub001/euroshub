@@ -1,27 +1,27 @@
 'use client';
 
+import { motion, useAnimation } from 'framer-motion';
+import {
+  ChevronDownIcon,
+  ChevronUpIcon,
+  ClipboardListIcon,
+  CloudIcon,
+  CodeIcon,
+  CpuIcon,
+  DatabaseIcon,
+  GlobeIcon,
+  HeadsetIcon,
+  KeyboardIcon,
+  LayoutDashboardIcon,
+  MoonIcon,
+  PhoneOutgoingIcon,
+  SmartphoneIcon,
+  SunIcon
+} from 'lucide-react';
 import Image from 'next/image';
 import Link from 'next/link';
 import { useEffect, useState } from 'react';
-import { motion, useAnimation } from 'framer-motion';
 import MobileMenu from './MobileMenu';
-import {
-    HeadsetIcon,
-  ClipboardListIcon,
-  KeyboardIcon,
-  DatabaseIcon,
-  PhoneOutgoingIcon,
-  LayoutDashboardIcon,
-  CodeIcon,
-  SmartphoneIcon,
-  GlobeIcon,
-  CpuIcon,
-  CloudIcon,
-  ChevronDownIcon,
-  ChevronUpIcon,
-  SunIcon,
-  MoonIcon
-} from 'lucide-react';
 
 // Animated Logo Text Component
 const AnimatedLogoText: React.FC<{ text: string; isHovered: boolean }> = ({ text, isHovered }) => {

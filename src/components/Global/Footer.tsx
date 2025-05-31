@@ -1,13 +1,15 @@
+// components/Global/Footer.tsx
 'use client';
-import React from 'react';
+
 import Image from 'next/image';
 import Link from 'next/link';
-import { FaGithub, FaTwitter, FaLinkedin, FaInstagram } from 'react-icons/fa';
+import React from 'react';
+import { FaGithub, FaInstagram, FaLinkedin, FaTwitter } from 'react-icons/fa';
 import CosmicConnectionText from './AnimatedText';
 
 const Footer: React.FC = () => {
   return (
-    <footer className="-mt-[15rem] sw-full bg-[var(--background)] text-[var(--foreground)] font-sans border-t border-white/20">
+    <footer className="w-full bg-[var(--background)] text-[var(--foreground)] font-sans border-t border-white/20">
       <div className="flex flex-col md:flex-row">
         {/* Logo and description section */}
         <div className="-ml-[1rem] md:w-1/3 p-4 md:p-8 flex flex-col justify-center">
