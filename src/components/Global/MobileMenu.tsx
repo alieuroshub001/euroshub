@@ -1,6 +1,6 @@
 'use client';
 
-import { HeadsetIcon, ClipboardListIcon, KeyboardIcon, DatabaseIcon, PhoneOutgoingIcon, CodeIcon, SmartphoneIcon, GlobeIcon, CpuIcon, CloudIcon, SunIcon, MoonIcon } from 'lucide-react';
+import { ClipboardListIcon, CloudIcon, CodeIcon, CpuIcon, DatabaseIcon, GlobeIcon, HeadsetIcon, KeyboardIcon, MoonIcon, PhoneOutgoingIcon, SmartphoneIcon, SunIcon } from 'lucide-react';
 import Image from 'next/image';
 import Link from 'next/link';
 import { useEffect, useState } from 'react';

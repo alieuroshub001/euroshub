@@ -1,6 +1,6 @@
 'use client';
 
-import { useState, useEffect } from 'react';
+import { useEffect, useState } from 'react';
 
 export default function ContactMap() {
   const [mapLoaded, setMapLoaded] = useState(false);

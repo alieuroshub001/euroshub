@@ -12,7 +12,7 @@ const Footer: React.FC = () => {
     <footer className="w-full bg-[var(--background)] text-[var(--foreground)] font-sans border-t border-white/20">
       <div className="flex flex-col md:flex-row">
         {/* Logo and description section */}
-        <div className="-ml-[1rem] md:w-1/3 p-4 md:p-8 flex flex-col justify-center">
+        <div className="md:w-1/3 p-4 md:p-8 flex flex-col justify-center">
           <div className="flex items-center gap-2">
             <Image
               src="/assets/images/logo.png"
