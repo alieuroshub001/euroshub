@@ -1,9 +1,9 @@
 'use client';
 
+import { JobFormData } from '@/types/job';
 import { Briefcase, Clock, MapPin } from 'lucide-react';
 import { useRouter } from 'next/navigation';
 import { useEffect, useState } from 'react';
-import { JobFormData } from '@/types/job';
 
 const jobTypes = ['Full-time', 'Part-time', 'Contract', 'Internship'];
 const departments = ['Technology', 'Business', 'Design', 'Marketing'];
