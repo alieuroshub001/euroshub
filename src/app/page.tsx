@@ -1,11 +1,11 @@
 import Footer from '@/components/Global/Footer';
 import Navbar from '@/components/Global/Navbar';
-import Hero from '@/components/Homepage/Hero';
-import Services from '@/components/Homepage/Services';
 import Clients from '@/components/Homepage/Clients';
 import Counter from '@/components/Homepage/Counter';
-import Testimonial from '@/components/Homepage/Testimonial';
+import Hero from '@/components/Homepage/Hero';
+import Services from '@/components/Homepage/Services';
 import Team from '@/components/Homepage/Team';
+import Testimonial from '@/components/Homepage/Testimonial';
 import { Metadata } from 'next';
 
 export const metadata: Metadata = {
@@ -46,7 +46,6 @@ export default function Home() {
       <Counter />
             <Team />
       <Testimonial />
-      
       <Footer />
     </main>
   );

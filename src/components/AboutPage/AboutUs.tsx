@@ -2,8 +2,9 @@
 'use client';
 
 import { motion } from 'framer-motion';
-import { Award, Globe, HeartHandshake, Link, Users } from 'lucide-react';
+import { Award, Globe, HeartHandshake, Users } from 'lucide-react';
 import Image from 'next/image';
+import Link from 'next/link';
 import Counter from '../Homepage/Counter';
 import Team from '../Homepage/Team';
 import Testimonials from '../Homepage/Testimonial';
@@ -64,7 +65,7 @@ const journey = [
 
 export default function AboutUs() {
   return (
-    <main className="bg-[var(--background)] text-[var(--foreground)]">
+    <main className="text-[var(--foreground)]">
 
       {/* HERO */}
       <section className="relative py-28 px-6 overflow-hidden">
@@ -98,32 +99,27 @@ export default function AboutUs() {
             </motion.p>
           </div>
 
-          {/* Image */}
+          {/* Hero Image */}
           <motion.div
             initial={{ opacity: 0, scale: 0.9 }}
             animate={{ opacity: 1, scale: 1 }}
             transition={{ duration: 0.6 }}
-            className="relative w-full h-64 md:h-96 rounded-xl overflow-hidden bg-[var(--card-bg)] shadow-lg"
+            className="relative w-full h-auto flex justify-center items-center"
           >
             <Image
               src="/assets/images/hero.png"
               alt="EurosHub team meeting"
-              className="w-full h-full object-cover"
-              fill
+              width={500}
+              height={400}
+              className="object-contain"
               priority
             />
           </motion.div>
         </div>
-
-        {/* Background Bubbles */}
-        <div className="absolute -z-10 top-0 left-0 w-full h-full overflow-hidden">
-          <div className="absolute top-[10%] right-[10%] w-64 h-64 bg-[var(--primary)] opacity-5 rounded-full blur-3xl"></div>
-          <div className="absolute bottom-[10%] left-[10%] w-80 h-80 bg-[var(--primary)] opacity-5 rounded-full blur-3xl"></div>
-        </div>
       </section>
 
       {/* CORE PRINCIPLES */}
-      <section className="py-20 bg-[var(--secondary)]">
+      <section className="py-20">
         <div className="max-w-7xl mx-auto px-6 text-center">
           <motion.h2
             initial={{ opacity: 0, y: -20 }}
@@ -150,7 +146,7 @@ export default function AboutUs() {
                 whileInView={{ opacity: 1, y: 0 }}
                 transition={{ duration: 0.5, delay: i * 0.1 }}
                 viewport={{ once: true }}
-                className="bg-[var(--card-bg)] p-6 rounded-xl shadow-sm"
+                className="p-6 rounded-xl shadow-sm border border-[var(--secondary)]"
               >
                 <div className="w-12 h-12 bg-[var(--primary)]/10 rounded-full flex items-center justify-center mb-4">
                   {p.icon}
@@ -192,17 +188,19 @@ export default function AboutUs() {
             </div>
           </motion.div>
 
+          {/* Journey Image */}
           <motion.div
             initial={{ opacity: 0, scale: 0.9 }}
             whileInView={{ opacity: 1, scale: 1 }}
             transition={{ duration: 0.6 }}
-            className="relative h-80 md:h-96 rounded-xl overflow-hidden bg-[var(--card-bg)] shadow-lg"
+            className="relative w-full h-auto flex justify-center items-center"
           >
             <Image
               src="/assets/images/hero.png"
               alt="EurosHub office growth"
-              className="w-full h-full object-cover"
-              fill
+              width={500}
+              height={400}
+              className="object-contain"
             />
           </motion.div>
         </div>
