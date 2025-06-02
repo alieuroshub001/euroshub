@@ -1,6 +1,7 @@
+// components/Global/Client.tsx
 'use client';
+
 import Image from 'next/image';
-import React from 'react';
 import Marquee from './ClientMarquee';
 
 const logos = [
@@ -23,14 +24,14 @@ const logos = [
 
 const ClientLogo = ({ logo }: { logo: string }) => {
   return (
-    <div className="flex-shrink-0 px-6">
-      <div className="p-4 rounded-lg">
+    <div className="flex-shrink-0 px-4 sm:px-6">
+      <div className="flex items-center justify-center p-4 rounded-lg bg-[var(--card-bg)]/10">
         <Image
           src={`/assets/clients/${logo}`}
-          alt={`Client Logo`}
+          alt="Client Logo"
           width={200}
           height={100}
-          className="object-contain h-24 w-auto transition-transform duration-300 [filter:drop-shadow(0_0_1px_rgba(0,0,0,0.3))]"
+          className="object-contain h-20 sm:h-24 w-auto transition-transform duration-300 hover:scale-105 [filter:drop-shadow(0_0_1px_rgba(0,0,0,0.3))]"
         />
       </div>
     </div>
@@ -38,49 +39,52 @@ const ClientLogo = ({ logo }: { logo: string }) => {
 };
 
 export default function Clients() {
-  // Create 3 copies of the logos array for smoother animation
+  // Triple the array for a seamless marquee
   const extendedLogos = [...logos, ...logos, ...logos];
 
   return (
-<section className="-mt-[5rem] relative py-20 text-[var(--foreground)] w-full bg-transparent">
-      <div className="w-full mx-auto">
-        {/* First marquee above heading */}
+    <section className="py-20 px-6 sm:px-8 md:px-16 lg:px-32 text-[var(--foreground)] bg-transparent">
+      <div className="max-w-7xl mx-auto">
+        {/* Top-left marquee */}
         <div className="mb-8">
           <Marquee direction="left" speed={35}>
-            {extendedLogos.map((logo, index) => (
-              <ClientLogo key={`top-left-${index}`} logo={logo} />
+            {extendedLogos.map((logo, idx) => (
+              <ClientLogo key={`top-left-${idx}`} logo={logo} />
             ))}
           </Marquee>
         </div>
 
-        {/* Second marquee above heading */}
-        <div className="mb-16">
+        {/* Top-right marquee */}
+        <div className="mb-12">
           <Marquee direction="right" speed={28}>
-            {extendedLogos.map((logo, index) => (
-              <ClientLogo key={`top-right-${index}`} logo={logo} />
+            {extendedLogos.map((logo, idx) => (
+              <ClientLogo key={`top-right-${idx}`} logo={logo} />
             ))}
           </Marquee>
         </div>
 
-        <h2 className="text-3xl md:text-4xl font-bold text-center mb-16">
+        {/* Heading */}
+        <h2 className="text-3xl md:text-4xl font-bold text-center mb-12">
           Trusted by Global Brands
         </h2>
 
-        {/* Third marquee below heading */}
-        <div className="mb-10">
+        {/* Bottom-left marquee */}
+        <div className="mb-8">
           <Marquee direction="left" speed={30}>
-            {extendedLogos.map((logo, index) => (
-              <ClientLogo key={`bottom-left-${index}`} logo={logo} />
+            {extendedLogos.map((logo, idx) => (
+              <ClientLogo key={`bottom-left-${idx}`} logo={logo} />
             ))}
           </Marquee>
         </div>
 
-        {/* Fourth marquee below heading */}
-        <Marquee direction="right" speed={25}>
-          {extendedLogos.map((logo, index) => (
-            <ClientLogo key={`bottom-right-${index}`} logo={logo} />
-          ))}
-        </Marquee>
+        {/* Bottom-right marquee */}
+        <div>
+          <Marquee direction="right" speed={25}>
+            {extendedLogos.map((logo, idx) => (
+              <ClientLogo key={`bottom-right-${idx}`} logo={logo} />
+            ))}
+          </Marquee>
+        </div>
       </div>
     </section>
   );

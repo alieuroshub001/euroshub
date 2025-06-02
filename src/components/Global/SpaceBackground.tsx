@@ -2,164 +2,248 @@
 'use client';
 
 import { useEffect, useRef } from 'react';
-import { SpaceMovement, SpaceElement } from './spacemovement';
+
+type Star = {
+  x: number;
+  y: number;
+  radius: number;
+  speed: number;
+  twinklePhase: number; // for twinkling
+  isLarge: boolean;
+};
+
+type ShootingStar = {
+  x: number;
+  y: number;
+  length: number;
+  speed: number;
+  angle: number;
+  progress: number;
+  active: boolean;
+};
+
+type DustCloud = {
+  x: number;
+  y: number;
+  radius: number;
+  opacity: number;
+  speed: number;
+  dx: number;
+  dy: number;
+};
 
 export default function SpaceBackground() {
-  const containerRef = useRef<HTMLDivElement>(null);
-  const movementRef = useRef<SpaceMovement | null>(null);
+  const canvasRef = useRef<HTMLCanvasElement>(null);
+  const animationRef = useRef<number | undefined>(undefined);
+  const starsRef = useRef<Star[]>([]);
+  const shootingStarsRef = useRef<ShootingStar[]>([]);
+  const dustCloudsRef = useRef<DustCloud[]>([]);
+  const lastTimeRef = useRef<number>(0);
+
+  // You can tweak these counts to taste:
+  const SMALL_STARS_COUNT = 150;
+  const LARGE_STARS_COUNT = 15;
+  const SHOOTING_STARS_COUNT = 5;
+  const DUST_CLOUDS_COUNT = 8;
 
   useEffect(() => {
-    if (!containerRef.current) return;
+    const canvas = canvasRef.current!;
+    const ctx = canvas.getContext('2d')!;
+    let width = canvas.clientWidth;
+    let height = canvas.clientHeight;
 
-    const container = containerRef.current;
-    const starsCount = 150;
-    const largeStarsCount = 15;
-    const shootingStarsCount = 5;
-    const dustCloudsCount = 8;
+    // Resize canvas to match its CSS size (full screen).
+    const resizeCanvas = () => {
+      width = canvas.clientWidth;
+      height = canvas.clientHeight;
+      canvas.width = width;
+      canvas.height = height;
+    };
+    resizeCanvas();
+    window.addEventListener('resize', resizeCanvas);
 
-    // Clear existing elements
-    container.innerHTML = '';
-    
-    // Initialize movement system
-    movementRef.current = new SpaceMovement(container);
-    const movableElements: SpaceElement[] = [];
+    // HELPER: random in range [min, max)
+    const randRange = (min: number, max: number) => Math.random() * (max - min) + min;
 
-    // Create small moving stars
-    for (let i = 0; i < starsCount; i++) {
-      const star = document.createElement('div');
-      star.className = 'space-star';
-      
-      // Random properties
-      const size = Math.random() * 2 + 0.5;
-      const speed = Math.random() * 0.2 + 0.1;
-      const direction = {
-        x: Math.random() * 2 - 1,
-        y: Math.random() * 2 - 1
-      };
-      
-      // Position
-      const x = Math.random() * 100;
-      const y = Math.random() * 100;
-      const opacity = Math.random() * 0.7 + 0.3;
-      
-      star.style.width = `${size}px`;
-      star.style.height = `${size}px`;
-      star.style.left = `${x}%`;
-      star.style.top = `${y}%`;
-      star.style.opacity = `${opacity}`;
-      
-      container.appendChild(star);
-      movableElements.push({ element: star, speed, direction });
+    // 1) Initialize small and large stars
+    const stars: Star[] = [];
+    for (let i = 0; i < SMALL_STARS_COUNT; i++) {
+      stars.push({
+        x: randRange(0, width),
+        y: randRange(0, height),
+        radius: randRange(0.5, 2),
+        speed: randRange(0.05, 0.2),
+        twinklePhase: randRange(0, Math.PI * 2),
+        isLarge: false,
+      });
     }
-
-    // Create larger twinkling stars
-    for (let i = 0; i < largeStarsCount; i++) {
-      const star = document.createElement('div');
-      star.className = 'space-star-large';
-      
-      // Random properties
-      const size = Math.random() * 4 + 2;
-      const speed = Math.random() * 0.1 + 0.05;
-      const direction = {
-        x: Math.random() * 2 - 1,
-        y: Math.random() * 2 - 1
-      };
-      const pulseSpeed = Math.random() * 5 + 5;
-      
-      // Position
-      const x = Math.random() * 100;
-      const y = Math.random() * 100;
-      const opacity = Math.random() * 0.5 + 0.5;
-      
-      star.style.width = `${size}px`;
-      star.style.height = `${size}px`;
-      star.style.left = `${x}%`;
-      star.style.top = `${y}%`;
-      star.style.opacity = `${opacity}`;
-      star.style.animation = `pulseStar ${pulseSpeed}s ease-in-out infinite`;
-      
-      container.appendChild(star);
-      movableElements.push({ element: star, speed, direction });
+    for (let i = 0; i < LARGE_STARS_COUNT; i++) {
+      stars.push({
+        x: randRange(0, width),
+        y: randRange(0, height),
+        radius: randRange(2, 6),
+        speed: randRange(0.02, 0.1),
+        twinklePhase: randRange(0, Math.PI * 2),
+        isLarge: true,
+      });
     }
+    starsRef.current = stars;
 
-    // Create shooting stars
-    for (let i = 0; i < shootingStarsCount; i++) {
-      const star = document.createElement('div');
-      star.className = 'shooting-star';
-      
-      // Random properties
-      const size = Math.random() * 2 + 1;
-      const length = Math.random() * 100 + 50;
-      const angle = Math.random() * 360;
-      const speed = Math.random() * 0.5 + 0.3;
-      const direction = {
-        x: Math.random() * 2 - 1,
-        y: Math.random() * 2 - 1
-      };
-      
-      // Position
-      const x = Math.random() * 100;
-      const y = Math.random() * 100;
-      
-      star.style.width = `${length}px`;
-      star.style.height = `${size}px`;
-      star.style.left = `${x}%`;
-      star.style.top = `${y}%`;
-      star.style.transform = `rotate(${angle}deg)`;
-      star.style.opacity = '0';
-      
-      container.appendChild(star);
-      
-      // Use the movement system's shooting star method
-      movementRef.current.createShootingStar(star, speed, direction);
+    // 2) Initialize shooting stars
+    const shootingStars: ShootingStar[] = [];
+    for (let i = 0; i < SHOOTING_STARS_COUNT; i++) {
+      shootingStars.push({
+        x: randRange(0, width),
+        y: randRange(0, height),
+        length: randRange(60, 120),
+        speed: randRange(0.8, 1.5),
+        angle: randRange(-Math.PI / 4, Math.PI / 4),
+        progress: 0,
+        active: false,
+      });
     }
+    shootingStarsRef.current = shootingStars;
 
-    // Create cosmic dust clouds
-    for (let i = 0; i < dustCloudsCount; i++) {
-      const cloud = document.createElement('div');
-      cloud.className = 'dust-cloud';
-      
-      // Random properties
-      const size = Math.random() * 200 + 100;
-      const speed = Math.random() * 0.05 + 0.02;
-      const direction = {
-        x: Math.random() * 2 - 1,
-        y: Math.random() * 2 - 1
-      };
-      
-      // Position
-      const x = Math.random() * 100;
-      const y = Math.random() * 100;
-      const opacity = Math.random() * 0.1 + 0.05;
-      
-      cloud.style.width = `${size}px`;
-      cloud.style.height = `${size}px`;
-      cloud.style.left = `${x}%`;
-      cloud.style.top = `${y}%`;
-      cloud.style.opacity = `${opacity}`;
-      
-      container.appendChild(cloud);
-      movableElements.push({ element: cloud, speed, direction });
+    // 3) Initialize dust clouds
+    const dustClouds: DustCloud[] = [];
+    for (let i = 0; i < DUST_CLOUDS_COUNT; i++) {
+      const radius = randRange(80, 200);
+      const angle = randRange(0, Math.PI * 2);
+      const speed = randRange(0.005, 0.02);
+      dustClouds.push({
+        x: randRange(0, width),
+        y: randRange(0, height),
+        radius,
+        opacity: randRange(0.02, 0.08),
+        speed,
+        dx: Math.cos(angle),
+        dy: Math.sin(angle),
+      });
     }
+    dustCloudsRef.current = dustClouds;
 
-    // Add all movable elements to the movement system
-    movementRef.current.addElements(movableElements);
-    
-    // Start the animation
-    movementRef.current.start();
+    // DRAW LOOP
+    const animate = (time: number) => {
+      if (!lastTimeRef.current) lastTimeRef.current = time;
+      const delta = (time - lastTimeRef.current) / 16; // normalized to “16ms per frame”
+      lastTimeRef.current = time;
 
+      // Clear entire canvas
+      ctx.clearRect(0, 0, width, height);
+
+      // 1) DRAW DUST CLOUDS (behind everything)
+      dustCloudsRef.current.forEach((cloud) => {
+        cloud.x += cloud.dx * cloud.speed * delta * 50;
+        cloud.y += cloud.dy * cloud.speed * delta * 50;
+        // wrap
+        if (cloud.x - cloud.radius > width) cloud.x = -cloud.radius;
+        if (cloud.x + cloud.radius < 0) cloud.x = width + cloud.radius;
+        if (cloud.y - cloud.radius > height) cloud.y = -cloud.radius;
+        if (cloud.y + cloud.radius < 0) cloud.y = height + cloud.radius;
+
+        const grd = ctx.createRadialGradient(
+          cloud.x,
+          cloud.y,
+          0,
+          cloud.x,
+          cloud.y,
+          cloud.radius
+        );
+        grd.addColorStop(0, `rgba(23, 23, 23, ${cloud.opacity})`);
+        grd.addColorStop(1, 'rgba(23, 23, 23, 0)');
+        ctx.beginPath();
+        ctx.fillStyle = grd;
+        ctx.arc(cloud.x, cloud.y, cloud.radius, 0, Math.PI * 2);
+        ctx.fill();
+      });
+
+      // 2) DRAW STARS (small & large)
+      starsRef.current.forEach((star) => {
+        // twinkle: change opacity with a sine wave
+        star.twinklePhase += 0.02 * (star.isLarge ? 0.5 : 1);
+        const baseAlpha = star.isLarge ? 0.6 : 0.3;
+        const twinkle = baseAlpha + Math.sin(star.twinklePhase) * (star.isLarge ? 0.4 : 0.2);
+
+        ctx.beginPath();
+        ctx.fillStyle = star.isLarge ? `rgba(23, 182, 178, ${twinkle})` : `rgba(255,255,255, ${twinkle})`;
+        ctx.arc(star.x, star.y, star.radius, 0, Math.PI * 2);
+        ctx.fill();
+
+        // Move slowly in a random direction
+        star.x += (Math.cos(star.twinklePhase) * star.speed * delta * 10);
+        star.y += (Math.sin(star.twinklePhase) * star.speed * delta * 10);
+
+        // wrap around edges
+        if (star.x > width + star.radius) star.x = -star.radius;
+        if (star.x < -star.radius) star.x = width + star.radius;
+        if (star.y > height + star.radius) star.y = -star.radius;
+        if (star.y < -star.radius) star.y = height + star.radius;
+      });
+
+      // 3) DRAW SHOOTING STARS
+      shootingStarsRef.current.forEach((shoot) => {
+        if (!shoot.active) {
+          // occasionally activate
+          if (Math.random() < 0.001 * delta) {
+            shoot.active = true;
+            shoot.x = randRange(0, width);
+            shoot.y = randRange(0, height * 0.5);
+            shoot.progress = 0;
+            shoot.angle = randRange(-Math.PI / 3, -Math.PI / 6);
+            shoot.speed = randRange(1.0, 1.5);
+            shoot.length = randRange(80, 140);
+          }
+        }
+
+        if (shoot.active) {
+          // draw streak
+          ctx.save();
+          ctx.translate(shoot.x, shoot.y);
+          ctx.rotate(shoot.angle);
+          const grad = ctx.createLinearGradient(0, 0, shoot.length, 0);
+          grad.addColorStop(0, 'rgba(255,255,255,0)');
+          grad.addColorStop(0.5, 'rgba(255,255,255,0.8)');
+          grad.addColorStop(1, 'rgba(255,255,255,0)');
+          ctx.fillStyle = grad;
+          ctx.fillRect(0, -2, shoot.length, 4);
+          ctx.restore();
+
+          // advance along trajectory
+          shoot.x += Math.cos(shoot.angle) * shoot.speed * delta * 15;
+          shoot.y += Math.sin(shoot.angle) * shoot.speed * delta * 15;
+          shoot.progress += shoot.speed * delta;
+
+          // deactivate when off-screen or finished
+          if (
+            shoot.x < -shoot.length ||
+            shoot.x > width + shoot.length ||
+            shoot.y < -shoot.length ||
+            shoot.y > height + shoot.length ||
+            shoot.progress > (width + height) / 100
+          ) {
+            shoot.active = false;
+          }
+        }
+      });
+
+      // Loop
+      animationRef.current = requestAnimationFrame(animate);
+    };
+
+    animationRef.current = requestAnimationFrame(animate);
+
+    // CLEANUP
     return () => {
-      if (movementRef.current) {
-        movementRef.current.stop();
-        movementRef.current = null;
-      }
+      window.removeEventListener('resize', resizeCanvas);
+      if (animationRef.current) cancelAnimationFrame(animationRef.current);
     };
   }, []);
 
   return (
-    <div 
-      ref={containerRef}
-      className="fixed inset-0 -z-50 overflow-hidden pointer-events-none"
+    <canvas
+      ref={canvasRef}
+      className="fixed inset-0 -z-50 w-full h-full pointer-events-none"
+      style={{ background: 'radial-gradient(circle at center, #000010, #000000)' }}
     />
   );
 }

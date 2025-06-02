@@ -1,27 +1,27 @@
 'use client';
 
+import { motion, useAnimation } from 'framer-motion';
+import {
+  ChevronDownIcon,
+  ChevronUpIcon,
+  ClipboardListIcon,
+  CloudIcon,
+  CodeIcon,
+  CpuIcon,
+  DatabaseIcon,
+  GlobeIcon,
+  HeadsetIcon,
+  KeyboardIcon,
+  LayoutDashboardIcon,
+  MoonIcon,
+  PhoneOutgoingIcon,
+  SmartphoneIcon,
+  SunIcon
+} from 'lucide-react';
 import Image from 'next/image';
 import Link from 'next/link';
 import { useEffect, useState } from 'react';
-import { motion, useAnimation } from 'framer-motion';
 import MobileMenu from './MobileMenu';
-import {
-    HeadsetIcon,
-  ClipboardListIcon,
-  KeyboardIcon,
-  DatabaseIcon,
-  PhoneOutgoingIcon,
-  LayoutDashboardIcon,
-  CodeIcon,
-  SmartphoneIcon,
-  GlobeIcon,
-  CpuIcon,
-  CloudIcon,
-  ChevronDownIcon,
-  ChevronUpIcon,
-  SunIcon,
-  MoonIcon
-} from 'lucide-react';
 
 // Animated Logo Text Component
 const AnimatedLogoText: React.FC<{ text: string; isHovered: boolean }> = ({ text, isHovered }) => {
@@ -184,12 +184,12 @@ export default function Navbar() {
 
   return (
     <header className={`w-full text-[var(--foreground)] sticky top-0 z-50 transition-all duration-300 ${
-  isScrolled && !showMobileMenu // Only apply blur when not in mobile view
-    ? 'backdrop-blur-md bg-[var(--background)/80]' 
-    : isScrolled 
-      ? 'bg-[var(--background)]' // Solid background for mobile when scrolled
-      : 'bg-transparent'
-}`}>
+      isScrolled && !showMobileMenu // Only apply blur when not in mobile view
+        ? 'backdrop-blur-md bg-[var(--background)]/80' 
+        : isScrolled 
+          ? 'bg-[var(--background)]' // Solid background for mobile when scrolled
+          : 'bg-transparent'
+    }`}>
       <nav className="relative flex items-center justify-between px-6 py-2 w-full">
         {/* Left: Logo with Hover Animation and Theme Toggle */}
         <div className="nav-left flex items-center gap-6">
@@ -217,7 +217,7 @@ export default function Navbar() {
           {/* Theme Toggle Button - Only shown in desktop view */}
           {!showMobileMenu && (
             <button
-              className="ml-15 flex items-center gap-3 p-2 rounded-full border border-[var(--primary)/20] hover:bg-[var(--primary)/10] transition-all duration-300 hover:scale-105"
+              className="ml-15 flex items-center gap-3 p-2 rounded-full border border-[var(--primary)]/20 hover:bg-[var(--primary)]/10 transition-all duration-300 hover:scale-105"
               onClick={toggleDarkMode}
               aria-label="Toggle Dark Mode"
             >
@@ -247,7 +247,7 @@ export default function Navbar() {
                 <Link 
                   href="/" 
                   className="px-3 py-2 rounded-lg font-medium transition-all duration-300
-                    hover:bg-[var(--primary)/10] hover:text-[var(--primary)] 
+                    hover:bg-[var(--primary)]/10 hover:text-[var(--primary)] 
                     hover:shadow-[0_4px_12px_rgba(0,0,0,0.1)]"
                 >
                   Home
@@ -258,7 +258,7 @@ export default function Navbar() {
               <li className="relative group">
                 <div 
                   className="flex items-center px-3 py-2 rounded-lg font-medium cursor-pointer transition-all duration-300
-                    hover:bg-[var(--primary)/10] hover:text-[var(--primary)] 
+                    hover:bg-[var(--primary)]/10 hover:text-[var(--primary)] 
                     hover:shadow-[0_4px_12px_rgba(0,0,0,0.1)]"
                   onClick={toggleServices}
                 >
@@ -276,7 +276,7 @@ export default function Navbar() {
                 <Link 
                   href="/about" 
                   className="px-3 py-2 rounded-lg font-medium transition-all duration-300
-                    hover:bg-[var(--primary)/10] hover:text-[var(--primary)] 
+                    hover:bg-[var(--primary)]/10 hover:text-[var(--primary)] 
                     hover:shadow-[0_4px_12px_rgba(0,0,0,0.1)]"
                 >
                   About Us
@@ -315,7 +315,7 @@ export default function Navbar() {
             <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
               {allServices.map((category) => (
                 <div key={category.category} className="space-y-2">
-                  <h3 className="text-base font-semibold text-[var(--primary)] border-b border-[var(--primary)/20] pb-1">
+                  <h3 className="text-base font-semibold text-[var(--primary)] border-b border-[var(--primary)]/20 pb-1">
                     {category.category}
                   </h3>
                   <div className="grid grid-cols-1 lg:grid-cols-2 gap-1">
@@ -323,9 +323,9 @@ export default function Navbar() {
                       <Link
                         key={service.name}
                         href={`/services#${service.name.toLowerCase().replace(/\s+/g, '-')}`}
-                        className="flex items-center gap-2 p-2 rounded-lg hover:bg-[var(--primary)/10] transition-all duration-200 group"
+                        className="flex items-center gap-2 p-2 rounded-lg hover:bg-[var(--primary)]/10 transition-all duration-200 group"
                       >
-                        <div className="bg-[var(--primary)/10] p-1.5 rounded-full group-hover:bg-[var(--primary)] group-hover:text-white transition-colors">
+                        <div className="bg-[var(--primary)]/10 p-1.5 rounded-full group-hover:bg-[var(--primary)] group-hover:text-white transition-colors">
                           {service.icon}
                         </div>
                         <span className="text-sm font-medium group-hover:text-[var(--primary)]">{service.name}</span>

@@ -1,10 +1,10 @@
+import Chatbot from "@/components/Global/Chatbot";
+import SpaceBackground from '@/components/Global/SpaceBackground';
+import '@fortawesome/fontawesome-free/css/all.min.css';
+import { SpeedInsights } from "@vercel/speed-insights/next";
 import type { Metadata } from "next";
 import { Geist, Geist_Mono } from "next/font/google";
 import "./globals.css";
-import '@fortawesome/fontawesome-free/css/all.min.css';
-import Chatbot from "@/components/Global/Chatbot";
-import { SpeedInsights } from "@vercel/speed-insights/next"
-import SpaceBackground from '@/components/Global/SpaceBackground';
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
