@@ -1,7 +1,8 @@
+/* eslint-disable react/jsx-no-undef */
 'use client';
 
 import { motion } from 'framer-motion';
-import { Award, Globe, HeartHandshake, Users } from 'lucide-react';
+import { Award, Globe, HeartHandshake, Link, Users } from 'lucide-react';
 import Image from 'next/image';
 import Counter from '../Homepage/Counter';
 import Team from '../Homepage/Team';
@@ -237,18 +238,18 @@ export default function AboutUs() {
             transition={{ duration: 0.6, delay: 0.4 }}
             className="flex flex-wrap justify-center gap-4"
           >
-            <a
+            <Link
               href="/contact"
               className="bg-white text-[var(--primary)] px-8 py-3 rounded-full font-medium hover:bg-opacity-90 transition"
             >
               Get in Touch
-            </a>
-            <a
+            </Link>
+            <Link
               href="/services"
               className="border border-white text-white px-8 py-3 rounded-full font-medium hover:bg-white hover:text-[var(--primary)] transition"
             >
               Explore Services
-            </a>
+            </Link>
           </motion.div>
         </div>
       </section>
