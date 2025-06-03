@@ -32,7 +32,7 @@ const businessServices: Service[] = [
           'Document preparation'
         ],
         slug: 'virtual-assistance', 
-        image: '/assets/services/virtual-assitant.jpeg' 
+        image: '/assets/services/virtual-assistant.jpg' 
       },
       { 
         id: 2, 
@@ -49,7 +49,7 @@ const businessServices: Service[] = [
           'Quality assurance'
         ],
         slug: 'project-management', 
-        image: '/assets/services/pm.jpeg' 
+        image: '/assets/services/project-management.JPG' 
       },
       { 
         id: 3, 
@@ -66,7 +66,7 @@ const businessServices: Service[] = [
           'OCR processing'
         ],
         slug: 'data-entry-transcription', 
-        image: '/assets/services/entry.jpg' 
+        image: '/assets/services/DATA-entry.jpEg' 
       },
       { 
         id: 4, 
