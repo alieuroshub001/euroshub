@@ -83,16 +83,15 @@ const Footer: React.FC = () => {
       <div className="flex flex-col md:flex-row justify-between items-center px-4 lg:px-30 py-4 lg:py-6 text-xs md:text-sm border-t border-[color:var(--border-color)]
 ">
         {/* Links first on mobile */}
-        <nav className="order-1 md:order-2 flex flex-wrap justify-center gap-2 md:gap-6 mb-2 md:mb-0">
+        <nav className="order-1 md:order-2 flex flex-wrap justify-center gap-8 md:gap-6 mb-5 md:mb-0">
           <Link href="/about" className="hover:text-[var(--primary)] transition-colors">About</Link>
           <Link href="/contact" className="hover:text-[var(--primary)] transition-colors">Contact</Link>
           <Link href="/career" className="hover:text-[var(--primary)] transition-colors">Career</Link>
-          <Link href="/pricing" className="hover:text-[var(--primary)] transition-colors">Pricing</Link>
         </nav>
         
         {/* Copyright second on mobile */}
         <p className="order-2 md:order-1 text-[var(--muted-foreground)] text-center md:text-left">
-          © 2024 | All rights reserved by EurosHub
+          © 2025 | All rights reserved by EurosHub
         </p>
       </div>
     </footer>
