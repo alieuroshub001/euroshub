@@ -258,7 +258,7 @@ export default function Navbar() {
           {!showMobileMenu && (
             <ul className="nav-center flex gap-8 items-center">
               <li className="relative group">
-                <Link href="/" className="px-3 py-2 rounded-lg font-medium hover:bg-[var(--primary)]/10 hover:text-[var(--primary)] transition-all">
+                <Link href="/" className="flex items-center px-3 py-2 rounded-lg font-medium hover:bg-[var(--primary)]/10 hover:text-[var(--primary)] transition-all">
                   Home
                   <span className="absolute bottom-0 left-0 w-0 h-0.5 bg-[var(--primary)] transition-all group-hover:w-full"></span>
                 </Link>
@@ -279,7 +279,7 @@ export default function Navbar() {
                 </div>
               </li>
               <li className="relative group">
-                <Link href="/about" className="px-3 py-2 rounded-lg font-medium hover:bg-[var(--primary)]/10 hover:text-[var(--primary)] transition-all">
+                <Link href="/about" className="flex items-center px-3 py-2 rounded-lg font-medium hover:bg-[var(--primary)]/10 hover:text-[var(--primary)] transition-all">
                   About Us
                   <span className="absolute bottom-0 left-0 w-0 h-0.5 bg-[var(--primary)] transition-all group-hover:w-full"></span>
                 </Link>

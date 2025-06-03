@@ -8,6 +8,8 @@
   --secondary: #ededed;
   --accent: #0a0a0a;
   --card-bg: #ffffff;
+    --primary-light: #ffffff; /* Light color for dark backgrounds */
+  --primary-dark: #000000; /* Dark color for light backgrounds */
 }
 
 /* Dark mode when using class-based toggle */
