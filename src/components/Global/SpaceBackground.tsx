@@ -1,14 +1,13 @@
-// components/Global/SpaceBackground.tsx
 'use client';
 
-import { useEffect, useRef } from 'react';
+import { useEffect, useRef, useState } from 'react';
 
 type Star = {
   x: number;
   y: number;
   radius: number;
   speed: number;
-  twinklePhase: number; // for twinkling
+  twinklePhase: number;
   isLarge: boolean;
 };
 
@@ -39,20 +38,23 @@ export default function SpaceBackground() {
   const shootingStarsRef = useRef<ShootingStar[]>([]);
   const dustCloudsRef = useRef<DustCloud[]>([]);
   const lastTimeRef = useRef<number>(0);
+  const [isDarkMode, setIsDarkMode] = useState<boolean>(false);
 
-  // You can tweak these counts to taste:
   const SMALL_STARS_COUNT = 150;
   const LARGE_STARS_COUNT = 15;
   const SHOOTING_STARS_COUNT = 5;
   const DUST_CLOUDS_COUNT = 8;
 
-  useEffect(() => {
-    const canvas = canvasRef.current!;
-    const ctx = canvas.getContext('2d')!;
+  const initCanvas = () => {
+    const canvas = canvasRef.current;
+    if (!canvas) return;
+
+    const ctx = canvas.getContext('2d');
+    if (!ctx) return;
+
     let width = canvas.clientWidth;
     let height = canvas.clientHeight;
 
-    // Resize canvas to match its CSS size (full screen).
     const resizeCanvas = () => {
       width = canvas.clientWidth;
       height = canvas.clientHeight;
@@ -62,10 +64,8 @@ export default function SpaceBackground() {
     resizeCanvas();
     window.addEventListener('resize', resizeCanvas);
 
-    // HELPER: random in range [min, max)
     const randRange = (min: number, max: number) => Math.random() * (max - min) + min;
 
-    // 1) Initialize small and large stars
     const stars: Star[] = [];
     for (let i = 0; i < SMALL_STARS_COUNT; i++) {
       stars.push({
@@ -89,7 +89,6 @@ export default function SpaceBackground() {
     }
     starsRef.current = stars;
 
-    // 2) Initialize shooting stars
     const shootingStars: ShootingStar[] = [];
     for (let i = 0; i < SHOOTING_STARS_COUNT; i++) {
       shootingStars.push({
@@ -104,7 +103,6 @@ export default function SpaceBackground() {
     }
     shootingStarsRef.current = shootingStars;
 
-    // 3) Initialize dust clouds
     const dustClouds: DustCloud[] = [];
     for (let i = 0; i < DUST_CLOUDS_COUNT; i++) {
       const radius = randRange(80, 200);
@@ -122,33 +120,23 @@ export default function SpaceBackground() {
     }
     dustCloudsRef.current = dustClouds;
 
-    // DRAW LOOP
     const animate = (time: number) => {
       if (!lastTimeRef.current) lastTimeRef.current = time;
-      const delta = (time - lastTimeRef.current) / 16; // normalized to “16ms per frame”
+      const delta = (time - lastTimeRef.current) / 16;
       lastTimeRef.current = time;
 
-      // Clear entire canvas
       ctx.clearRect(0, 0, width, height);
 
-      // 1) DRAW DUST CLOUDS (behind everything)
       dustCloudsRef.current.forEach((cloud) => {
         cloud.x += cloud.dx * cloud.speed * delta * 50;
         cloud.y += cloud.dy * cloud.speed * delta * 50;
-        // wrap
+
         if (cloud.x - cloud.radius > width) cloud.x = -cloud.radius;
         if (cloud.x + cloud.radius < 0) cloud.x = width + cloud.radius;
         if (cloud.y - cloud.radius > height) cloud.y = -cloud.radius;
         if (cloud.y + cloud.radius < 0) cloud.y = height + cloud.radius;
 
-        const grd = ctx.createRadialGradient(
-          cloud.x,
-          cloud.y,
-          0,
-          cloud.x,
-          cloud.y,
-          cloud.radius
-        );
+        const grd = ctx.createRadialGradient(cloud.x, cloud.y, 0, cloud.x, cloud.y, cloud.radius);
         grd.addColorStop(0, `rgba(23, 23, 23, ${cloud.opacity})`);
         grd.addColorStop(1, 'rgba(23, 23, 23, 0)');
         ctx.beginPath();
@@ -157,9 +145,7 @@ export default function SpaceBackground() {
         ctx.fill();
       });
 
-      // 2) DRAW STARS (small & large)
       starsRef.current.forEach((star) => {
-        // twinkle: change opacity with a sine wave
         star.twinklePhase += 0.02 * (star.isLarge ? 0.5 : 1);
         const baseAlpha = star.isLarge ? 0.6 : 0.3;
         const twinkle = baseAlpha + Math.sin(star.twinklePhase) * (star.isLarge ? 0.4 : 0.2);
@@ -169,34 +155,27 @@ export default function SpaceBackground() {
         ctx.arc(star.x, star.y, star.radius, 0, Math.PI * 2);
         ctx.fill();
 
-        // Move slowly in a random direction
         star.x += (Math.cos(star.twinklePhase) * star.speed * delta * 10);
         star.y += (Math.sin(star.twinklePhase) * star.speed * delta * 10);
 
-        // wrap around edges
         if (star.x > width + star.radius) star.x = -star.radius;
         if (star.x < -star.radius) star.x = width + star.radius;
         if (star.y > height + star.radius) star.y = -star.radius;
         if (star.y < -star.radius) star.y = height + star.radius;
       });
 
-      // 3) DRAW SHOOTING STARS
       shootingStarsRef.current.forEach((shoot) => {
-        if (!shoot.active) {
-          // occasionally activate
-          if (Math.random() < 0.001 * delta) {
-            shoot.active = true;
-            shoot.x = randRange(0, width);
-            shoot.y = randRange(0, height * 0.5);
-            shoot.progress = 0;
-            shoot.angle = randRange(-Math.PI / 3, -Math.PI / 6);
-            shoot.speed = randRange(1.0, 1.5);
-            shoot.length = randRange(80, 140);
-          }
+        if (!shoot.active && Math.random() < 0.001 * delta) {
+          shoot.active = true;
+          shoot.x = randRange(0, width);
+          shoot.y = randRange(0, height * 0.5);
+          shoot.progress = 0;
+          shoot.angle = randRange(-Math.PI / 3, -Math.PI / 6);
+          shoot.speed = randRange(1.0, 1.5);
+          shoot.length = randRange(80, 140);
         }
 
         if (shoot.active) {
-          // draw streak
           ctx.save();
           ctx.translate(shoot.x, shoot.y);
           ctx.rotate(shoot.angle);
@@ -208,36 +187,61 @@ export default function SpaceBackground() {
           ctx.fillRect(0, -2, shoot.length, 4);
           ctx.restore();
 
-          // advance along trajectory
           shoot.x += Math.cos(shoot.angle) * shoot.speed * delta * 15;
           shoot.y += Math.sin(shoot.angle) * shoot.speed * delta * 15;
           shoot.progress += shoot.speed * delta;
 
-          // deactivate when off-screen or finished
-          if (
-            shoot.x < -shoot.length ||
-            shoot.x > width + shoot.length ||
-            shoot.y < -shoot.length ||
-            shoot.y > height + shoot.length ||
-            shoot.progress > (width + height) / 100
-          ) {
+          if (shoot.x < -shoot.length || shoot.x > width + shoot.length ||
+              shoot.y < -shoot.length || shoot.y > height + shoot.length ||
+              shoot.progress > (width + height) / 100) {
             shoot.active = false;
           }
         }
       });
 
-      // Loop
       animationRef.current = requestAnimationFrame(animate);
     };
 
     animationRef.current = requestAnimationFrame(animate);
 
-    // CLEANUP
     return () => {
       window.removeEventListener('resize', resizeCanvas);
       if (animationRef.current) cancelAnimationFrame(animationRef.current);
     };
+  };
+
+  useEffect(() => {
+    const updateDarkMode = () => {
+      const dark = document.body.classList.contains('dark');
+      setIsDarkMode(dark);
+    };
+
+    updateDarkMode(); // initial check
+
+    const observer = new MutationObserver((mutations) => {
+      mutations.forEach((mutation) => {
+        if (mutation.attributeName === 'class') updateDarkMode();
+      });
+    });
+
+    observer.observe(document.body, { attributes: true });
+
+    return () => observer.disconnect();
   }, []);
+
+  useEffect(() => {
+    if (isDarkMode) {
+      const cleanup = initCanvas();
+      return cleanup;
+    } else {
+      if (animationRef.current) {
+        cancelAnimationFrame(animationRef.current);
+        animationRef.current = undefined;
+      }
+    }
+  }, [isDarkMode]);
+
+  if (!isDarkMode) return null;
 
   return (
     <canvas

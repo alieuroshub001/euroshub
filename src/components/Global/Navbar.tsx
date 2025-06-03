@@ -13,24 +13,20 @@ import {
   HeadsetIcon,
   KeyboardIcon,
   LayoutDashboardIcon,
-  MoonIcon,
   PhoneOutgoingIcon,
-  SmartphoneIcon,
-  SunIcon
+  SmartphoneIcon
 } from 'lucide-react';
 import Image from 'next/image';
 import Link from 'next/link';
 import { useEffect, useState } from 'react';
 import MobileMenu from './MobileMenu';
 
-// Animated Logo Text Component
 const AnimatedLogoText: React.FC<{ text: string; isHovered: boolean }> = ({ text, isHovered }) => {
   const letters = text.split('');
   const controls = useAnimation();
 
   useEffect(() => {
     if (isHovered) {
-      // Start animation when hovered - letters rise up
       controls.start(i => ({
         opacity: 1,
         y: 0,
@@ -57,7 +53,6 @@ const AnimatedLogoText: React.FC<{ text: string; isHovered: boolean }> = ({ text
         }
       }));
     } else {
-      // Fall down animation when not hovered
       controls.start(i => ({
         opacity: 0,
         y: 50,
@@ -109,9 +104,9 @@ export default function Navbar() {
   const [servicesOpen, setServicesOpen] = useState(false);
   const [isScrolled, setIsScrolled] = useState(false);
   const [logoHovered, setLogoHovered] = useState(false);
-  
+
   const allServices = [
-    { 
+    {
       category: 'Business Services',
       services: [
         { name: 'Virtual Assistance', icon: <HeadsetIcon className="w-4 h-4" /> },
@@ -122,7 +117,7 @@ export default function Navbar() {
         { name: 'ERP/CRM Software', icon: <LayoutDashboardIcon className="w-4 h-4" /> },
       ]
     },
-    { 
+    {
       category: 'Technology Services',
       services: [
         { name: 'Web Development', icon: <CodeIcon className="w-4 h-4" /> },
@@ -183,111 +178,97 @@ export default function Navbar() {
   };
 
   return (
-    <header className={`w-full text-[var(--foreground)] sticky top-0 z-50 transition-all duration-300 ${
-      isScrolled && !showMobileMenu // Only apply blur when not in mobile view
-        ? 'backdrop-blur-md bg-[var(--background)]/80' 
-        : isScrolled 
-          ? 'bg-[var(--background)]' // Solid background for mobile when scrolled
-          : 'bg-transparent'
-    }`}>
-      <nav className="relative flex items-center justify-between px-6 py-2 w-full">
-        {/* Left: Logo with Hover Animation and Theme Toggle */}
-        <div className="nav-left flex items-center gap-6">
-          <Link 
-            href="/" 
-            className="flex items-center gap-1 group overflow-hidden relative"
-            onMouseEnter={() => setLogoHovered(true)}
-            onMouseLeave={() => setLogoHovered(false)}
-          >
-            <Image
-              src="/assets/images/logo.png"
-              alt="Euroshub Logo"
-              width={75}
-              height={40}
-              className="object-contain"
-            />
-            {/* Animated text only appears on hover */}
-            <div className={`transition-all duration-300 ${
-              logoHovered ? 'opacity-100' : 'opacity-0 pointer-events-none'
-            }`}>
-              {logoHovered && <AnimatedLogoText text="EurosHub" isHovered={logoHovered} />}
-            </div>
-          </Link>
-          
-          {/* Theme Toggle Button - Only shown in desktop view */}
-          {!showMobileMenu && (
-            <button
-              className="ml-15 flex items-center gap-3 p-2 rounded-full border border-[var(--primary)]/20 hover:bg-[var(--primary)]/10 transition-all duration-300 hover:scale-105"
-              onClick={toggleDarkMode}
-              aria-label="Toggle Dark Mode"
-            >
-              <SunIcon className={`w-4 h-4 transition-all duration-300 ${darkMode ? 'text-gray-400' : 'text-yellow-500'}`} />
-              <div className={`w-6 h-3 rounded-full border flex items-center px-0.5 transition-colors ${
-                darkMode ? 'bg-[var(--foreground)]' : 'bg-[var(--secondary)]'
-              }`}>
-                <div
-                  className={`w-2 h-2 rounded-full transition-transform duration-300 ${
-                    darkMode
-                      ? 'translate-x-3 bg-[var(--background)]'
-                      : 'bg-[var(--foreground)]'
-                  }`}
-                />
-              </div>
-              <MoonIcon className={`w-4 h-4 transition-all duration-300 ${darkMode ? 'text-blue-400' : 'text-gray-400'}`} />
-            </button>
-          )}
-        </div>
+   <header className={`w-full text-[var(--foreground)] sticky top-0 z-50 transition-all duration-300 ${
+  darkMode
+    ? isScrolled && !showMobileMenu
+      ? 'backdrop-blur-md bg-[var(--background)]/80'
+      : isScrolled
+        ? 'bg-[var(--background)]'
+        : 'bg-transparent'
+    : 'bg-white'
+}`}>
 
-        {/* Navigation and Actions */}
+
+      <nav className="relative flex items-center justify-between px-6 py-2 w-full">
+        {/* Left: Logo and Theme Toggle */}
+        <div className="nav-left flex items-center gap-4 relative group">
+  {/* Logo Link and Extended Hover Zone */}
+  <div
+    className="relative z-10 flex items-center gap-1"
+    onMouseEnter={() => setLogoHovered(true)}
+    onMouseLeave={() => setLogoHovered(false)}
+  >
+    {/* Invisible expanded hover zone */}
+    <div className="absolute -left-8 right-4 top-0 bottom-0 z-0" />
+
+    <Link
+      href="/"
+      className="flex items-center relative z-10"
+    >
+      <Image
+        src="/assets/images/logo.png"
+        alt="Euroshub Logo"
+        width={75}
+        height={40}
+        className="object-contain"
+      />
+      <div className={`transition-opacity duration-300 ml-2 ${logoHovered ? 'opacity-100' : 'opacity-0 pointer-events-none'}`}>
+        <AnimatedLogoText text="EurosHub" isHovered={logoHovered} />
+      </div>
+    </Link>
+  </div>
+
+  {/* Theme Toggle Button - Z-index above extended hover zone */}
+  {!showMobileMenu && (
+    <button
+      className="relative z-20 w-14 h-7 flex items-center justify-start p-1 rounded-full border border-[var(--primary)]/40 bg-[var(--primary)]/10 transition-all duration-300"
+      onClick={toggleDarkMode}
+      aria-label="Toggle Theme"
+    >
+      <div
+        className={`w-5 h-5 rounded-full bg-[var(--foreground)] transition-transform duration-300 ${
+          darkMode ? 'translate-x-7' : ''
+        }`}
+      />
+    </button>
+  )}
+</div>
+
+        {/* Navigation Links */}
         <div className="flex items-center gap-8 flex-wrap">
-          {/* Navigation Links */}
           {!showMobileMenu && (
             <ul className="nav-center flex gap-8 items-center">
               <li className="relative group">
-                <Link 
-                  href="/" 
-                  className="px-3 py-2 rounded-lg font-medium transition-all duration-300
-                    hover:bg-[var(--primary)]/10 hover:text-[var(--primary)] 
-                    hover:shadow-[0_4px_12px_rgba(0,0,0,0.1)]"
-                >
+                <Link href="/" className="px-3 py-2 rounded-lg font-medium hover:bg-[var(--primary)]/10 hover:text-[var(--primary)] transition-all">
                   Home
-                  <span className="absolute bottom-0 left-0 w-0 h-0.5 bg-[var(--primary)] transition-all duration-300 group-hover:w-full"></span>
+                  <span className="absolute bottom-0 left-0 w-0 h-0.5 bg-[var(--primary)] transition-all group-hover:w-full"></span>
                 </Link>
               </li>
-              
               <li className="relative group">
-                <div 
-                  className="flex items-center px-3 py-2 rounded-lg font-medium cursor-pointer transition-all duration-300
-                    hover:bg-[var(--primary)]/10 hover:text-[var(--primary)] 
-                    hover:shadow-[0_4px_12px_rgba(0,0,0,0.1)]"
+                <div
+                  className="flex items-center px-3 py-2 rounded-lg font-medium cursor-pointer hover:bg-[var(--primary)]/10 hover:text-[var(--primary)] transition-all"
                   onClick={toggleServices}
                 >
                   Services
                   {servicesOpen ? (
-                    <ChevronUpIcon className="ml-1 w-4 h-4 transition-transform duration-200" />
+                    <ChevronUpIcon className="ml-1 w-4 h-4" />
                   ) : (
-                    <ChevronDownIcon className="ml-1 w-4 h-4 transition-transform duration-200" />
+                    <ChevronDownIcon className="ml-1 w-4 h-4" />
                   )}
-                  <span className="absolute bottom-0 left-0 w-0 h-0.5 bg-[var(--primary)] transition-all duration-300 group-hover:w-full"></span>
+                  <span className="absolute bottom-0 left-0 w-0 h-0.5 bg-[var(--primary)] transition-all group-hover:w-full"></span>
                 </div>
               </li>
-              
               <li className="relative group">
-                <Link 
-                  href="/about" 
-                  className="px-3 py-2 rounded-lg font-medium transition-all duration-300
-                    hover:bg-[var(--primary)]/10 hover:text-[var(--primary)] 
-                    hover:shadow-[0_4px_12px_rgba(0,0,0,0.1)]"
-                >
+                <Link href="/about" className="px-3 py-2 rounded-lg font-medium hover:bg-[var(--primary)]/10 hover:text-[var(--primary)] transition-all">
                   About Us
-                  <span className="absolute bottom-0 left-0 w-0 h-0.5 bg-[var(--primary)] transition-all duration-300 group-hover:w-full"></span>
+                  <span className="absolute bottom-0 left-0 w-0 h-0.5 bg-[var(--primary)] transition-all group-hover:w-full"></span>
                 </Link>
               </li>
             </ul>
           )}
 
           {/* CTA Buttons */}
-          <div className="nav-right flex gap-3 items-center navbar-cta"> 
+          <div className="nav-right flex gap-3 items-center navbar-cta">
             <Link href="/career">
               <button className="border border-[var(--primary)] text-[var(--primary)] px-4 py-3 rounded-full text-md font-medium hover:bg-[var(--primary)] hover:text-white transition-colors">
                 Explore Careers
@@ -295,22 +276,18 @@ export default function Navbar() {
             </Link>
             <Link href="/contact">
               <button className="border border-[var(--primary)] text-[var(--primary)] px-4 py-3 rounded-full text-md font-medium hover:bg-[var(--primary)] hover:text-white transition-colors">
-              Let&apos;s Talk Business
+                Let&apos;s Talk Business
               </button>
             </Link>
           </div>
 
-          {/* Hamburger Menu */}
           {showMobileMenu && <MobileMenu darkMode={darkMode} toggleDarkMode={toggleDarkMode} />}
         </div>
       </nav>
 
-      {/* Full Width Horizontal Services Dropdown - Matches Navbar Width */}
+      {/* Dropdown for Services */}
       {servicesOpen && (
-        <div 
-          className="absolute left-0 right-0 top-full w-full bg-[var(--background)] border-t border-[var(--secondary)] shadow-xl z-40"
-        >
-          {/* Match navbar's exact padding and layout */}
+        <div className="absolute left-0 right-0 top-full w-full bg-[var(--background)] border-t border-[var(--secondary)] shadow-xl z-40">
           <div className="px-6 py-4">
             <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
               {allServices.map((category) => (
@@ -323,9 +300,9 @@ export default function Navbar() {
                       <Link
                         key={service.name}
                         href={`/services#${service.name.toLowerCase().replace(/\s+/g, '-')}`}
-                        className="flex items-center gap-2 p-2 rounded-lg hover:bg-[var(--primary)]/10 transition-all duration-200 group"
+                        className="flex items-center gap-2 p-2 rounded-lg hover:bg-[var(--primary)]/10 transition-all group"
                       >
-                        <div className="bg-[var(--primary)]/10 p-1.5 rounded-full group-hover:bg-[var(--primary)] group-hover:text-white transition-colors">
+                        <div className="bg-[var(--primary)]/10 p-1.5 rounded-full group-hover:bg-[var(--primary)] group-hover:text-white">
                           {service.icon}
                         </div>
                         <span className="text-sm font-medium group-hover:text-[var(--primary)]">{service.name}</span>
@@ -335,13 +312,8 @@ export default function Navbar() {
                 </div>
               ))}
             </div>
-            
-            {/* View All Services Button */}
             <div className="mt-4 pt-3 border-t border-[var(--secondary)] text-center">
-              <Link 
-                href="/services" 
-                className="inline-flex items-center gap-2 bg-[var(--primary)] text-white px-4 py-2 rounded-full text-sm font-medium hover:bg-[var(--primary)]/90 transition-colors"
-              >
+              <Link href="/services" className="inline-flex items-center gap-2 bg-[var(--primary)] text-white px-4 py-2 rounded-full text-sm font-medium hover:bg-[var(--primary)]/90 transition-colors">
                 View All Services
                 <ChevronDownIcon className="w-3 h-3 rotate-90" />
               </Link>

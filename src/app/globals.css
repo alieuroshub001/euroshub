@@ -39,6 +39,14 @@ body {
   transition: background-color 0.3s, color 0.3s;
 }
 
+/* Hide space background animation elements in light mode */
+body:not(.dark) .space-star,
+body:not(.dark) .space-star-large,
+body:not(.dark) .shooting-star,
+body:not(.dark) .dust-cloud {
+  display: none !important;
+}
+
 /* Smooth transitions */
 * {
   transition: background-color 0.3s ease, color 0.3s ease;
@@ -136,6 +144,7 @@ body {
 .animate-marquee-reverse {
   animation: marquee 30s linear infinite reverse;
 }
+
 /* Space Background Styles */
 .space-star {
   position: absolute;

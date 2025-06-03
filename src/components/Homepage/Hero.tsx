@@ -7,7 +7,7 @@ import { FC } from 'react';
 
 const Hero: FC = () => {
   return (
-    <section className="relative text-[var(--foreground)] px-6 sm:px-8 md:px-16 lg:px-32 py-24">
+    <section className="mt-14 relative text-[var(--foreground)] px-6 sm:px-8 md:px-16 lg:px-32 py-24">
       {/* → Content container: flex-col on mobile, two-column on md+ */}
       <div className="max-w-7xl mx-auto flex flex-col-reverse md:flex-row items-center gap-12">
         {/* ───────────────────────────────────────────────────────────────────── Text Content ───────────────────────────────────────────────────────────────────── */}

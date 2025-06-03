@@ -9,7 +9,8 @@ import CosmicConnectionText from './AnimatedText';
 
 const Footer: React.FC = () => {
   return (
-    <footer className="w-full bg-[var(--background)] text-[var(--foreground)] font-sans border-t border-white/20">
+    <footer className="w-full bg-[var(--background)] text-[var(--foreground)] font-sans border-t border-[color:var(--border-color)]
+">
       <div className="flex flex-col lg:flex-row">
         {/* Logo and description section */}
         <div className="lg:w-1/3 p-4 lg:p-8 flex flex-col justify-center">
@@ -28,7 +29,7 @@ const Footer: React.FC = () => {
         </div>
 
         {/* Social icons section - hidden on mobile, shown from 768px */}
-        <div className="hidden md:flex mx-auto lg:ml-15 border-t lg:border-t-0 border-white/20 flex-row lg:flex-col text-center">
+<div className="hidden md:flex mx-auto lg:ml-15 border-t lg:border-t-0 border-[color:var(--border-color)] flex-row lg:flex-col text-center">
           {[
             { icon: FaGithub, label: 'Github' },
             { icon: FaTwitter, label: 'Twitter' },
@@ -38,7 +39,8 @@ const Footer: React.FC = () => {
             <a
               key={label}
               href="#"
-              className={`hover:text-[var(--primary)] transition-colors text-xs uppercase tracking-wide flex items-center justify-center px-4 py-4 lg:px-6 lg:py-6 border-l border-r border-white/20 ${
+              className={`hover:text-[var(--primary)] transition-colors text-xs uppercase tracking-wide flex items-center justify-center px-4 py-4 lg:px-6 lg:py-6 border-l border-r border-[color:var(--border-color)]
+ ${
                 index !== arr.length - 1 ? 'border-b lg:border-b' : ''
               }`}
             >
@@ -49,7 +51,8 @@ const Footer: React.FC = () => {
         </div>
 
         {/* Mobile social icons - shown only on mobile */}
-        <div className="md:hidden flex border-t border-white/20">
+        <div className="md:hidden flex border-t border-[color:var(--border-color)]
+">
           {[
             { icon: FaGithub, label: 'Github' },
             { icon: FaTwitter, label: 'Twitter' },
@@ -77,7 +80,8 @@ const Footer: React.FC = () => {
       </div>
 
       {/* Bottom section - reversed order on mobile */}
-      <div className="flex flex-col md:flex-row justify-between items-center px-4 lg:px-30 py-4 lg:py-6 text-xs md:text-sm border-t border-white/20">
+      <div className="flex flex-col md:flex-row justify-between items-center px-4 lg:px-30 py-4 lg:py-6 text-xs md:text-sm border-t border-[color:var(--border-color)]
+">
         {/* Links first on mobile */}
         <nav className="order-1 md:order-2 flex flex-wrap justify-center gap-2 md:gap-6 mb-2 md:mb-0">
           <Link href="/about" className="hover:text-[var(--primary)] transition-colors">About</Link>

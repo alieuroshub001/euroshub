@@ -67,8 +67,8 @@ export default function AboutUs() {
   return (
     <main className="text-[var(--foreground)]">
 
-      {/* HERO */}
-      <section className="relative py-28 px-6 overflow-hidden">
+      {/* HERO - White background */}
+      <section className="relative py-28 px-6 overflow-hidden bg-[var(--background)]">
         <div className="max-w-7xl mx-auto grid md:grid-cols-2 gap-12 items-center">
           {/* Text */}
           <div>
@@ -118,8 +118,8 @@ export default function AboutUs() {
         </div>
       </section>
 
-      {/* CORE PRINCIPLES */}
-      <section className="py-20">
+      {/* CORE PRINCIPLES - Secondary background */}
+      <section className="py-20 bg-[var(--secondary)]">
         <div className="max-w-7xl mx-auto px-6 text-center">
           <motion.h2
             initial={{ opacity: 0, y: -20 }}
@@ -146,7 +146,7 @@ export default function AboutUs() {
                 whileInView={{ opacity: 1, y: 0 }}
                 transition={{ duration: 0.5, delay: i * 0.1 }}
                 viewport={{ once: true }}
-                className="p-6 rounded-xl shadow-sm border border-[var(--secondary)]"
+                className="p-6 rounded-xl shadow-sm border border-[var(--secondary)]/20 bg-[var(--card-bg)]"
               >
                 <div className="w-12 h-12 bg-[var(--primary)]/10 rounded-full flex items-center justify-center mb-4">
                   {p.icon}
@@ -159,8 +159,8 @@ export default function AboutUs() {
         </div>
       </section>
 
-      {/* OUR JOURNEY */}
-      <section className="py-20">
+      {/* OUR JOURNEY - White background */}
+      <section className="py-20 bg-[var(--background)]">
         <div className="max-w-7xl mx-auto px-6 grid md:grid-cols-2 gap-12 items-center">
           <motion.div
             initial={{ opacity: 0, x: -50 }}
@@ -206,12 +206,14 @@ export default function AboutUs() {
         </div>
       </section>
 
-      {/* STATS / TEAM / TESTIMONIALS */}
-      <Counter />
-      <Team />
-      <Testimonials />
+      {/* STATS / TEAM / TESTIMONIALS - Secondary background */}
+      <div className="bg-[var(--secondary)]">
+        <Counter />
+        <Team />
+        <Testimonials />
+      </div>
 
-      {/* CALL TO ACTION */}
+      {/* CALL TO ACTION - Primary color */}
       <section className="py-20 bg-[var(--primary)] text-white text-center">
         <div className="max-w-7xl mx-auto px-6">
           <motion.h2

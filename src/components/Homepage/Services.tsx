@@ -21,6 +21,7 @@ import {
 } from 'lucide-react';
 import Image from 'next/image';
 import { JSX, useCallback, useEffect, useRef, useState } from 'react';
+import { ChevronLeft, ChevronRight } from 'lucide-react';
 
 interface Service {
   id: number;
@@ -40,7 +41,7 @@ const allServices: Service[] = [
     description: 'Remote support for administrative and customer tasks.',
     category: 'business',
     slug: 'virtual-assistance',
-    image: '/assets/services/virtual.jpeg',
+    image: '/assets/services/virtual-assistant.jpg',
   },
   {
     id: 2,
@@ -49,7 +50,7 @@ const allServices: Service[] = [
     description: 'Complete coordination for project execution and tracking.',
     category: 'business',
     slug: 'project-management',
-    image: '/assets/services/pm.jpeg',
+    image: '/assets/services/project-management.JPG',
   },
   {
     id: 3,
@@ -58,7 +59,7 @@ const allServices: Service[] = [
     description: 'Precise data processing and document conversion solutions.',
     category: 'business',
     slug: 'data-entry-transcription',
-    image: '/assets/services/entry.jpg',
+    image: '/assets/services/data-entry.jpeg',
   },
   {
     id: 4,
@@ -371,29 +372,32 @@ export default function Services() {
           ))}
         </motion.div>
 
-        {/* → Custom cursor circle with arrows */}
-        {showCursor && !isDragging && (
-          <motion.div
-            className="fixed pointer-events-none z-50 w-16 h-16 rounded-full border border-white bg-white/10 backdrop-blur-sm"
-            style={{
-              top: mousePos.y - 32,
-              left: mousePos.x - 32,
-            }}
-            initial={{ opacity: 0 }}
-            animate={{ opacity: 1 }}
-            exit={{ opacity: 0 }}
-            transition={{ type: 'spring', stiffness: 300, damping: 20 }}
-          >
-            {/* Left arrow */}
-            <span className="absolute left-[-18px] top-1/2 -translate-y-1/2 text-xl select-none pointer-events-none text-white">
-              &larr;
-            </span>
-            {/* Right arrow */}
-            <span className="absolute right-[-18px] top-1/2 -translate-y-1/2 text-xl select-none pointer-events-none text-white">
-              &rarr;
-            </span>
-          </motion.div>
-        )}
+      {showCursor && (
+  <motion.div
+    className={`fixed pointer-events-none z-50 rounded-full border border-white bg-white/10 transition-all duration-200 ease-out ${
+      isDragging ? 'w-8 h-8' : 'w-16 h-16'
+    }`}
+    style={{
+      top: mousePos.y - (isDragging ? 16 : 32),
+      left: mousePos.x - (isDragging ? 16 : 32),
+    }}
+    initial={{ opacity: 0 }}
+    animate={{ opacity: 1 }}
+    exit={{ opacity: 0 }}
+    transition={{ type: 'spring', stiffness: 300, damping: 20 }}
+  >
+    {/* Left Chevron */}
+    {!isDragging && (
+      <ChevronLeft className="absolute left-[-20px] top-1/2 -translate-y-1/2 w-5 h-5 text-white pointer-events-none" />
+    )}
+    {/* Right Chevron */}
+    {!isDragging && (
+      <ChevronRight className="absolute right-[-20px] top-1/2 -translate-y-1/2 w-5 h-5 text-white pointer-events-none" />
+    )}
+  </motion.div>
+)}
+
+
       </div>
     </section>
   );

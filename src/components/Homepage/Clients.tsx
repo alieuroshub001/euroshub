@@ -1,4 +1,3 @@
-// components/Global/Client.tsx
 'use client';
 
 import Image from 'next/image';
@@ -39,12 +38,11 @@ const ClientLogo = ({ logo }: { logo: string }) => {
 };
 
 export default function Clients() {
-  // Triple the array for a seamless marquee
   const extendedLogos = [...logos, ...logos, ...logos];
 
   return (
-    <section className="py-20 px-6 sm:px-8 md:px-16 lg:px-32 text-[var(--foreground)] bg-transparent">
-      <div className="max-w-7xl mx-auto">
+    <section className="py-20 px-0 text-[var(--foreground)] bg-transparent">
+      <div className="w-screen overflow-hidden">
         {/* Top-left marquee */}
         <div className="mb-8">
           <Marquee direction="left" speed={35}>

@@ -32,7 +32,7 @@ const businessServices: Service[] = [
           'Document preparation'
         ],
         slug: 'virtual-assistance', 
-        image: '/assets/services/virtual.jpeg' 
+        image: '/assets/services/virtual-assitant.jpeg' 
       },
       { 
         id: 2, 
