@@ -18,7 +18,7 @@ import {
 } from 'lucide-react';
 import Image from 'next/image';
 import Link from 'next/link';
-import { useEffect, useState } from 'react';
+import { useEffect, useState, useRef } from 'react';
 import MobileMenu from './MobileMenu';
 
 const AnimatedLogoText: React.FC<{ text: string; isHovered: boolean }> = ({ text, isHovered }) => {
@@ -104,6 +104,8 @@ export default function Navbar() {
   const [servicesOpen, setServicesOpen] = useState(false);
   const [isScrolled, setIsScrolled] = useState(false);
   const [logoHovered, setLogoHovered] = useState(false);
+  const dropdownRef = useRef<HTMLDivElement>(null);
+  const servicesButtonRef = useRef<HTMLDivElement>(null);
 
   const allServices = [
     {
@@ -177,62 +179,79 @@ export default function Navbar() {
     setServicesOpen(!servicesOpen);
   };
 
-  return (
-   <header className={`w-full text-[var(--foreground)] sticky top-0 z-50 transition-all duration-300 ${
-  darkMode
-    ? isScrolled && !showMobileMenu
-      ? 'backdrop-blur-md bg-[var(--background)]/80'
-      : isScrolled
-        ? 'bg-[var(--background)]'
-        : 'bg-transparent'
-    : 'bg-white'
-}`}>
+  // Close dropdown when clicking outside
+  useEffect(() => {
+    const handleClickOutside = (event: MouseEvent) => {
+      if (servicesOpen && 
+          dropdownRef.current && 
+          !dropdownRef.current.contains(event.target as Node) &&
+          servicesButtonRef.current && 
+          !servicesButtonRef.current.contains(event.target as Node)) {
+        setServicesOpen(false);
+      }
+    };
 
+    document.addEventListener('mousedown', handleClickOutside);
+    return () => {
+      document.removeEventListener('mousedown', handleClickOutside);
+    };
+  }, [servicesOpen]);
+
+  return (
+    <header className={`w-full text-[var(--foreground)] sticky top-0 z-50 transition-all duration-300 ${
+      darkMode
+        ? isScrolled && !showMobileMenu
+          ? 'backdrop-blur-md bg-[var(--background)]/80'
+          : isScrolled
+            ? 'bg-[var(--background)]'
+            : 'bg-transparent'
+        : 'bg-white'
+    }`}>
 
       <nav className="relative flex items-center justify-between px-6 py-2 w-full">
         {/* Left: Logo and Theme Toggle */}
         <div className="nav-left flex items-center gap-4 relative group">
-  {/* Logo Link and Extended Hover Zone */}
-  <div
-    className="relative z-10 flex items-center gap-1"
-    onMouseEnter={() => setLogoHovered(true)}
-    onMouseLeave={() => setLogoHovered(false)}
-  >
-    {/* Invisible expanded hover zone */}
-    <div className="absolute -left-8 right-4 top-0 bottom-0 z-0" />
+          {/* Logo Link and Extended Hover Zone */}
+          <div
+            className="relative z-10 flex items-center gap-1"
+            onMouseEnter={() => setLogoHovered(true)}
+            onMouseLeave={() => setLogoHovered(false)}
+          >
+            {/* Invisible expanded hover zone */}
+            <div className="absolute -left-8 right-4 top-0 bottom-0 z-0" />
 
-    <Link
-      href="/"
-      className="flex items-center relative z-10"
-    >
-      <Image
-        src="/assets/images/logo.png"
-        alt="Euroshub Logo"
-        width={75}
-        height={40}
-        className="object-contain"
-      />
-      <div className={`transition-opacity duration-300 ml-2 ${logoHovered ? 'opacity-100' : 'opacity-0 pointer-events-none'}`}>
-        <AnimatedLogoText text="EurosHub" isHovered={logoHovered} />
-      </div>
-    </Link>
-  </div>
+            <Link
+              href="/"
+              className="flex items-center relative z-10"
+            >
+              <Image
+                src="/assets/images/logo.png"
+                alt="Euroshub Logo"
+                width={75}
+                height={40}
+                className="object-contain"
+              />
+              <div className={`transition-opacity duration-300 ml-2 ${logoHovered ? 'opacity-100' : 'opacity-0 pointer-events-none'}`}>
+                <AnimatedLogoText text="EurosHub" isHovered={logoHovered} />
+              </div>
+            </Link>
+          </div>
 
-  {/* Theme Toggle Button - Z-index above extended hover zone */}
-  {!showMobileMenu && (
-    <button
-      className="relative z-20 w-14 h-7 flex items-center justify-start p-1 rounded-full border border-[var(--primary)]/40 bg-[var(--primary)]/10 transition-all duration-300"
-      onClick={toggleDarkMode}
-      aria-label="Toggle Theme"
-    >
-      <div
-        className={`w-5 h-5 rounded-full bg-[var(--foreground)] transition-transform duration-300 ${
-          darkMode ? 'translate-x-7' : ''
-        }`}
-      />
-    </button>
-  )}
-</div>
+          {/* Theme Toggle Button - Z-index above extended hover zone */}
+          {!showMobileMenu && (
+            <button
+              className="relative z-20 w-14 h-7 flex items-center justify-start p-1 rounded-full border border-[var(--primary)]/40 bg-[var(--primary)]/10 transition-all duration-300"
+              onClick={toggleDarkMode}
+              aria-label="Toggle Theme"
+            >
+              <div
+                className={`w-5 h-5 rounded-full bg-[var(--foreground)] transition-transform duration-300 ${
+                  darkMode ? 'translate-x-7' : ''
+                }`}
+              />
+            </button>
+          )}
+        </div>
 
         {/* Navigation Links */}
         <div className="flex items-center gap-8 flex-wrap">
@@ -246,6 +265,7 @@ export default function Navbar() {
               </li>
               <li className="relative group">
                 <div
+                  ref={servicesButtonRef}
                   className="flex items-center px-3 py-2 rounded-lg font-medium cursor-pointer hover:bg-[var(--primary)]/10 hover:text-[var(--primary)] transition-all"
                   onClick={toggleServices}
                 >
@@ -287,7 +307,12 @@ export default function Navbar() {
 
       {/* Dropdown for Services */}
       {servicesOpen && (
-        <div className="absolute left-0 right-0 top-full w-full bg-[var(--background)] border-t border-[var(--secondary)] shadow-xl z-40">
+        <div 
+          ref={dropdownRef}
+          className="absolute left-0 right-0 top-full w-full bg-[var(--background)] border-t border-[var(--secondary)] shadow-xl z-40"
+          onMouseEnter={() => setServicesOpen(true)}
+          onMouseLeave={() => setServicesOpen(false)}
+        >
           <div className="px-6 py-4">
             <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
               {allServices.map((category) => (
