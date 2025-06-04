@@ -7,7 +7,6 @@ import { useEffect, useState, useRef } from 'react';
 interface CursorProps {
   mousePos: { x: number; y: number };
   isDragging: boolean;
-  isDarkMode?: boolean;
   showCursor: boolean;
 }
 
@@ -19,9 +18,9 @@ const parseRGB = (rgbString: string): number[] | null => {
 const getLuminance = ([r, g, b]: number[]): number =>
   (0.299 * r + 0.587 * g + 0.114 * b) / 255;
 
-export default function Cursor({ mousePos, isDragging, showCursor, isDarkMode }: CursorProps) {
+export default function Cursor({ mousePos, isDragging, showCursor }: CursorProps) {
   const [mounted, setMounted] = useState(false);
-  const [dynamicColor, setDynamicColor] = useState<string>('');
+  const [dynamicColor, setDynamicColor] = useState<string>('#00FFFF'); // Bright cyan by default
   const canvasRef = useRef<HTMLCanvasElement | null>(null);
   const rafRef = useRef<number | null>(null);
 
@@ -54,83 +53,47 @@ export default function Cursor({ mousePos, isDragging, showCursor, isDarkMode }:
     const relX = ((x - rect.left) / rect.width) * canvas.width;
     const relY = ((y - rect.top) / rect.height) * canvas.height;
 
-    const clampedX = Math.min(Math.max(0, Math.floor(relX)), canvas.width - 1);
-    const clampedY = Math.min(Math.max(0, Math.floor(relY)), canvas.height - 1);
+    const clampedX = Math.floor(Math.min(Math.max(0, relX), canvas.width - 1));
+    const clampedY = Math.floor(Math.min(Math.max(0, relY), canvas.height - 1));
 
-    const sampleSize = 3;
-    const imageData = ctx.getImageData(
-      Math.max(0, clampedX - sampleSize),
-      Math.max(0, clampedY - sampleSize),
-      Math.min(sampleSize * 2 + 1, canvas.width),
-      Math.min(sampleSize * 2 + 1, canvas.height)
-    );
-
-    const data = imageData.data;
-    let r = 0, g = 0, b = 0, count = 0;
-    for (let i = 0; i < data.length; i += 4) {
-      r += data[i];
-      g += data[i + 1];
-      b += data[i + 2];
-      count++;
-    }
-
-    if (count === 0) return null;
-    const luminance = getLuminance([r / count, g / count, b / count]);
+    const imageData = ctx.getImageData(clampedX, clampedY, 1, 1).data;
+    const luminance = getLuminance([imageData[0], imageData[1], imageData[2]]);
     return luminance > 0.5 ? '#000000' : '#ffffff';
   };
 
-  const getBackgroundImageColor = (el: Element, x: number, y: number): Promise<string | null> => {
-    const bgImage = window.getComputedStyle(el).backgroundImage;
-    const match = bgImage.match(/url\(['"]?([^'"]*)['"]?\)/);
-    if (!match) return Promise.resolve(null);
-
-    const tempImg = new Image();
-    tempImg.crossOrigin = 'anonymous';
-
-    return new Promise((resolve) => {
-      tempImg.onload = () => resolve(getImageColorAtPoint(tempImg, x, y));
-      tempImg.onerror = () => resolve(null);
-      tempImg.src = match[1];
-    });
-  };
-
   const getContrastingColor = async (x: number, y: number): Promise<string> => {
-    const el = document.elementFromPoint(x, y);
-    if (!el) return '';
+  const el = document.elementFromPoint(x, y);
+  if (!el) return '#00FFFF';
 
-    const styles = window.getComputedStyle(el);
-    const bgImage = styles.backgroundImage;
+  const isDarkMode = window.matchMedia('(prefers-color-scheme: dark)').matches;
+  const styles = window.getComputedStyle(el);
 
-    if (el.tagName === 'IMG') {
-      const img = el as HTMLImageElement;
-      if (img.complete && img.naturalWidth > 0) {
-        const color = getImageColorAtPoint(img, x, y);
-        if (color) return color;
+  if (el.tagName === 'IMG') {
+    const img = el as HTMLImageElement;
+    if (img.complete && img.naturalWidth > 0) {
+      const color = getImageColorAtPoint(img, x, y);
+      if (color) {
+        if ((color === '#ffffff' && !isDarkMode) || (color === '#000000' && isDarkMode)) {
+          return '#00FFFF'; // fallback for conflict
+        }
+        return color;
       }
     }
+  }
 
-    if (bgImage && bgImage !== 'none') {
-      const color = await getBackgroundImageColor(el, x, y);
-      if (color) return color;
-
-      if (bgImage.toLowerCase().includes('dark')) return '#ffffff';
-      if (bgImage.toLowerCase().includes('light')) return '#000000';
-      return '#17b6b2'; // fallback
+  const rgb = parseRGB(styles.backgroundColor || styles.color || '');
+  if (rgb) {
+    const luminance = getLuminance(rgb);
+    const baseColor = luminance > 0.5 ? '#000000' : '#ffffff';
+    if ((baseColor === '#ffffff' && !isDarkMode) || (baseColor === '#000000' && isDarkMode)) {
+      return '#00FFFF'; // fallback if not visible enough
     }
+    return baseColor;
+  }
 
-    const rgb = parseRGB(styles.backgroundColor || styles.color || '');
-    if (rgb) {
-      return getLuminance(rgb) > 0.5 ? '#000000' : '#ffffff';
-    }
+  return '#00FFFF'; // fallback
+};
 
-    const tag = el.tagName.toLowerCase();
-    const classList = Array.from(el.classList);
-    if (['button', 'a', 'input'].includes(tag) || classList.some(c => /button|link/.test(c))) {
-      return '#17b6b2';
-    }
-
-    return isDarkMode ? '#ffffff' : '#000000';
-  };
 
   useEffect(() => {
     if (!mounted) return;
@@ -151,44 +114,38 @@ export default function Cursor({ mousePos, isDragging, showCursor, isDarkMode }:
 
   if (!mounted) return null;
 
-  const size = isDragging ? 42 : 48;
+  const size = isDragging ? 48 : 56;
   const offset = size / 2;
-  const chevronOffset = isDragging ? '-24px' : '-26px';
-  const chevronSize = isDragging ? 14 : 16;
-  const glowSize = isDragging ? '10px' : '12px';
-
-  const finalColor = dynamicColor || (isDarkMode ? 'var(--primary-light)' : 'var(--primary-dark)');
+  const chevronOffset = isDragging ? '-26px' : '-30px';
+  const chevronSize = isDragging ? 16 : 18;
+  const glowSize = isDragging ? '14px' : '16px';
 
   return (
     <motion.div
-      className="fixed pointer-events-none z-50 rounded-full border-2 transition-all duration-200 ease-out"
+      className="fixed pointer-events-none z-50 rounded-full"
       style={{
         top: mousePos.y - offset,
         left: mousePos.x - offset,
         width: size,
         height: size,
-        borderColor: finalColor,
+        border: `6px solid ${dynamicColor}`,
         backgroundColor: 'transparent',
-        borderWidth: isDragging ? '3px' : '2px',
+        boxShadow: `0 0 ${glowSize} ${dynamicColor}`,
         willChange: 'transform',
       }}
       initial={{ opacity: 0 }}
-      animate={{ opacity: showCursor ? 1 : 0, width: size, height: size }}
+      animate={{ opacity: showCursor ? 1 : 0 }}
       transition={{ type: 'spring', stiffness: 300, damping: 20 }}
     >
       <ChevronLeft
         className="absolute top-1/2 -translate-y-1/2 transition-all duration-200"
-        style={{ left: chevronOffset, color: finalColor }}
+        style={{ left: chevronOffset, color: dynamicColor }}
         size={chevronSize}
       />
       <ChevronRight
         className="absolute top-1/2 -translate-y-1/2 transition-all duration-200"
-        style={{ right: chevronOffset, color: finalColor }}
+        style={{ right: chevronOffset, color: dynamicColor }}
         size={chevronSize}
-      />
-      <div
-        className="absolute inset-0 rounded-full opacity-30 transition-all duration-200"
-        style={{ boxShadow: `0 0 ${glowSize} ${finalColor}` }}
       />
     </motion.div>
   );

@@ -3,7 +3,6 @@
 
 import { motion, useAnimation } from 'framer-motion';
 import { Aperture, CheckCircle, Clock, Globe, Users } from 'lucide-react';
-import Image from 'next/image';
 import { memo, useCallback, useEffect, useRef, useState } from 'react';
 import { useInView } from 'react-intersection-observer';
 
@@ -70,10 +69,19 @@ const Counter = () => {
       ref={ref}
       className="relative py-24 bg-transparent text-[var(--foreground)] overflow-hidden"
     >
-      {/* Background accents */}
-      <div className="absolute inset-0 pointer-events-none">
-        <div className="absolute top-1/4 left-1/4 w-56 h-56 bg-gradient-to-br from-[var(--primary)]/10 to-purple-500/10 rounded-full blur-3xl opacity-30" />
-        <div className="absolute bottom-1/4 right-1/4 w-72 h-72 bg-gradient-to-br from-blue-500/10 to-[var(--primary)]/10 rounded-full blur-3xl opacity-30" />
+      {/* Animated gradient background */}
+      <div className="absolute inset-0 overflow-hidden">
+        <motion.div 
+          className="absolute top-0 left-0 w-full h-full bg-gradient-to-br from-[var(--primary)]/5 to-purple-500/5"
+          initial={{ x: '-50%', y: '-50%', scale: 1.5 }}
+          animate={{ x: '50%', y: '50%', scale: 1.8 }}
+          transition={{
+            duration: 30,
+            repeat: Infinity,
+            repeatType: 'reverse',
+            ease: 'linear'
+          }}
+        />
       </div>
 
       <div className="max-w-7xl mx-auto px-6 sm:px-8 md:px-16 lg:px-32 relative z-10">
@@ -87,69 +95,98 @@ const Counter = () => {
           }}
           className="text-center mb-16"
         >
-          <div className="inline-flex items-center justify-center px-4 py-2 rounded-full bg-[var(--primary)]/10 text-[var(--primary)] border border-[var(--primary)]/20 mb-4">
+          <motion.div
+            className="inline-flex items-center justify-center px-4 py-2 rounded-full bg-[var(--primary)]/10 text-[var(--primary)] border border-[var(--primary)]/20 mb-4"
+            whileHover={{ scale: 1.05 }}
+            whileTap={{ scale: 0.95 }}
+          >
             <Aperture className="w-5 h-5 mr-2" />
             <span className="text-sm font-medium">OUR ACHIEVEMENTS</span>
-          </div>
+          </motion.div>
           <h2 className="text-3xl md:text-4xl lg:text-5xl font-bold leading-tight">
-            Delivering Excellence
+            Numbers That Speak
             <br className="hidden md:block" />
-            <span className="text-[var(--primary)]">Across The Globe</span>
+            <span className="bg-gradient-to-r from-[var(--primary)] to-[#0d8f8c] bg-clip-text text-transparent">
+              Volumes
+            </span>
           </h2>
         </motion.div>
 
-        {/* Image and Counters */}
-        <div className="flex flex-col lg:flex-row items-center gap-12">
-          {/* Illustration */}
-          <div className="w-full lg:w-1/2 flex justify-center">
-            <Image
-              src="/assets/images/counter.png"
-              alt="Counter Illustration"
-              width={500}
-              height={500}
-              className="rounded-xl shadow-lg"
-              priority
-            />
-          </div>
-
-          {/* Counters Grid */}
-          <div className="w-full lg:w-1/2 grid grid-cols-1 sm:grid-cols-2 gap-8">
-            {counters.map((counter, index) => {
-              const Icon = counter.icon;
-              return (
-                <motion.div
-                  key={index}
-                  className="flex flex-col items-center text-center"
-                  initial={{ opacity: 0, y: 30 }}
-                  animate={controls}
-                  variants={{
-                    visible: {
-                      opacity: 1,
-                      y: 0,
-                      transition: {
-                        delay: index * 0.1,
-                        type: 'spring',
-                        stiffness: 120,
-                        damping: 12,
-                      },
+        {/* Counters Grid */}
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-8">
+          {counters.map((counter, index) => {
+            const Icon = counter.icon;
+            return (
+              <motion.div
+                key={index}
+                className="flex flex-col items-center text-center"
+                initial={{ opacity: 0, y: 30 }}
+                animate={controls}
+                variants={{
+                  visible: {
+                    opacity: 1,
+                    y: 0,
+                    transition: {
+                      delay: index * 0.1,
+                      type: 'spring',
+                      stiffness: 120,
+                      damping: 12,
                     },
-                  }}
+                  },
+                }}
+              >
+                <motion.div
+                  className="relative w-24 h-24 mb-6 flex items-center justify-center"
+                  whileHover={{ scale: 1.1 }}
                 >
-                  <div className="p-4 bg-[var(--primary)]/10 rounded-full mb-3 border border-[var(--primary)]/20">
+                  {/* Animated circle background */}
+                  <motion.div
+                    className="absolute inset-0 rounded-full bg-[var(--primary)]/10 border border-[var(--primary)]/20"
+                    initial={{ scale: 0.8, opacity: 0 }}
+                    animate={{ scale: 1, opacity: 1 }}
+                    transition={{ delay: index * 0.1 + 0.3 }}
+                  />
+                  <motion.div
+                    className="absolute inset-0 rounded-full bg-[var(--primary)]/5 border border-[var(--primary)]/10"
+                    initial={{ scale: 0.6, opacity: 0 }}
+                    animate={{ scale: 0.9, opacity: 1 }}
+                    transition={{ delay: index * 0.1 + 0.4 }}
+                  />
+                  
+                  {/* Icon */}
+                  <div className="p-4 bg-[var(--primary)]/10 rounded-full border border-[var(--primary)]/20 z-10">
                     <Icon className="w-8 h-8 text-[var(--primary)]" />
                   </div>
-                  <div className="text-3xl sm:text-4xl font-bold text-[var(--primary)]">
-                    {counter.value}
-                    {counter.suffix}
-                  </div>
-                  <div className="text-sm sm:text-base text-[var(--foreground)] mt-1 opacity-80">
-                    {counter.label}
-                  </div>
                 </motion.div>
-              );
-            })}
-          </div>
+
+                {/* Counter */}
+                <motion.div 
+                  className="text-4xl sm:text-5xl font-bold text-[var(--primary)] mb-2"
+                  initial={{ opacity: 0 }}
+                  animate={{ opacity: 1 }}
+                  transition={{ delay: index * 0.1 + 0.5 }}
+                >
+                  {counter.value}
+                  <span className="text-[var(--primary)]">{counter.suffix}</span>
+                </motion.div>
+
+                {/* Label */}
+                <motion.div
+                  className="text-sm sm:text-base text-[var(--foreground)] mt-1 opacity-80"
+                  initial={{ opacity: 0 }}
+                  animate={{ opacity: 0.8 }}
+                  transition={{ delay: index * 0.1 + 0.6 }}
+                >
+                  {counter.label}
+                </motion.div>
+              </motion.div>
+            );
+          })}
         </div>
+
+        {/* Animated decorative elements */}
+        <div className="absolute -bottom-20 -left-20 w-40 h-40 rounded-full bg-[var(--primary)]/10 blur-3xl opacity-30" />
+        <div className="absolute -top-20 -right-20 w-60 h-60 rounded-full bg-[var(--primary)]/10 blur-3xl opacity-30" />
       </div>
     </section>
   );

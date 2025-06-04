@@ -138,7 +138,7 @@ export default function Team() {
   };
 
   return (
-    <section className="py-24 px-6 sm:px-8 md:px-16 lg:px-32 relative overflow-hidden">
+    <section className="py-38 px-6 sm:px-8 md:px-16 lg:px-32 relative overflow-hidden">
       {/* Background Accents */}
       <div className="absolute inset-0 pointer-events-none">
         <div className="absolute top-1/5 left-1/5 w-48 h-48 sm:w-56 sm:h-56 bg-gradient-to-br from-[var(--primary)]/10 to-purple-500/10 rounded-full blur-3xl opacity-30" />
