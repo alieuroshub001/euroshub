@@ -1,7 +1,6 @@
-// components/Global/Services.tsx
 'use client';
 import Cursor from '@/components/Global/Cursor';
-import { motion, useMotionValue, useTransform } from 'framer-motion';
+import { motion, useMotionValue } from 'framer-motion'; 
 import {
   BarChart2,
   ClipboardList,
@@ -17,11 +16,11 @@ import {
   PhoneOutgoing,
   Search,
   Server,
-  Smartphone
+  Smartphone,
 } from 'lucide-react';
 import Image from 'next/image';
 import { JSX, useCallback, useEffect, useRef, useState } from 'react';
-import { ChevronLeft, ChevronRight } from 'lucide-react';
+
 
 interface Service {
   id: number;

@@ -2,7 +2,7 @@
 
 import { useState, useEffect, useRef, useCallback } from 'react';
 import { motion, useMotionValue } from 'framer-motion';
-import { ChevronLeft, ChevronRight, UserCircle2 } from 'lucide-react';
+import { UserCircle2 } from 'lucide-react';
 import Cursor from '@/components/Global/Cursor';
 
 interface Testimonial {
@@ -41,7 +41,6 @@ export default function Testimonials() {
 
   const [mousePos, setMousePos] = useState({ x: 0, y: 0 });
   const [showCursor, setShowCursor] = useState(false);
-  const [isDarkMode, setIsDarkMode] = useState(true);
 
   // For detecting drag vs click
   const pointerDownPos = useRef<{ x: number; y: number } | null>(null);
@@ -56,11 +55,7 @@ export default function Testimonials() {
   const singleSetWidth = testimonials.length * (cardWidth + gap);
 
   // Dark mode detection
-  useEffect(() => {
-    const isDark = document.documentElement.classList.contains('dark');
-    setIsDarkMode(isDark);
-  }, []);
-
+ 
   // Auto-scroll marquee animation
   const moveMarquee = useCallback(() => {
     if (isHovered || isDragging) return;

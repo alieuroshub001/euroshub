@@ -2,7 +2,7 @@
 
 import { motion } from 'framer-motion';
 import { ChevronLeft, ChevronRight } from 'lucide-react';
-import { useEffect, useState, useRef } from 'react';
+import { useEffect, useState, useRef, useCallback } from 'react';
 
 interface CursorProps {
   mousePos: { x: number; y: number };
@@ -20,7 +20,7 @@ const getLuminance = ([r, g, b]: number[]): number =>
 
 export default function Cursor({ mousePos, isDragging, showCursor }: CursorProps) {
   const [mounted, setMounted] = useState(false);
-  const [dynamicColor, setDynamicColor] = useState<string>('#00FFFF'); // Bright cyan by default
+  const [dynamicColor, setDynamicColor] = useState<string>('#00FFFF');
   const canvasRef = useRef<HTMLCanvasElement | null>(null);
   const rafRef = useRef<number | null>(null);
 
@@ -38,7 +38,7 @@ export default function Cursor({ mousePos, isDragging, showCursor }: CursorProps
     };
   }, []);
 
-  const getImageColorAtPoint = (img: HTMLImageElement, x: number, y: number): string | null => {
+  const getImageColorAtPoint = useCallback((img: HTMLImageElement, x: number, y: number): string | null => {
     const canvas = canvasRef.current;
     if (!canvas) return null;
     const ctx = canvas.getContext('2d', { willReadFrequently: true });
@@ -59,41 +59,40 @@ export default function Cursor({ mousePos, isDragging, showCursor }: CursorProps
     const imageData = ctx.getImageData(clampedX, clampedY, 1, 1).data;
     const luminance = getLuminance([imageData[0], imageData[1], imageData[2]]);
     return luminance > 0.5 ? '#000000' : '#ffffff';
-  };
+  }, []);
 
-  const getContrastingColor = async (x: number, y: number): Promise<string> => {
-  const el = document.elementFromPoint(x, y);
-  if (!el) return '#00FFFF';
+  const getContrastingColor = useCallback(async (x: number, y: number): Promise<string> => {
+    const el = document.elementFromPoint(x, y);
+    if (!el) return '#00FFFF';
 
-  const isDarkMode = window.matchMedia('(prefers-color-scheme: dark)').matches;
-  const styles = window.getComputedStyle(el);
+    const isDarkMode = window.matchMedia('(prefers-color-scheme: dark)').matches;
+    const styles = window.getComputedStyle(el);
 
-  if (el.tagName === 'IMG') {
-    const img = el as HTMLImageElement;
-    if (img.complete && img.naturalWidth > 0) {
-      const color = getImageColorAtPoint(img, x, y);
-      if (color) {
-        if ((color === '#ffffff' && !isDarkMode) || (color === '#000000' && isDarkMode)) {
-          return '#00FFFF'; // fallback for conflict
+    if (el.tagName === 'IMG') {
+      const img = el as HTMLImageElement;
+      if (img.complete && img.naturalWidth > 0) {
+        const color = getImageColorAtPoint(img, x, y);
+        if (color) {
+          if ((color === '#ffffff' && !isDarkMode) || (color === '#000000' && isDarkMode)) {
+            return '#00FFFF';
+          }
+          return color;
         }
-        return color;
       }
     }
-  }
 
-  const rgb = parseRGB(styles.backgroundColor || styles.color || '');
-  if (rgb) {
-    const luminance = getLuminance(rgb);
-    const baseColor = luminance > 0.5 ? '#000000' : '#ffffff';
-    if ((baseColor === '#ffffff' && !isDarkMode) || (baseColor === '#000000' && isDarkMode)) {
-      return '#00FFFF'; // fallback if not visible enough
+    const rgb = parseRGB(styles.backgroundColor || styles.color || '');
+    if (rgb) {
+      const luminance = getLuminance(rgb);
+      const baseColor = luminance > 0.5 ? '#000000' : '#ffffff';
+      if ((baseColor === '#ffffff' && !isDarkMode) || (baseColor === '#000000' && isDarkMode)) {
+        return '#00FFFF';
+      }
+      return baseColor;
     }
-    return baseColor;
-  }
 
-  return '#00FFFF'; // fallback
-};
-
+    return '#00FFFF';
+  }, [getImageColorAtPoint]);
 
   useEffect(() => {
     if (!mounted) return;
@@ -110,7 +109,7 @@ export default function Cursor({ mousePos, isDragging, showCursor }: CursorProps
     return () => {
       if (rafRef.current) cancelAnimationFrame(rafRef.current);
     };
-  }, [mousePos.x, mousePos.y, mounted]);
+  }, [mousePos.x, mousePos.y, mounted, getContrastingColor, dynamicColor]);
 
   if (!mounted) return null;
 
