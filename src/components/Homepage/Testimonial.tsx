@@ -1,8 +1,9 @@
 'use client';
 
 import { useState, useEffect, useRef, useCallback } from 'react';
-import { motion, PanInfo, useAnimation } from 'framer-motion';
+import { motion, useMotionValue } from 'framer-motion';
 import { ChevronLeft, ChevronRight, UserCircle2 } from 'lucide-react';
+import Cursor from '@/components/Global/Cursor';
 
 interface Testimonial {
   id: number;
@@ -32,92 +33,109 @@ const testimonials: Testimonial[] = [
 
 export default function Testimonials() {
   const containerRef = useRef<HTMLDivElement>(null);
-  const controls = useAnimation();
-
-  const positionRef = useRef(0);
-  const lastTimeRef = useRef(0);
-  const animationFrameRef = useRef<number | null>(null);
+  const x = useMotionValue(0);
+  const animationRef = useRef<number | null>(null);
 
   const [isHovered, setIsHovered] = useState(false);
   const [isDragging, setIsDragging] = useState(false);
 
-  const mousePosRef = useRef({ x: 0, y: 0 });
   const [mousePos, setMousePos] = useState({ x: 0, y: 0 });
   const [showCursor, setShowCursor] = useState(false);
-
   const [isDarkMode, setIsDarkMode] = useState(true);
-  const requestMousePosUpdate = useRef(false);
 
-  const infiniteTestimonials = [...testimonials, ...testimonials, ...testimonials];
+  // For detecting drag vs click
+  const pointerDownPos = useRef<{ x: number; y: number } | null>(null);
+  const clickTimeout = useRef<NodeJS.Timeout | null>(null);
 
+  // Create 5 copies for seamless infinite scroll
+  const infiniteTestimonials = Array(5).fill(testimonials).flat();
+  
+  // Calculate dimensions for infinite loop
+  const cardWidth = 280; // w-[280px]
+  const gap = 16; // gap-4 = 16px
+  const singleSetWidth = testimonials.length * (cardWidth + gap);
+
+  // Dark mode detection
   useEffect(() => {
     const isDark = document.documentElement.classList.contains('dark');
     setIsDarkMode(isDark);
   }, []);
 
-  useEffect(() => {
-    const containerWidth = containerRef.current?.scrollWidth ?? 0;
-    const sectionWidth = containerWidth / 3;
-    positionRef.current = -sectionWidth / 2;
-    controls.set({ x: positionRef.current });
-  }, [controls]);
+  // Auto-scroll marquee animation
+  const moveMarquee = useCallback(() => {
+    if (isHovered || isDragging) return;
+    
+    const currentX = x.get();
+    x.set(currentX - 0.8); // Slightly slower than services
+    
+    animationRef.current = requestAnimationFrame(moveMarquee);
+  }, [isHovered, isDragging, x]);
 
-  const animate = useCallback((time: number) => {
-    if (!lastTimeRef.current) lastTimeRef.current = time;
-    const delta = time - lastTimeRef.current;
-    lastTimeRef.current = time;
-
-    if (!isHovered && !isDragging && containerRef.current) {
-      positionRef.current -= delta * 0.1;
-
-      const containerWidth = containerRef.current.scrollWidth;
-      const sectionWidth = containerWidth / 3;
-
-      if (positionRef.current <= -sectionWidth) {
-        positionRef.current += sectionWidth;
-      } else if (positionRef.current >= 0) {
-        positionRef.current -= sectionWidth;
-      }
-
-      controls.set({ x: positionRef.current });
+  // Handle infinite loop repositioning
+  const handleInfiniteLoop = useCallback(() => {
+    const currentX = x.get();
+    
+    // If we've moved too far left, jump back to equivalent position
+    if (currentX <= -singleSetWidth * 2) {
+      x.set(currentX + singleSetWidth);
     }
+    // If we've moved too far right, jump back to equivalent position  
+    else if (currentX >= 0) {
+      x.set(currentX - singleSetWidth);
+    }
+  }, [x, singleSetWidth]);
 
-    animationFrameRef.current = requestAnimationFrame(animate);
-  }, [controls, isHovered, isDragging]);
+  // Monitor x value changes for infinite loop
+  useEffect(() => {
+    const unsubscribe = x.onChange(handleInfiniteLoop);
+    return unsubscribe;
+  }, [x, handleInfiniteLoop]);
 
   useEffect(() => {
-    animationFrameRef.current = requestAnimationFrame(animate);
+    animationRef.current = requestAnimationFrame(moveMarquee);
     return () => {
-      if (animationFrameRef.current) cancelAnimationFrame(animationFrameRef.current);
+      if (animationRef.current) cancelAnimationFrame(animationRef.current);
     };
-  }, [animate]);
+  }, [moveMarquee]);
 
-  const handleDrag = useCallback((_: unknown, info: PanInfo) => {
-    positionRef.current += info.delta.x;
+  // Initialize position at middle for smooth bi-directional scroll
+  useEffect(() => {
+    x.set(-singleSetWidth); // Start from middle position
+  }, [x, singleSetWidth]);
 
-    const containerWidth = containerRef.current?.scrollWidth ?? 0;
-    const sectionWidth = containerWidth / 3;
-
-    if (positionRef.current <= -sectionWidth) {
-      positionRef.current += sectionWidth;
-    } else if (positionRef.current >= 0) {
-      positionRef.current -= sectionWidth;
-    }
-
-    controls.set({ x: positionRef.current });
-  }, [controls]);
-
+  // Mouse move for custom cursor
   const handleMouseMove = useCallback((e: React.MouseEvent) => {
-    mousePosRef.current = { x: e.clientX, y: e.clientY };
-
-    if (!requestMousePosUpdate.current) {
-      requestMousePosUpdate.current = true;
-      requestAnimationFrame(() => {
-        setMousePos(mousePosRef.current);
-        requestMousePosUpdate.current = false;
-      });
-    }
+    setMousePos({ x: e.clientX, y: e.clientY });
   }, []);
+
+  // Pointer down/up for click vs drag detection
+  const handlePointerDown = (e: React.PointerEvent) => {
+    pointerDownPos.current = { x: e.clientX, y: e.clientY };
+    if (clickTimeout.current) {
+      clearTimeout(clickTimeout.current);
+      clickTimeout.current = null;
+    }
+  };
+
+  const handlePointerUp = (testimonialId: number, e: React.PointerEvent) => {
+    if (!pointerDownPos.current) return;
+    const dx = Math.abs(e.clientX - pointerDownPos.current.x);
+    const dy = Math.abs(e.clientY - pointerDownPos.current.y);
+    const dragThreshold = 10;
+
+    if (dx > dragThreshold || dy > dragThreshold) {
+      // It was a drag; do nothing
+      pointerDownPos.current = null;
+      return;
+    }
+
+    // Otherwise, treat as click after slight delay (could open testimonial details)
+    clickTimeout.current = setTimeout(() => {
+      console.log(`Clicked testimonial ${testimonialId}`);
+      pointerDownPos.current = null;
+      clickTimeout.current = null;
+    }, 150);
+  };
 
   return (
     <section className="py-10 w-full overflow-hidden relative">
@@ -145,34 +163,30 @@ export default function Testimonials() {
           onMouseMove={handleMouseMove}
         >
           <motion.div
-            className="flex gap-4 w-max items-stretch pl-4 cursor-grab"
+            className="flex gap-4 w-max items-stretch pl-4 cursor-grab active:cursor-grabbing"
+            style={{ x }}
             drag="x"
-            dragConstraints={containerRef}
+            dragConstraints={{ left: -Infinity, right: Infinity }}
             onDragStart={() => setIsDragging(true)}
-onDragEnd={(_, info) => {
-  setIsDragging(false);
-  positionRef.current += info.offset.x;
-
-  const containerWidth = containerRef.current?.scrollWidth ?? 0;
-  const sectionWidth = containerWidth / 3;
-
-  if (positionRef.current <= -sectionWidth) {
-    positionRef.current += sectionWidth;
-  } else if (positionRef.current >= 0) {
-    positionRef.current -= sectionWidth;
-  }
-
-  controls.set({ x: positionRef.current });
-}}
-            onDrag={handleDrag}
-            animate={controls}
+            onDragEnd={() => setIsDragging(false)}
             dragElastic={0}
+            dragMomentum={false}
           >
             {infiniteTestimonials.map((testimonial, index) => (
               <motion.div
-                key={`${testimonial.id}-${index}`}
-                className="flex-shrink-0 w-[280px] h-[280px] px-2"
+                key={`${testimonial.id}-${Math.floor(index / testimonials.length)}-${index % testimonials.length}`}
+                className="flex-shrink-0 w-[280px] h-[280px] px-2 cursor-pointer"
                 whileHover={{ scale: 1.03 }}
+                transition={{ type: 'spring', stiffness: 400, damping: 30 }}
+                onPointerDown={handlePointerDown}
+                onPointerUp={(e) => handlePointerUp(testimonial.id, e)}
+                onPointerCancel={() => {
+                  if (clickTimeout.current) {
+                    clearTimeout(clickTimeout.current);
+                    clickTimeout.current = null;
+                  }
+                  pointerDownPos.current = null;
+                }}
               >
                 <div className="bg-[var(--secondary)]/30 backdrop-blur-lg border border-[var(--primary)]/20 p-6 h-full w-full flex flex-col justify-between rounded-lg transition-all duration-300 hover:bg-[var(--secondary)]/50 hover:shadow-xl">
                   <div>
@@ -193,14 +207,16 @@ onDragEnd={(_, info) => {
 
                   <div className="flex mt-4">
                     {[...Array(5)].map((_, i) => (
-                      <svg
+                      <motion.svg
                         key={i}
                         className={`w-4 h-4 ${i < testimonial.rating ? 'text-yellow-400' : 'text-gray-300'}`}
                         fill="currentColor"
                         viewBox="0 0 20 20"
+                        whileHover={{ scale: 1.2 }}
+                        transition={{ type: 'spring', stiffness: 400, damping: 10 }}
                       >
                         <path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z" />
-                      </svg>
+                      </motion.svg>
                     ))}
                   </div>
                 </div>
@@ -208,35 +224,12 @@ onDragEnd={(_, info) => {
             ))}
           </motion.div>
 
-          {showCursor && (
-            <motion.div
-              className="fixed pointer-events-none z-50 rounded-full border"
-              style={{
-                top: mousePos.y - (isDragging ? 16 : 32),
-                left: mousePos.x - (isDragging ? 16 : 32),
-                width: isDragging ? 32 : 64,
-                height: isDragging ? 32 : 64,
-                borderColor: isDarkMode ? 'white' : 'black',
-                backgroundColor: 'transparent',
-              }}
-              animate={{
-                width: isDragging ? 32 : 64,
-                height: isDragging ? 32 : 64,
-              }}
-              transition={{ type: 'spring', stiffness: 300, damping: 20 }}
-            >
-              <ChevronLeft
-                className="absolute -left-6 top-1/2 -translate-y-1/2"
-                size={20}
-                color={isDarkMode ? 'white' : 'black'}
-              />
-              <ChevronRight
-                className="absolute -right-6 top-1/2 -translate-y-1/2"
-                size={20}
-                color={isDarkMode ? 'white' : 'black'}
-              />
-            </motion.div>
-          )}
+          {/* Custom Cursor */}
+           <Cursor 
+            mousePos={mousePos} 
+            isDragging={isDragging} 
+            showCursor={showCursor}
+          />
         </div>
       </div>
     </section>

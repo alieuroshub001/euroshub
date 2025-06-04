@@ -1,7 +1,7 @@
 // components/Global/Services.tsx
 'use client';
-
-import { motion, useMotionValue } from 'framer-motion';
+import Cursor from '@/components/Global/Cursor';
+import { motion, useMotionValue, useTransform } from 'framer-motion';
 import {
   BarChart2,
   ClipboardList,
@@ -187,23 +187,46 @@ export default function Services() {
   const pointerDownPos = useRef<{ x: number; y: number } | null>(null);
   const clickTimeout = useRef<NodeJS.Timeout | null>(null);
 
-  // Filtered + tripled for marquee effect
+  // Filtered services for current tab
   const filteredServices = allServices.filter((s) => s.category === activeTab);
-  const duplicatedServices = [...filteredServices, ...filteredServices, ...filteredServices];
+  
+  // Create 5 copies for seamless infinite scroll (more copies = smoother transitions)
+  const infiniteServices = Array(5).fill(filteredServices).flat();
+  
+  // Calculate dimensions for infinite loop
+  const cardWidth = 320; // w-80 = 320px
+  const gap = 24; // gap-6 = 24px
+  const singleSetWidth = filteredServices.length * (cardWidth + gap);
 
-  // Marquee movement
+  // Auto-scroll marquee animation
   const moveMarquee = useCallback(() => {
-    if (isHovered || isDragging || !containerRef.current) return;
+    if (isHovered || isDragging) return;
+    
     const currentX = x.get();
-    const containerWidth = containerRef.current.scrollWidth / 3;
-
-    if (Math.abs(currentX) >= containerWidth) {
-      x.set(0);
-    } else {
-      x.set(currentX - 1);
-    }
+    x.set(currentX - 1);
+    
     animationRef.current = requestAnimationFrame(moveMarquee);
   }, [isHovered, isDragging, x]);
+
+  // Handle infinite loop repositioning
+  const handleInfiniteLoop = useCallback(() => {
+    const currentX = x.get();
+    
+    // If we've moved too far left, jump back to equivalent position
+    if (currentX <= -singleSetWidth * 2) {
+      x.set(currentX + singleSetWidth);
+    }
+    // If we've moved too far right, jump back to equivalent position  
+    else if (currentX >= 0) {
+      x.set(currentX - singleSetWidth);
+    }
+  }, [x, singleSetWidth]);
+
+  // Monitor x value changes for infinite loop
+  useEffect(() => {
+    const unsubscribe = x.onChange(handleInfiniteLoop);
+    return unsubscribe;
+  }, [x, handleInfiniteLoop]);
 
   useEffect(() => {
     animationRef.current = requestAnimationFrame(moveMarquee);
@@ -212,16 +235,17 @@ export default function Services() {
     };
   }, [moveMarquee]);
 
+  // Reset position when tab changes
   useEffect(() => {
-    x.set(0);
-  }, [activeTab, x]);
+    x.set(-singleSetWidth); // Start from middle position for smooth bi-directional scroll
+  }, [activeTab, x, singleSetWidth]);
 
   // Mouse move for custom cursor
   const handleMouseMove = (e: React.MouseEvent) => {
     setMousePos({ x: e.clientX, y: e.clientY });
   };
 
-  // Pointer down/up for click vs drag
+  // Pointer down/up for click vs drag detection
   const handlePointerDown = (e: React.PointerEvent) => {
     pointerDownPos.current = { x: e.clientX, y: e.clientY };
     if (clickTimeout.current) {
@@ -299,7 +323,7 @@ export default function Services() {
         </div>
       </div>
 
-      {/* → Marquee Container */}
+      {/* → Infinite Marquee Container */}
       <div
         ref={containerRef}
         className="relative w-full overflow-hidden py-8"
@@ -317,14 +341,15 @@ export default function Services() {
           className="flex gap-6 w-max px-6 cursor-grab active:cursor-grabbing"
           style={{ x }}
           drag="x"
-          dragConstraints={containerRef}
+          dragConstraints={{ left: -Infinity, right: Infinity }}
           onDragStart={() => setIsDragging(true)}
           onDragEnd={() => setIsDragging(false)}
-          dragElastic={0.1}
+          dragElastic={0}
+          dragMomentum={false}
         >
-          {duplicatedServices.map((service, idx) => (
+          {infiniteServices.map((service, idx) => (
             <motion.div
-              key={`${service.id}-${idx}`}
+              key={`${service.id}-${Math.floor(idx / filteredServices.length)}-${idx % filteredServices.length}`}
               className="flex-shrink-0 w-64 sm:w-72 md:w-80 h-80 sm:h-96 cursor-pointer relative"
               whileHover={{ scale: 1.03 }}
               transition={{ type: 'spring', stiffness: 400, damping: 30 }}
@@ -372,32 +397,12 @@ export default function Services() {
           ))}
         </motion.div>
 
-      {showCursor && (
-  <motion.div
-    className={`fixed pointer-events-none z-50 rounded-full border border-white bg-white/10 transition-all duration-200 ease-out ${
-      isDragging ? 'w-8 h-8' : 'w-16 h-16'
-    }`}
-    style={{
-      top: mousePos.y - (isDragging ? 16 : 32),
-      left: mousePos.x - (isDragging ? 16 : 32),
-    }}
-    initial={{ opacity: 0 }}
-    animate={{ opacity: 1 }}
-    exit={{ opacity: 0 }}
-    transition={{ type: 'spring', stiffness: 300, damping: 20 }}
-  >
-    {/* Left Chevron */}
-    {!isDragging && (
-      <ChevronLeft className="absolute left-[-20px] top-1/2 -translate-y-1/2 w-5 h-5 text-white pointer-events-none" />
-    )}
-    {/* Right Chevron */}
-    {!isDragging && (
-      <ChevronRight className="absolute right-[-20px] top-1/2 -translate-y-1/2 w-5 h-5 text-white pointer-events-none" />
-    )}
-  </motion.div>
-)}
-
-
+       {/* Replace the custom cursor with the imported component */}
+        <Cursor 
+          mousePos={mousePos} 
+          isDragging={isDragging} 
+          showCursor={showCursor}
+        />
       </div>
     </section>
   );

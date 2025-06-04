@@ -2,6 +2,7 @@
 
 import Image from 'next/image';
 import Marquee from 'react-fast-marquee';
+import { useState } from 'react';
 
 const logos = [
   'BH.png',
@@ -21,8 +22,28 @@ const logos = [
   'Zuri bella.png',
 ];
 
-const ClientLogo = ({ logo }: { logo: string }) => (
-  <div className="flex-shrink-0 px-4 sm:px-6">
+// Split into two arrays
+const mid = Math.ceil(logos.length / 2);
+const firstArray = logos.slice(0, mid);
+const secondArray = logos.slice(mid);
+
+// Rotate utility
+const rotateArray = (arr: string[], start: number) => {
+  return [...arr.slice(start), ...arr.slice(0, start)];
+};
+
+const ClientLogo = ({
+  logo,
+  setPaused,
+}: {
+  logo: string;
+  setPaused: (pause: boolean) => void;
+}) => (
+  <div
+    className="flex-shrink-0 px-4 sm:px-6"
+    onMouseEnter={() => setPaused(true)}
+    onMouseLeave={() => setPaused(false)}
+  >
     <div className="flex items-center justify-center p-4 rounded-lg bg-[var(--card-bg)]/10">
       <Image
         src={`/assets/clients/${logo}`}
@@ -35,64 +56,51 @@ const ClientLogo = ({ logo }: { logo: string }) => (
   </div>
 );
 
-function shuffle(array: string[]): string[] {
-  const result = [...array];
-  for (let i = result.length - 1; i > 0; i--) {
-    const j = Math.floor(Math.random() * (i + 1));
-    [result[i], result[j]] = [result[i], result[j]];
-  }
-  return result;
-}
+
 
 export default function Clients() {
-  const topLogos1 = shuffle(logos);
-  const topLogos2 = shuffle(logos);
-  const bottomLogos1 = shuffle(logos);
-  const bottomLogos2 = shuffle(logos);
+  const [paused1, setPaused1] = useState(false);
+  const [paused2, setPaused2] = useState(false);
+  const [paused3, setPaused3] = useState(false);
+  const [paused4, setPaused4] = useState(false);
 
   return (
-    <section className="py-20 px-0 text-[var(--foreground)] bg-transparent">
-      <div className="w-screen overflow-hidden">
-        {/* Top-left marquee */}
-        <div className="mb-6">
-          <Marquee direction="left" speed={35} gradient={false}>
-            {topLogos1.map((logo, idx) => (
-              <ClientLogo key={`top-left-${idx}`} logo={logo} />
-            ))}
-          </Marquee>
-        </div>
+    <section className="py-20 text-[var(--foreground)] bg-transparent">
+      <div className="w-screen overflow-hidden space-y-10">
 
-        {/* Top-right marquee */}
-        <div className="mb-12">
-          <Marquee direction="right" speed={30} gradient={false}>
-            {topLogos2.map((logo, idx) => (
-              <ClientLogo key={`top-right-${idx}`} logo={logo} />
-            ))}
-          </Marquee>
-        </div>
+        {/* Marquee 1: First Array (start at 0) */}
+        <Marquee direction="left" speed={35} gradient={false} play={!paused1}>
+          {[...firstArray, ...firstArray].map((logo, idx) => (
+            <ClientLogo key={`marquee1-${idx}`} logo={logo} setPaused={setPaused1} />
+          ))}
+        </Marquee>
+
+        {/* Marquee 2: Second Array (start at 0) */}
+        <Marquee direction="right" speed={30} gradient={false} play={!paused2}>
+          {[...secondArray, ...secondArray].map((logo, idx) => (
+            <ClientLogo key={`marquee2-${idx}`} logo={logo} setPaused={setPaused2} />
+          ))}
+        </Marquee>
 
         {/* Heading */}
-        <h2 className="text-3xl md:text-4xl font-bold text-center mb-12">
+        <h2 className="text-3xl md:text-4xl font-bold text-center">
           Trusted by Global Brands
         </h2>
 
-        {/* Bottom-left marquee */}
-        <div className="mb-6">
-          <Marquee direction="left" speed={30} gradient={false}>
-            {bottomLogos1.map((logo, idx) => (
-              <ClientLogo key={`bottom-left-${idx}`} logo={logo} />
-            ))}
-          </Marquee>
-        </div>
+        {/* Marquee 3: First Array (start from middle = opposite of 0) */}
+        <Marquee direction="left" speed={30} gradient={false} play={!paused3}>
+          {[...rotateArray(firstArray, Math.floor(firstArray.length / 2)), ...rotateArray(firstArray, Math.floor(firstArray.length / 2))].map((logo, idx) => (
+            <ClientLogo key={`marquee3-${idx}`} logo={logo} setPaused={setPaused3} />
+          ))}
+        </Marquee>
 
-        {/* Bottom-right marquee */}
-        <div>
-          <Marquee direction="right" speed={25} gradient={false}>
-            {bottomLogos2.map((logo, idx) => (
-              <ClientLogo key={`bottom-right-${idx}`} logo={logo} />
-            ))}
-          </Marquee>
-        </div>
+        {/* Marquee 4: Second Array (start from middle = opposite of 0) */}
+        <Marquee direction="right" speed={25} gradient={false} play={!paused4}>
+          {[...rotateArray(secondArray, Math.floor(secondArray.length / 2)), ...rotateArray(secondArray, Math.floor(secondArray.length / 2))].map((logo, idx) => (
+            <ClientLogo key={`marquee4-${idx}`} logo={logo} setPaused={setPaused4} />
+          ))}
+        </Marquee>
+
       </div>
     </section>
   );

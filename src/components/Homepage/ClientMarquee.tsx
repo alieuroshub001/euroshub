@@ -23,7 +23,7 @@ const Marquee: React.FC<MarqueeProps> = ({
     
     // Clone the content multiple times (3 copies total) for seamless looping
     const content = Array.from(scrollerRef.current.children);
-    for (let i = 0; i < 2; i++) {
+    for (let i = 0; i < 4; i++) {
       content.forEach(item => {
         const clone = item.cloneNode(true);
         scrollerRef.current?.appendChild(clone);
