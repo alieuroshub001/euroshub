@@ -4,95 +4,108 @@
 import Image from 'next/image';
 import Link from 'next/link';
 import React from 'react';
-import { FaGithub, FaInstagram, FaLinkedin, FaTwitter } from 'react-icons/fa';
-import CosmicConnectionText from './AnimatedText';
+import { FaLinkedin, FaFacebook, FaInstagram } from 'react-icons/fa';
+import { FaXTwitter } from 'react-icons/fa6';
 
 const Footer: React.FC = () => {
   return (
-    <footer className="w-full bg-[var(--background)] text-[var(--foreground)] font-sans border-t border-[color:var(--border-color)]
-">
-      <div className="flex flex-col lg:flex-row">
-        {/* Logo and description section */}
-        <div className="lg:w-1/3 p-4 lg:p-8 flex flex-col justify-center">
-          <div className="flex items-center gap-2">
+    <footer className="mt-0 pt-[50px] lg:pt-0 border-t border-[#4F4F4F] relative z-[20] backdrop-blur-sm" style={{ backgroundColor: 'rgba(0, 0, 0, 0)' }}>
+      <div className="max-w-[1900px] w-[90%] md:w-[95%] mx-auto">
+        <div className="grid grid-cols-1 gap-y-8 lg:flex flex-row justify-between items-start lg:items-center">
+          {/* Logo and description section */}
+          <div className="max-w-[700px] xl:max-w-[670px] flex flex-col gap-[20px] xxl:gap-[32px]">
             <Image
               src="/assets/images/logo.png"
-              alt="EurosHub Logo"
-              width={140}
-              height={40}
+              alt="EurosHub-logo"
+              width={150}
+              height={73}
               className="object-contain"
             />
+            <p className="text-[14px] sm:text-[16px] font-normal leading-[26px] text-white max-w-[700px] sm:max-w-[500px]">
+              When do they work well, and when do they on us and Finally, <br />when do we actually need how can we avoid them.
+            </p>
           </div>
-          <p className="ml-5 mt-2 lg:mt-4 text-base lg:text-xl leading-snug max-w-md text-[var(--muted-foreground)]">
-            Your trusted partner for innovative business and technology solutions.
-          </p>
-        </div>
 
-        {/* Social icons section - hidden on mobile, shown from 768px */}
-<div className="hidden md:flex mx-auto lg:ml-15 border-t lg:border-t-0 border-[color:var(--border-color)] flex-row lg:flex-col text-center">
-          {[
-            { icon: FaGithub, label: 'Github' },
-            { icon: FaTwitter, label: 'Twitter' },
-            { icon: FaLinkedin, label: 'LinkedIn' },
-            { icon: FaInstagram, label: 'Instagram' },
-          ].map(({ icon: Icon, label }, index, arr) => (
-            <a
-              key={label}
-              href="#"
-              className={`hover:text-[var(--primary)] transition-colors text-xs uppercase tracking-wide flex items-center justify-center px-4 py-4 lg:px-6 lg:py-6 border-l border-r border-[color:var(--border-color)]
- ${
-                index !== arr.length - 1 ? 'border-b lg:border-b' : ''
-              }`}
+          {/* Social links section */}
+          <div className="ml-10 flex flex-col items-start max-w-[100%] lg:max-w-[200px] xl:max-w-[244px] w-full">
+            <Link
+              target="_blank"
+              className="hover:bg-[#0FB8AF] pl-[67px] w-full xl:h-[78px] text-[14px] xxl:h-[96px] xxl:text-[16px] border-t border-l border-r border-[#4F4F4F] text-white uppercase flex justify-start items-center gap-2 border-b lg:border-b-[0px]"
+              href="https://twitter.com/EurosHub"
             >
-              <Icon className="w-4 h-4 lg:w-5 lg:h-5 mr-2" /> 
-              <span className="hidden lg:inline">{label}</span>
-            </a>
-          ))}
-        </div>
-
-        {/* Mobile social icons - shown only on mobile */}
-        <div className="md:hidden flex border-t border-[color:var(--border-color)]
-">
-          {[
-            { icon: FaGithub, label: 'Github' },
-            { icon: FaTwitter, label: 'Twitter' },
-            { icon: FaLinkedin, label: 'LinkedIn' },
-            { icon: FaInstagram, label: 'Instagram' },
-          ].map(({ icon: Icon, label }) => (
-            <a
-              key={label}
-              href="#"
-              className="flex-1 hover:text-[var(--primary)] transition-colors flex items-center justify-center py-4"
+              <FaXTwitter className="w-[24px] h-[24px]" />
+              X
+            </Link>
+            <Link
+              target="_blank"
+              className="hover:bg-[#0FB8AF] pl-[67px] w-full xl:h-[78px] text-[14px] xxl:h-[96px] xxl:text-[16px] border-t border-l border-r border-[#4F4F4F] text-white uppercase flex justify-start items-center gap-2 border-b lg:border-b-[0px]"
+              href="https://www.linkedin.com/company/euroshub"
             >
-              <Icon className="w-5 h-5" />
-            </a>
-          ))}
-        </div>
+              <FaLinkedin className="w-[24px] h-[24px]" />
+              LinkedIn
+            </Link>
+            <Link
+              target="_blank"
+              className="hover:bg-[#0FB8AF] pl-[67px] w-full xl:h-[78px] text-[14px] xxl:h-[96px] xxl:text-[16px] border-t border-l border-r border-[#4F4F4F] text-white uppercase flex justify-start items-center gap-2 border-b lg:border-b-[0px]"
+              href="https://www.facebook.com/official.euroshub/"
+            >
+              <FaFacebook className="w-[24px] h-[24px]" />
+              Facebook
+            </Link>
+            <Link
+              target="_blank"
+              className="hover:bg-[#0FB8AF] pl-[67px] w-full xl:h-[78px] text-[14px] xxl:h-[96px] xxl:text-[16px] border-t border-l border-r border-[#4F4F4F] text-white uppercase flex justify-start items-center gap-2 border-b lg:border-b-[0px]"
+              href="https://www.instagram.com/euroshub.official/"
+            >
+              <FaInstagram className="w-[24px] h-[24px]" />
+              Instagram
+            </Link>
+          </div>
 
-        {/* Let's Connect section */}
-        <div className="lg:w-1/2 lg:mr-1 flex items-center justify-center p-4 lg:p-8">
-          <Link href="/contact">
-            <h2 className="cursor-pointer text-2xl sm:text-3xl md:text-4xl lg:text-5xl">
-              <CosmicConnectionText text="Let's Connect" />
-            </h2>
+          {/* Let's Connect section */}
+          <Link
+            className="pt-[30px] md:pt-[60px] mb-0 md:mb-[50px] footer__contact-3 end text-center mx-auto lg:text-[56px] lg:leading-[62px] lg:text-left xl:text-[66px] xl:leading-[90px] xxl:text-[116px] xxl:leading-[130px] footerText font-extrabold w-fit max-w-[100%]"
+            href="/contact"
+            style={{ opacity: 1 }}
+          >
+            <h1 className="text text-[20px] leading-[28px] sm:text-[30px] sm:leading-[38px] lg:text-[48px] lg:leading-[56px] xl:text-[56px] xl:leading-[66px] xxl:text-[70px] xxl:leading-[80px] font-extrabold tracking-wider">
+              <span className="letter letter-1 letter--6 mx-[3px] md:mx-[5px]">L</span>
+              <span className="letter letter-2 letter--5 mx-[3px] md:mx-[5px]">E</span>
+              <span className="letter letter-3 letter--4 mx-[3px] md:mx-[5px]">T</span>
+              <span className="letter letter-4 letter--3 mx-[3px] md:mx-[5px]">S</span>
+              <span className="letter letter-5 letter--2 mx-[3px] md:mx-[5px]">C</span>
+              <span className="letter letter-6 letter--1 mx-[3px] md:mx-[5px]">O</span>
+              <span className="letter letter-7 letter-0 mx-[3px] md:mx-[5px]">N</span>
+              <span className="letter letter-8 letter-1 mx-[3px] md:mx-[5px]">N</span>
+              <span className="letter letter-9 letter-2 mx-[3px] md:mx-[5px]">E</span>
+              <span className="letter letter-10 letter-3 mx-[3px] md:mx-[5px]">C</span>
+              <span className="letter letter-11 letter-4 mx-[3px] md:mx-[5px]">T</span>
+            </h1>
           </Link>
         </div>
       </div>
 
-      {/* Bottom section - reversed order on mobile */}
-      <div className="flex flex-col md:flex-row justify-between items-center px-4 lg:px-30 py-4 lg:py-6 text-xs md:text-sm border-t border-[color:var(--border-color)]
-">
-        {/* Links first on mobile */}
-        <nav className="order-1 md:order-2 flex flex-wrap justify-center gap-8 md:gap-6 mb-5 md:mb-0">
-          <Link href="/about" className="hover:text-[var(--primary)] transition-colors">About</Link>
-          <Link href="/contact" className="hover:text-[var(--primary)] transition-colors">Contact</Link>
-          <Link href="/career" className="hover:text-[var(--primary)] transition-colors">Career</Link>
-        </nav>
-        
-        {/* Copyright second on mobile */}
-        <p className="order-2 md:order-1 text-[var(--muted-foreground)] text-center md:text-left">
-          © 2025 | All rights reserved by EurosHub
-        </p>
+      {/* Bottom section */}
+      <div className="mt-[30px] lg:mt-[0] md:bg-[#171717] md:border-t border-[#4F4F4F] backdrop-blur-[8px] bg-transparent" style={{ backgroundColor: 'rgba(0, 0, 0, 0)' }}>
+        <div className="max-w-[1900px] w-[90%] md:w-[95%] mx-auto">
+          <div className="flex flex-col-reverse gap-y-[40px] lg:flex-row justify-between items-center py-[30px]">
+            <p className="text-[12px] sm:text-[14px] md:text-[16px] xxl:text-[18px] text-white leading-[20px]">
+              © 2025 | All rights reserved by EurosHub
+            </p>
+            <div className="flex gap-[50px]">
+              <Link className="text-[12px] sm:text-[14px] md:text-[16px] xxl:text-[18px] text-white leading-[20px]" href="/about">
+                About
+              </Link>
+              <Link className="text-[12px] sm:text-[14px] md:text-[16px] xxl:text-[18px] text-white leading-[20px]" href="/contact">
+                Contact
+              </Link>
+              <Link className="text-[12px] sm:text-[14px] md:text-[16px] xxl:text-[18px] text-white leading-[20px]" href="/career">
+                Career
+              </Link>
+              
+            </div>
+          </div>
+        </div>
       </div>
     </footer>
   );
