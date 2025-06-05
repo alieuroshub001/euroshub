@@ -89,10 +89,10 @@ const Footer: React.FC = () => {
       <div className="mt-[30px] lg:mt-[0] md:bg-[#171717] md:border-t border-[#4F4F4F] backdrop-blur-[8px] bg-transparent" style={{ backgroundColor: 'rgba(0, 0, 0, 0)' }}>
         <div className="max-w-[1900px] w-[90%] md:w-[95%] mx-auto">
           <div className="flex flex-col-reverse gap-y-[40px] lg:flex-row justify-between items-center py-[30px]">
-            <p className="text-[12px] sm:text-[14px] md:text-[16px] xxl:text-[18px] text-white leading-[20px]">
+            <p className="ml-20 text-[12px] sm:text-[14px] md:text-[16px] xxl:text-[18px] text-white leading-[20px]">
               © 2025 | All rights reserved by EurosHub
             </p>
-            <div className="flex gap-[50px]">
+            <div className="mr-20 flex gap-[50px]">
               <Link className="text-[12px] sm:text-[14px] md:text-[16px] xxl:text-[18px] text-white leading-[20px]" href="/about">
                 About
               </Link>
