@@ -5,7 +5,6 @@ import Link from 'next/link';
 import React from 'react';
 import { FaLinkedin, FaFacebook, FaInstagram } from 'react-icons/fa';
 import { FaXTwitter } from 'react-icons/fa6';
-import CosmicConnectionText from './AnimatedText';
 
 const Footer: React.FC = () => {
   return (
@@ -63,15 +62,16 @@ const Footer: React.FC = () => {
           </div>
 
           {/* Let's Connect */}
-<Link
-  href="/contact"
-  className="pt-8 md:pt-14 mb-0 md:mb-12 text-center mx-auto lg:text-left font-library3am tracking-wider w-fit max-w-full group"
->
-  <div className="px-6 py-3 rounded-lg hover:bg-opacity-10 hover:bg-[#17b6b2] transition-all duration-300">
-    <CosmicConnectionText text="LETS CONNECT" />
-  </div>
-</Link>
-
+          <Link
+            href="/contact"
+            className="pt-8 md:pt-14 mb-0 md:mb-12 text-center mx-auto lg:text-left font-library3am tracking-wider w-fit max-w-full group"
+          >
+            <div className="px-6 py-3 rounded-lg hover:bg-opacity-10 hover:bg-[#17b6b2] transition-all duration-300">
+              <span className="text-4xl md:text-6xl lg:text-7xl font-bold tracking-tight bg-gradient-to-r from-[#17b6b2] to-[#0FB8AF] bg-clip-text text-transparent">
+                LETS CONNECT
+              </span>
+            </div>
+          </Link>
         </div>
       </div>
 
