@@ -198,3 +198,7 @@ body:not(.dark) .dust-cloud {
   will-change: transform;
   filter: blur(2px);
 }
+/* In your global CSS */
+body {
+  overflow-x: hidden;
+}

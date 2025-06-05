@@ -104,8 +104,11 @@ export default function Navbar() {
   const [servicesOpen, setServicesOpen] = useState(false);
   const [isScrolled, setIsScrolled] = useState(false);
   const [logoHovered, setLogoHovered] = useState(false);
+  const [lastScrollY, setLastScrollY] = useState(0);
+  const [visible, setVisible] = useState(true);
   const dropdownRef = useRef<HTMLDivElement>(null);
   const servicesButtonRef = useRef<HTMLDivElement>(null);
+  const navbarRef = useRef<HTMLDivElement>(null);
 
   const allServices = [
     {
@@ -146,12 +149,32 @@ export default function Navbar() {
 
   useEffect(() => {
     const handleScroll = () => {
-      setIsScrolled(window.scrollY > 10);
+      const currentScrollY = window.scrollY;
+      
+      // Always show navbar at top of page
+      if (currentScrollY <= 10) {
+        setVisible(true);
+        setIsScrolled(false);
+        setLastScrollY(currentScrollY);
+        return;
+      }
+
+      // Determine scroll direction
+      if (currentScrollY > lastScrollY && currentScrollY > 100) {
+        // Scrolling down
+        setVisible(false);
+      } else if (currentScrollY < lastScrollY) {
+        // Scrolling up
+        setVisible(true);
+      }
+
+      setIsScrolled(currentScrollY > 10);
+      setLastScrollY(currentScrollY);
     };
 
-    window.addEventListener('scroll', handleScroll);
+    window.addEventListener('scroll', handleScroll, { passive: true });
     return () => window.removeEventListener('scroll', handleScroll);
-  }, []);
+  }, [lastScrollY]);
 
   const toggleDarkMode = () => {
     const newMode = !darkMode;
@@ -198,16 +221,21 @@ export default function Navbar() {
   }, [servicesOpen]);
 
   return (
-    <header className={`w-full text-[var(--foreground)] sticky top-0 z-50 transition-all duration-300 ${
-      darkMode
-        ? isScrolled && !showMobileMenu
-          ? 'backdrop-blur-md bg-[var(--background)]/80'
-          : isScrolled
-            ? 'bg-[var(--background)]'
-            : 'bg-transparent'
-        : 'bg-white'
-    }`}>
-
+    <motion.header
+      ref={navbarRef}
+      initial={{ y: 0 }}
+      animate={{ y: visible ? 0 : -100 }}
+      transition={{ type: 'spring', damping: 15, stiffness: 200 }}
+      className={`w-full text-[var(--foreground)] fixed top-0 z-50 transition-all duration-300 ${
+        darkMode
+          ? isScrolled && !showMobileMenu
+            ? 'backdrop-blur-md bg-[var(--background)]/80'
+            : isScrolled
+              ? 'bg-[var(--background)]'
+              : 'bg-transparent'
+          : 'bg-white'
+      }`}
+    >
       <nav className="relative flex items-center justify-between px-6 py-2 w-full">
         {/* Left: Logo and Theme Toggle */}
         <div className="nav-left flex items-center gap-4 relative group">
@@ -346,6 +374,6 @@ export default function Navbar() {
           </div>
         </div>
       )}
-    </header>
+    </motion.header>
   );
 }

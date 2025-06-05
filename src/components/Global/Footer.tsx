@@ -1,4 +1,3 @@
-// components/Global/Footer.tsx
 'use client';
 
 import Image from 'next/image';
@@ -6,14 +5,15 @@ import Link from 'next/link';
 import React from 'react';
 import { FaLinkedin, FaFacebook, FaInstagram } from 'react-icons/fa';
 import { FaXTwitter } from 'react-icons/fa6';
+import CosmicConnectionText from './AnimatedText';
 
 const Footer: React.FC = () => {
   return (
-    <footer className="mt-0 pt-[50px] lg:pt-0 border-t border-[#4F4F4F] relative z-[20] backdrop-blur-sm" style={{ backgroundColor: 'rgba(0, 0, 0, 0)' }}>
+    <footer className="mt-0 pt-12 lg:pt-0 border-t border-neutral-400 dark:border-neutral-700 relative z-20 backdrop-blur-sm bg-transparent">
       <div className="max-w-[1900px] w-[90%] md:w-[95%] mx-auto">
-        <div className="grid grid-cols-1 gap-y-8 lg:flex flex-row justify-between items-start lg:items-center">
-          {/* Logo and description section */}
-          <div className="max-w-[700px] xl:max-w-[670px] flex flex-col gap-[20px] xxl:gap-[32px]">
+        <div className="grid grid-cols-1 gap-y-8 lg:flex justify-between items-start lg:items-center">
+          {/* Logo and description */}
+          <div className="max-w-[700px] xl:max-w-[670px] flex flex-col gap-5">
             <Image
               src="/assets/images/logo.png"
               alt="EurosHub-logo"
@@ -21,88 +21,74 @@ const Footer: React.FC = () => {
               height={73}
               className="object-contain"
             />
-            <p className="text-[14px] sm:text-[16px] font-normal leading-[26px] text-white max-w-[700px] sm:max-w-[500px]">
-              When do they work well, and when do they on us and Finally, <br />when do we actually need how can we avoid them.
+            <p className="text-sm sm:text-base font-normal leading-[26px] text-[var(--foreground)] dark:text-[var(--foreground)] max-w-[700px] sm:max-w-[500px]">
+              When do they work well, and when do they on us and Finally, <br /> when do we actually need how can we avoid them.
             </p>
           </div>
 
-          {/* Social links section */}
-          <div className="ml-10 flex flex-col items-start max-w-[100%] lg:max-w-[200px] xl:max-w-[244px] w-full">
-            <Link
-              target="_blank"
-              className="hover:bg-[#0FB8AF] pl-[67px] w-full xl:h-[78px] text-[14px] xxl:h-[96px] xxl:text-[16px] border-t border-l border-r border-[#4F4F4F] text-white uppercase flex justify-start items-center gap-2 border-b lg:border-b-[0px]"
-              href="https://twitter.com/EurosHub"
-            >
-              <FaXTwitter className="w-[24px] h-[24px]" />
-              X
-            </Link>
-            <Link
-              target="_blank"
-              className="hover:bg-[#0FB8AF] pl-[67px] w-full xl:h-[78px] text-[14px] xxl:h-[96px] xxl:text-[16px] border-t border-l border-r border-[#4F4F4F] text-white uppercase flex justify-start items-center gap-2 border-b lg:border-b-[0px]"
-              href="https://www.linkedin.com/company/euroshub"
-            >
-              <FaLinkedin className="w-[24px] h-[24px]" />
-              LinkedIn
-            </Link>
-            <Link
-              target="_blank"
-              className="hover:bg-[#0FB8AF] pl-[67px] w-full xl:h-[78px] text-[14px] xxl:h-[96px] xxl:text-[16px] border-t border-l border-r border-[#4F4F4F] text-white uppercase flex justify-start items-center gap-2 border-b lg:border-b-[0px]"
-              href="https://www.facebook.com/official.euroshub/"
-            >
-              <FaFacebook className="w-[24px] h-[24px]" />
-              Facebook
-            </Link>
-            <Link
-              target="_blank"
-              className="hover:bg-[#0FB8AF] pl-[67px] w-full xl:h-[78px] text-[14px] xxl:h-[96px] xxl:text-[16px] border-t border-l border-r border-[#4F4F4F] text-white uppercase flex justify-start items-center gap-2 border-b lg:border-b-[0px]"
-              href="https://www.instagram.com/euroshub.official/"
-            >
-              <FaInstagram className="w-[24px] h-[24px]" />
-              Instagram
-            </Link>
+          {/* Social Links */}
+          <div className="ml-0 lg:ml-10 flex flex-col items-start w-full max-w-full lg:max-w-[244px]">
+            {[
+              {
+                href: 'https://twitter.com/EurosHub',
+                icon: <FaXTwitter className="w-6 h-10" />,
+                label: 'X',
+              },
+              {
+                href: 'https://www.linkedin.com/company/euroshub',
+                icon: <FaLinkedin className="w-6 h-10" />,
+                label: 'LinkedIn',
+              },
+              {
+                href: 'https://www.facebook.com/official.euroshub/',
+                icon: <FaFacebook className="w-6 h-10" />,
+                label: 'Facebook',
+              },
+              {
+                href: 'https://www.instagram.com/euroshub.official/',
+                icon: <FaInstagram className="w-6 h-10" />,
+                label: 'Instagram',
+              },
+            ].map(({ href, icon, label }) => (
+              <Link
+                key={label}
+                href={href}
+                target="_blank"
+                className="hover:bg-[#0FB8AF] pl-10 w-full py-4 text-sm sm:text-base uppercase flex items-center gap-2 border border-neutral-400 dark:border-neutral-700 text-[var(--foreground)] dark:text-[var(--foreground)]"
+              >
+                {icon}
+                {label}
+              </Link>
+            ))}
           </div>
 
-          {/* Let's Connect section */}
+          {/* Let's Connect */}
           <Link
-            className="pt-[30px] md:pt-[60px] mb-0 md:mb-[50px] footer__contact-3 end text-center mx-auto lg:text-[56px] lg:leading-[62px] lg:text-left xl:text-[66px] xl:leading-[90px] xxl:text-[116px] xxl:leading-[130px] footerText font-extrabold w-fit max-w-[100%]"
             href="/contact"
-            style={{ opacity: 1 }}
+            className="pt-8 md:pt-14 mb-0 md:mb-12 text-center mx-auto lg:text-left font-extrabold tracking-wider w-fit max-w-full"
           >
-            <h1 className="text text-[20px] leading-[28px] sm:text-[30px] sm:leading-[38px] lg:text-[48px] lg:leading-[56px] xl:text-[56px] xl:leading-[66px] xxl:text-[70px] xxl:leading-[80px] font-extrabold tracking-wider">
-              <span className="letter letter-1 letter--6 mx-[3px] md:mx-[5px]">L</span>
-              <span className="letter letter-2 letter--5 mx-[3px] md:mx-[5px]">E</span>
-              <span className="letter letter-3 letter--4 mx-[3px] md:mx-[5px]">T</span>
-              <span className="letter letter-4 letter--3 mx-[3px] md:mx-[5px]">S</span>
-              <span className="letter letter-5 letter--2 mx-[3px] md:mx-[5px]">C</span>
-              <span className="letter letter-6 letter--1 mx-[3px] md:mx-[5px]">O</span>
-              <span className="letter letter-7 letter-0 mx-[3px] md:mx-[5px]">N</span>
-              <span className="letter letter-8 letter-1 mx-[3px] md:mx-[5px]">N</span>
-              <span className="letter letter-9 letter-2 mx-[3px] md:mx-[5px]">E</span>
-              <span className="letter letter-10 letter-3 mx-[3px] md:mx-[5px]">C</span>
-              <span className="letter letter-11 letter-4 mx-[3px] md:mx-[5px]">T</span>
-            </h1>
+            <CosmicConnectionText text="LETS CONNECT" />
           </Link>
         </div>
       </div>
 
-      {/* Bottom section */}
-      <div className="mt-[30px] lg:mt-[0] md:bg-[#171717] md:border-t border-[#4F4F4F] backdrop-blur-[8px] bg-transparent" style={{ backgroundColor: 'rgba(0, 0, 0, 0)' }}>
+      {/* Bottom Section */}
+      <div className="px-11 mt-8 lg:mt-0 bg-[var(--secondary)] dark:bg-[var(--secondary)] border-t border-neutral-400 dark:border-neutral-700 backdrop-blur-md">
         <div className="max-w-[1900px] w-[90%] md:w-[95%] mx-auto">
-          <div className="flex flex-col-reverse gap-y-[40px] lg:flex-row justify-between items-center py-[30px]">
-            <p className="ml-20 text-[12px] sm:text-[14px] md:text-[16px] xxl:text-[18px] text-white leading-[20px]">
+          <div className="flex flex-col-reverse gap-y-6 lg:flex-row justify-between items-center py-6">
+            <p className="text-sm sm:text-base xxl:text-lg text-[var(--foreground)] dark:text-[var(--foreground)]">
               © 2025 | All rights reserved by EurosHub
             </p>
-            <div className="mr-20 flex gap-[50px]">
-              <Link className="text-[12px] sm:text-[14px] md:text-[16px] xxl:text-[18px] text-white leading-[20px]" href="/about">
-                About
-              </Link>
-              <Link className="text-[12px] sm:text-[14px] md:text-[16px] xxl:text-[18px] text-white leading-[20px]" href="/contact">
-                Contact
-              </Link>
-              <Link className="text-[12px] sm:text-[14px] md:text-[16px] xxl:text-[18px] text-white leading-[20px]" href="/career">
-                Career
-              </Link>
-              
+            <div className="flex gap-8">
+              {['about', 'contact', 'career'].map((page) => (
+                <Link
+                  key={page}
+                  href={`/${page}`}
+                  className="text-sm sm:text-base xxl:text-lg text-[var(--foreground)] dark:text-[var(--foreground)] hover:text-[var(--primary)] dark:hover:text-[var(--primary)]"
+                >
+                  {page.charAt(0).toUpperCase() + page.slice(1)}
+                </Link>
+              ))}
             </div>
           </div>
         </div>

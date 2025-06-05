@@ -6,19 +6,6 @@ const CosmicConnectionText: React.FC<{ text: string }> = ({ text }) => {
   const controls = useAnimation();
   const [isMounted, setIsMounted] = useState(false);
 
-  // Constellation connection effect
-  const ConnectionLine = () => (
-    <motion.div
-      initial={{ scaleX: 0, opacity: 0 }}
-      animate={{ scaleX: 1, opacity: 1 }}
-      transition={{ duration: 2, delay: 0.5, type: 'spring' }}
-      className="absolute h-0.5 bg-gradient-to-r from-[#17b6b2] to-[#17b6b2] top-1/2 left-0 right-0 -z-10"
-      style={{
-        boxShadow: '0 0 10px rgba(23, 182, 178, 0.8)',
-      }}
-    />
-  );
-
   // Generate stable star positions
   const generateStarPositions = () => {
     const stars = [];
@@ -83,7 +70,7 @@ const CosmicConnectionText: React.FC<{ text: string }> = ({ text }) => {
       scale: 0.8,
     });
     
-    // Reset all letters to initial state (removed unused i parameter)
+    // Reset all letters to initial state
     await controls.start({
       opacity: 0,
       y: 50,
@@ -129,18 +116,17 @@ const CosmicConnectionText: React.FC<{ text: string }> = ({ text }) => {
     }, 8000);
 
     return () => clearInterval(interval);
-  }, [startAnimation]); // Added startAnimation as a dependency
+  }, [startAnimation]);
 
   return (
     <div className="relative inline-block">
-      <ConnectionLine />
       <FloatingStars />
       
       <div className="flex items-center justify-center">
         {letters.map((letter, index) => (
           <motion.span
             key={index}
-            className="inline-block text-3xl md:text-5xl lg:text-6xl font-bold tracking-tight"
+            className="inline-block text-3xl md:text-5xl lg:text-6xl font-bold tracking-tight text-black dark:text-white"
             custom={index}
             initial={{ 
               opacity: 0,
