@@ -213,3 +213,17 @@ body:not(.dark) .dust-cloud {
 body {
   overflow-x: hidden;
 }
+@font-face {
+  font-family: 'Library3am';
+  src: url('/fonts/library3am/Library3am.otf') format('opentype');
+  font-weight: normal;
+  font-style: normal;
+  font-display: swap;
+}
+/* Custom glowing text effect */
+.glow-text {
+  text-shadow:
+    0 0 6px rgba(255, 255, 255, 0.8),
+    0 0 10px rgba(23, 182, 178, 0.8),
+    0 0 14px rgba(15, 184, 175, 0.9);
+}

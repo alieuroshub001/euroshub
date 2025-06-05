@@ -7,6 +7,27 @@ import { FaLinkedin, FaFacebook, FaInstagram } from 'react-icons/fa';
 import { FaXTwitter } from 'react-icons/fa6';
 
 const Footer: React.FC = () => {
+  // Function to render text with special 'E' styling
+  const renderTextWithStyledE = (text: string) => {
+    return text.split('').map((letter, index) => (
+      <span
+        key={index}
+        className={`inline-block ${
+          letter === 'E' ? 'relative top-[8px] transform -rotate-5' : ''
+        }`}
+        style={{
+          background: 'linear-gradient(135deg, #17b6b2, #0FB8AF)',
+          backgroundClip: 'text',
+          WebkitBackgroundClip: 'text',
+          color: 'transparent',
+          display: 'inline-block',
+        }}
+      >
+        {letter === ' ' ? '\u00A0' : letter}
+      </span>
+    ));
+  };
+
   return (
     <footer className="mt-0 pt-12 lg:pt-0 border-t border-neutral-400 dark:border-neutral-700 relative z-20 backdrop-blur-sm bg-transparent">
       <div className="max-w-[1900px] w-[90%] md:w-[95%] mx-auto">
@@ -66,9 +87,9 @@ const Footer: React.FC = () => {
             href="/contact"
             className="pt-8 md:pt-14 mb-0 md:mb-12 text-center mx-auto lg:text-left font-library3am tracking-wider w-fit max-w-full group"
           >
-            <div className="px-6 py-3 rounded-lg hover:bg-opacity-10 hover:bg-[#17b6b2] transition-all duration-300">
-              <span className="text-4xl md:text-6xl lg:text-7xl font-bold tracking-tight bg-gradient-to-r from-[#17b6b2] to-[#0FB8AF] bg-clip-text text-transparent">
-                LETS CONNECT
+            <div className="px-6 py-3 rounded-lg">
+              <span className="text-4xl md:text-6xl lg:text-7xl font-library3am tracking-tight">
+                {renderTextWithStyledE("LETS CONNECT")}
               </span>
             </div>
           </Link>
