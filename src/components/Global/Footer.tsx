@@ -63,12 +63,15 @@ const Footer: React.FC = () => {
           </div>
 
           {/* Let's Connect */}
-          <Link
-            href="/contact"
-            className="pt-8 md:pt-14 mb-0 md:mb-12 text-center mx-auto lg:text-left font-extrabold tracking-wider w-fit max-w-full"
-          >
-            <CosmicConnectionText text="LETS CONNECT" />
-          </Link>
+<Link
+  href="/contact"
+  className="pt-8 md:pt-14 mb-0 md:mb-12 text-center mx-auto lg:text-left font-library3am tracking-wider w-fit max-w-full group"
+>
+  <div className="px-6 py-3 rounded-lg hover:bg-opacity-10 hover:bg-[#17b6b2] transition-all duration-300">
+    <CosmicConnectionText text="LETS CONNECT" />
+  </div>
+</Link>
+
         </div>
       </div>
 

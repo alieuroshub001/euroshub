@@ -69,21 +69,6 @@ const Counter = () => {
       ref={ref}
       className="relative py-24 bg-transparent text-[var(--foreground)] overflow-hidden"
     >
-      {/* Animated gradient background */}
-      <div className="absolute inset-0 overflow-hidden">
-        <motion.div 
-          className="absolute top-0 left-0 w-full h-full bg-gradient-to-br from-[var(--primary)]/5 to-purple-500/5"
-          initial={{ x: '-50%', y: '-50%', scale: 1.5 }}
-          animate={{ x: '50%', y: '50%', scale: 1.8 }}
-          transition={{
-            duration: 30,
-            repeat: Infinity,
-            repeatType: 'reverse',
-            ease: 'linear'
-          }}
-        />
-      </div>
-
       <div className="max-w-7xl mx-auto px-6 sm:px-8 md:px-16 lg:px-32 relative z-10">
         {/* Header */}
         <motion.div
@@ -183,10 +168,6 @@ const Counter = () => {
             );
           })}
         </div>
-
-        {/* Animated decorative elements */}
-        <div className="absolute -bottom-20 -left-20 w-40 h-40 rounded-full bg-[var(--primary)]/10 blur-3xl opacity-30" />
-        <div className="absolute -top-20 -right-20 w-60 h-60 rounded-full bg-[var(--primary)]/10 blur-3xl opacity-30" />
       </div>
     </section>
   );

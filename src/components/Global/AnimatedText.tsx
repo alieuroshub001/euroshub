@@ -9,11 +9,9 @@ const CosmicConnectionText: React.FC<{ text: string }> = ({ text }) => {
   // Generate stable star positions
   const generateStarPositions = () => {
     const stars = [];
-    // Use a fixed seed for consistent positions
     const seed = 12345;
     
     for (let i = 0; i < 15; i++) {
-      // Simple pseudo-random generator using the seed
       const x = Math.sin(i + seed) * 8000;
       const rand = x - Math.floor(x);
       
@@ -28,7 +26,6 @@ const CosmicConnectionText: React.FC<{ text: string }> = ({ text }) => {
     return stars;
   };
 
-  // Floating stars background - only render on client
   const FloatingStars = () => {
     if (!isMounted) return null;
     
@@ -61,7 +58,6 @@ const CosmicConnectionText: React.FC<{ text: string }> = ({ text }) => {
     );
   };
 
-  // Animation sequence wrapped in useCallback to prevent recreation on every render
   const startAnimation = useCallback(async () => {
     await controls.start({
       opacity: 0,
@@ -70,7 +66,6 @@ const CosmicConnectionText: React.FC<{ text: string }> = ({ text }) => {
       scale: 0.8,
     });
     
-    // Reset all letters to initial state
     await controls.start({
       opacity: 0,
       y: 50,
@@ -79,33 +74,52 @@ const CosmicConnectionText: React.FC<{ text: string }> = ({ text }) => {
       transition: { duration: 0 }
     });
     
-    // Animate letters in one by one
-    await controls.start(i => ({
-      opacity: 1,
-      y: 0,
-      rotate: 0,
-      scale: 1,
-      textShadow: [
-        '0 0 0px rgba(255,255,255,0)',
-        '0 0 10px rgba(23, 182, 178, 0.8)',
-        '0 0 20px rgba(23, 182, 178, 0.5)',
-        '0 0 10px rgba(23, 182, 178, 0.8)',
-      ],
-      transition: {
-        delay: i * 0.1,
-        duration: 1.5,
-        type: 'spring',
-        damping: 10,
-        stiffness: 100,
-        textShadow: {
-          duration: 4,
-          repeat: Infinity,
-          repeatType: 'reverse',
-          ease: 'easeInOut',
+    // Animate letters with special treatment for 'E'
+    await controls.start(i => {
+      const isE = letters[i] === 'E';
+      return {
+        opacity: 1,
+        y: isE ? 8 : 0, // E is slightly lower
+        rotate: isE ? -5 : 0, // E is tilted
+        scale: 1,
+        textShadow: [
+          '0 0 0px rgba(255,255,255,0)',
+          '0 0 15px rgba(23, 182, 178, 0.9)',
+          '0 0 25px rgba(23, 182, 178, 0.7)',
+          '0 0 15px rgba(23, 182, 178, 0.9)',
+        ],
+        transition: {
+          delay: i * 0.1,
+          duration: 1.5,
+          type: 'spring',
+          damping: 10,
+          stiffness: 100,
+          textShadow: {
+            duration: 4,
+            repeat: Infinity,
+            repeatType: 'reverse',
+            ease: 'easeInOut',
+          }
         }
+      };
+    });
+
+    // Add blinking effect specifically for 'E' letters
+    letters.forEach((letter, index) => {
+      if (letter === 'E') {
+        controls.start({
+          opacity: [1, 0.1, 1, 0.1, 1, 0.1, 1],
+          transition: {
+            delay: index * 0.1 + 1.5,
+            duration: 2,
+            repeat: Infinity,
+            repeatDelay: 3,
+            ease: "easeInOut"
+          }
+        });
       }
-    }));
-  }, [controls]);
+    });
+  }, [controls, letters]);
 
   useEffect(() => {
     setIsMounted(true);
@@ -126,22 +140,26 @@ const CosmicConnectionText: React.FC<{ text: string }> = ({ text }) => {
         {letters.map((letter, index) => (
           <motion.span
             key={index}
-            className="inline-block text-3xl md:text-5xl lg:text-6xl font-bold tracking-tight text-black dark:text-white"
+            className={`inline-block text-4xl md:text-6xl lg:text-7xl font-bold tracking-tight ${
+              letter === 'E' ? 'relative top-[8px]' : ''
+            }`}
             custom={index}
             initial={{ 
               opacity: 0,
               y: 50,
-              rotate: 10,
+              rotate: letter === 'E' ? -5 : 10,
               scale: 0.8,
               textShadow: '0 0 0px rgba(255,255,255,0)'
             }}
             animate={controls}
             style={{
-              background: 'linear-gradient(135deg, #17b6b2, #17b6b2)',
+              background: 'linear-gradient(135deg, #17b6b2, #0FB8AF)',
               backgroundClip: 'text',
               WebkitBackgroundClip: 'text',
               color: 'transparent',
               display: 'inline-block',
+              filter: 'drop-shadow(0 0 8px rgba(23, 182, 178, 0.9))',
+              transform: letter === 'E' ? 'rotate(-5deg)' : 'none',
             }}
           >
             {letter === ' ' ? '\u00A0' : letter}
