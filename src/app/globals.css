@@ -1,12 +1,11 @@
 @import "tailwindcss";
 @font-face {
   font-family: 'Library3am';
-  src: url('/fonts/library3am/Library3am.otf') format('opentype');
+  src: url('/fonts/library3am/library3am.otf') format('opentype');
   font-weight: normal;
   font-style: normal;
   font-display: swap;
 }
-
 .font-library3am {
   font-family: 'Library3am', sans-serif;
 }
