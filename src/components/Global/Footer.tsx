@@ -87,7 +87,7 @@ const Footer: React.FC = () => {
           >
             <div className="px-6 py-3 rounded-lg">
               <span className="text-4xl md:text-6xl lg:text-7xl font-library3am tracking-tight">
-                {renderTextWithStyledE('LETS     CONNECT')}
+                {renderTextWithStyledE('LETS CONNECT')}
               </span>
             </div>
           </Link>
