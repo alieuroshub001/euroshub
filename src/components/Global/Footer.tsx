@@ -7,20 +7,18 @@ import { FaLinkedin, FaFacebook, FaInstagram } from 'react-icons/fa';
 import { FaXTwitter } from 'react-icons/fa6';
 
 const Footer: React.FC = () => {
-  // Function to render text with special 'E' styling
   const renderTextWithStyledE = (text: string) => {
     return text.split('').map((letter, index) => (
       <span
         key={index}
         className={`inline-block ${
-          letter === 'E' ? 'relative top-[8px] transform -rotate-5' : ''
-        }`}
+          letter === 'E' ? 'styled-e' : ''
+        } glow-text`}
         style={{
-          background: 'linear-gradient(135deg, #17b6b2, #0FB8AF)',
+          background: 'linear-gradient(135deg, #d8fdff, #a0f7ff, #7df3ff)',
           backgroundClip: 'text',
           WebkitBackgroundClip: 'text',
           color: 'transparent',
-          display: 'inline-block',
         }}
       >
         {letter === ' ' ? '\u00A0' : letter}
@@ -29,8 +27,8 @@ const Footer: React.FC = () => {
   };
 
   return (
-    <footer className="mt-0 pt-12 lg:pt-0 border-t border-neutral-400 dark:border-neutral-700 relative z-20 backdrop-blur-sm bg-transparent">
-      <div className="max-w-[1900px] w-[90%] md:w-[95%] mx-auto">
+    <footer className="w-full mt-0 pt-12 lg:pt-0 border-t border-neutral-400 dark:border-neutral-700 relative z-20 backdrop-blur-sm bg-transparent">
+      <div className="max-w-[1900px] w-full mx-auto px-[5%] md:px-[2.5%]">
         <div className="grid grid-cols-1 gap-y-8 lg:flex justify-between items-start lg:items-center">
           {/* Logo and description */}
           <div className="max-w-[700px] xl:max-w-[670px] flex flex-col gap-5">
@@ -89,7 +87,7 @@ const Footer: React.FC = () => {
           >
             <div className="px-6 py-3 rounded-lg">
               <span className="text-4xl md:text-6xl lg:text-7xl font-library3am tracking-tight">
-                {renderTextWithStyledE("LETS CONNECT")}
+                {renderTextWithStyledE('LETS     CONNECT')}
               </span>
             </div>
           </Link>
@@ -97,8 +95,8 @@ const Footer: React.FC = () => {
       </div>
 
       {/* Bottom Section */}
-      <div className="px-11 mt-8 lg:mt-0 bg-[var(--secondary)] dark:bg-[var(--secondary)] border-t border-neutral-400 dark:border-neutral-700 backdrop-blur-md">
-        <div className="max-w-[1900px] w-[90%] md:w-[95%] mx-auto">
+      <div className="w-full px-[5%] md:px-[2.5%] mt-8 lg:mt-0 bg-[var(--secondary)] dark:bg-[var(--secondary)] border-t border-neutral-400 dark:border-neutral-700 backdrop-blur-md">
+        <div className="max-w-[1900px] w-full mx-auto">
           <div className="flex flex-col-reverse gap-y-6 lg:flex-row justify-between items-center py-6">
             <p className="text-sm sm:text-base xxl:text-lg text-[var(--foreground)] dark:text-[var(--foreground)]">
               © 2025 | All rights reserved by EurosHub
