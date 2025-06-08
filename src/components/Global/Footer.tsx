@@ -101,7 +101,7 @@ const Footer: React.FC = () => {
             <p className="text-sm sm:text-base xxl:text-lg text-[var(--foreground)] dark:text-[var(--foreground)]">
               © 2025 | All rights reserved by EurosHub
             </p>
-            <div className="flex gap-8">
+            <div className="mr-20 flex gap-8">
               {['about', 'contact', 'career'].map((page) => (
                 <Link
                   key={page}
