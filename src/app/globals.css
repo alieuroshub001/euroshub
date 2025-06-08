@@ -208,10 +208,7 @@ body:not(.dark) .dust-cloud {
   will-change: transform;
   filter: blur(2px);
 }
-/* In your global CSS */
-body {
-  overflow-x: hidden;
-}
+
 /* Updated CSS for neon blue glowing text effect */
 .glow-text {
   text-shadow:
@@ -228,7 +225,7 @@ body {
 
 .styled-e {
   position: relative;
-  top: 15px;
+  top: 5px;
   transform: rotate(12deg);
   animation: blink 1.5s infinite;
   /* Enhanced neon blue glow for the E */

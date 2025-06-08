@@ -66,7 +66,7 @@ export default function Clients() {
 
   return (
     <section className="py-20 text-[var(--foreground)] bg-transparent">
-      <div className="w-screen overflow-hidden space-y-10">
+      <div className="w-full overflow-hidden space-y-10">
 
         {/* Marquee 1: First Array (start at 0) */}
         <Marquee direction="left" speed={35} gradient={false} play={!paused1}>

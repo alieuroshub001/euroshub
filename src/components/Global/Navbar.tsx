@@ -98,6 +98,70 @@ const AnimatedLogoText: React.FC<{ text: string; isHovered: boolean }> = ({ text
   );
 };
 
+const AnimatedLogo: React.FC<{ isHovered: boolean }> = ({ isHovered }) => {
+  return (
+    <motion.div
+      initial={{ 
+        scale: 1,
+        rotate: 0,
+        filter: 'drop-shadow(0 0 0px rgba(23, 182, 178, 0))'
+      }}
+      animate={isHovered ? {
+        scale: [1, 1.1, 1.05],
+        rotate: [0, -5, 2, 0],
+        filter: [
+          'drop-shadow(0 0 0px rgba(23, 182, 178, 0))',
+          'drop-shadow(0 0 10px rgba(23, 182, 178, 0.6))',
+          'drop-shadow(0 0 20px rgba(23, 182, 178, 0.4))',
+          'drop-shadow(0 0 10px rgba(23, 182, 178, 0.6))',
+        ],
+        transition: {
+          scale: {
+            duration: 0.6,
+            ease: 'easeOut'
+          },
+          rotate: {
+            duration: 0.8,
+            ease: 'easeInOut'
+          },
+          filter: {
+            duration: 2,
+            repeat: Infinity,
+            repeatType: 'reverse',
+            ease: 'easeInOut',
+          }
+        }
+      } : {
+        scale: 1,
+        rotate: 0,
+        filter: 'drop-shadow(0 0 0px rgba(23, 182, 178, 0))',
+        transition: {
+          duration: 0.3,
+          ease: 'easeOut'
+        }
+      }}
+      whileHover={isHovered ? {
+        y: [-2, 2, -1, 0],
+        transition: {
+          y: {
+            duration: 1.5,
+            repeat: Infinity,
+            ease: 'easeInOut'
+          }
+        }
+      } : {}}
+    >
+      <Image
+        src="/assets/images/logo.png"
+        alt="Euroshub Logo"
+        width={75}
+        height={40}
+        className="object-contain"
+      />
+    </motion.div>
+  );
+};
+
 export default function Navbar() {
   const [darkMode, setDarkMode] = useState(false);
   const [showMobileMenu, setShowMobileMenu] = useState(false);
@@ -252,13 +316,7 @@ export default function Navbar() {
               href="/"
               className="flex items-center relative z-10"
             >
-              <Image
-                src="/assets/images/logo.png"
-                alt="Euroshub Logo"
-                width={75}
-                height={40}
-                className="object-contain"
-              />
+              <AnimatedLogo isHovered={logoHovered} />
               <div className={`transition-opacity duration-300 ml-2 ${logoHovered ? 'opacity-100' : 'opacity-0 pointer-events-none'}`}>
                 <AnimatedLogoText text="EurosHub" isHovered={logoHovered} />
               </div>
