@@ -1,5 +1,16 @@
 'use client';
-
+// Add these imports at the top of Navbar.tsx
+import VirtualAssistance from '../ServicePage/business/VirtualAssistance';
+import ProjectManagement from '../ServicePage/business/ProjectManagement';
+import DataEntryTranscription from '../ServicePage/business/DataEntryTranscription';
+import DataExtractionETL from '../ServicePage/business/DataExtractionETL';
+import LeadGeneration from '../ServicePage/business/LeadGeneration';
+import ERPCRMSoftware from '../ServicePage/business/ERPCRMSoftware';
+import WebDevelopment from '../ServicePage/technology/WebDevelopment';
+import MobileAppDevelopment from '../ServicePage/technology/MobileAppDevelopment';
+import UIUXDesign from '../ServicePage/technology/UIUXDesign';
+import CloudSolutions from '../ServicePage/technology/CloudSolutions';
+import AISolutions from '../ServicePage/technology/AISolutions';
 import { motion, useAnimation } from 'framer-motion';
 import {
   ChevronDownIcon,
@@ -173,30 +184,73 @@ export default function Navbar() {
   const dropdownRef = useRef<HTMLDivElement>(null);
   const servicesButtonRef = useRef<HTMLDivElement>(null);
   const navbarRef = useRef<HTMLDivElement>(null);
-
-  const allServices = [
-    {
-      category: 'Business Services',
-      services: [
-        { name: 'Virtual Assistance', icon: <HeadsetIcon className="w-4 h-4" /> },
-        { name: 'Project Management', icon: <ClipboardListIcon className="w-4 h-4" /> },
-        { name: 'Data Entry & Transcription', icon: <KeyboardIcon className="w-4 h-4" /> },
-        { name: 'Data Extraction/ETL', icon: <DatabaseIcon className="w-4 h-4" /> },
-        { name: 'Lead Generation', icon: <PhoneOutgoingIcon className="w-4 h-4" /> },
-        { name: 'ERP/CRM Software', icon: <LayoutDashboardIcon className="w-4 h-4" /> },
-      ]
-    },
-    {
-      category: 'Technology Services',
-      services: [
-        { name: 'Web Development', icon: <CodeIcon className="w-4 h-4" /> },
-        { name: 'Mobile App Development', icon: <SmartphoneIcon className="w-4 h-4" /> },
-        { name: 'UI/UX Design', icon: <GlobeIcon className="w-4 h-4" /> },
-        { name: 'Cloud Solutions', icon: <CloudIcon className="w-4 h-4" /> },
-        { name: 'AI Solutions', icon: <CpuIcon className="w-4 h-4" /> }
-      ]
-    }
-  ];
+const allServices = [
+  {
+    category: 'Business Services',
+    services: [
+      { 
+        name: 'Virtual Assistance', 
+        icon: <HeadsetIcon className="w-4 h-4" />,
+        path: '/services/business/virtual-assistance'
+      },
+      { 
+        name: 'Project Management', 
+        icon: <ClipboardListIcon className="w-4 h-4" />,
+        path: '/services/business/project-management'
+      },
+      { 
+        name: 'Data Entry & Transcription', 
+        icon: <KeyboardIcon className="w-4 h-4" />,
+        path: '/services/business/data-entry-transcription'
+      },
+      { 
+        name: 'Data Extraction/ETL', 
+        icon: <DatabaseIcon className="w-4 h-4" />,
+        path: '/services/business/data-extraction-etl'
+      },
+      { 
+        name: 'Lead Generation', 
+        icon: <PhoneOutgoingIcon className="w-4 h-4" />,
+        path: '/services/business/lead-generation'
+      },
+      { 
+        name: 'ERP/CRM Software', 
+        icon: <LayoutDashboardIcon className="w-4 h-4" />,
+        path: '/services/business/erp-crm-software'
+      },
+    ]
+  },
+  {
+    category: 'Technology Services',
+    services: [
+      { 
+        name: 'Web Development', 
+        icon: <CodeIcon className="w-4 h-4" />,
+        path: '/services/technology/web-development'
+      },
+      { 
+        name: 'Mobile App Development', 
+        icon: <SmartphoneIcon className="w-4 h-4" />,
+        path: '/services/technology/mobile-app-development'
+      },
+      { 
+        name: 'UI/UX Design', 
+        icon: <GlobeIcon className="w-4 h-4" />,
+        path: '/services/technology/ui-ux-design'
+      },
+      { 
+        name: 'Cloud Solutions', 
+        icon: <CloudIcon className="w-4 h-4" />,
+        path: '/services/technology/cloud-solutions'
+      },
+      { 
+        name: 'AI Solutions', 
+        icon: <CpuIcon className="w-4 h-4" />,
+        path: '/services/technology/ai-solutions'
+      }
+    ]
+  }
+];
 
   useEffect(() => {
     const storedTheme = localStorage.getItem('theme');
@@ -407,18 +461,18 @@ export default function Navbar() {
                     {category.category}
                   </h3>
                   <div className="grid grid-cols-1 lg:grid-cols-2 gap-1">
-                    {category.services.map((service) => (
-                      <Link
-                        key={service.name}
-                        href={`/services#${service.name.toLowerCase().replace(/\s+/g, '-')}`}
-                        className="flex items-center gap-2 p-2 rounded-lg hover:bg-[var(--primary)]/10 transition-all group"
-                      >
-                        <div className="bg-[var(--primary)]/10 p-1.5 rounded-full group-hover:bg-[var(--primary)] group-hover:text-white">
-                          {service.icon}
-                        </div>
-                        <span className="text-sm font-medium group-hover:text-[var(--primary)]">{service.name}</span>
-                      </Link>
-                    ))}
+{category.services.map((service) => (
+  <Link
+    key={service.name}
+    href={service.path}
+    className="flex items-center gap-2 p-2 rounded-lg hover:bg-[var(--primary)]/10 transition-all group"
+  >
+    <div className="bg-[var(--primary)]/10 p-1.5 rounded-full group-hover:bg-[var(--primary)] group-hover:text-white">
+      {service.icon}
+    </div>
+    <span className="text-sm font-medium group-hover:text-[var(--primary)]">{service.name}</span>
+  </Link>
+))}
                   </div>
                 </div>
               ))}

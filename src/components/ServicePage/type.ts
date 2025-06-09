@@ -1,3 +1,4 @@
+// components/services/type.ts
 import { JSX } from 'react';
 
 export interface Service {
@@ -7,7 +8,6 @@ export interface Service {
   description: string;
   longDescription: string;
   features: string[];
-  slug: string;
   image: string;
 }
 
