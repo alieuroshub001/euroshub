@@ -1,16 +1,5 @@
 'use client';
 // Add these imports at the top of Navbar.tsx
-import VirtualAssistance from '../ServicePage/business/VirtualAssistance';
-import ProjectManagement from '../ServicePage/business/ProjectManagement';
-import DataEntryTranscription from '../ServicePage/business/DataEntryTranscription';
-import DataExtractionETL from '../ServicePage/business/DataExtractionETL';
-import LeadGeneration from '../ServicePage/business/LeadGeneration';
-import ERPCRMSoftware from '../ServicePage/business/ERPCRMSoftware';
-import WebDevelopment from '../ServicePage/technology/WebDevelopment';
-import MobileAppDevelopment from '../ServicePage/technology/MobileAppDevelopment';
-import UIUXDesign from '../ServicePage/technology/UIUXDesign';
-import CloudSolutions from '../ServicePage/technology/CloudSolutions';
-import AISolutions from '../ServicePage/technology/AISolutions';
 import { motion, useAnimation } from 'framer-motion';
 import {
   ChevronDownIcon,

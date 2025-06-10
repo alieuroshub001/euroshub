@@ -68,15 +68,15 @@ export default function Clients() {
     <section className="py-20 text-[var(--foreground)] bg-transparent">
       <div className="w-full overflow-hidden space-y-10">
 
-        {/* Marquee 1: First Array (start at 0) */}
-        <Marquee direction="left" speed={35} gradient={false} play={!paused1}>
+        {/* Marquee 1: First Array (start at 0) - Direction inverted to right */}
+        <Marquee direction="right" speed={35} gradient={false} play={!paused1}>
           {[...firstArray, ...firstArray].map((logo, idx) => (
             <ClientLogo key={`marquee1-${idx}`} logo={logo} setPaused={setPaused1} />
           ))}
         </Marquee>
 
-        {/* Marquee 2: Second Array (start at 0) */}
-        <Marquee direction="right" speed={30} gradient={false} play={!paused2}>
+        {/* Marquee 2: Second Array (start at 0) - Direction inverted to left */}
+        <Marquee direction="left" speed={30} gradient={false} play={!paused2}>
           {[...secondArray, ...secondArray].map((logo, idx) => (
             <ClientLogo key={`marquee2-${idx}`} logo={logo} setPaused={setPaused2} />
           ))}
@@ -87,15 +87,15 @@ export default function Clients() {
           Trusted by Global Brands
         </h2>
 
-        {/* Marquee 3: First Array (start from middle = opposite of 0) */}
-        <Marquee direction="left" speed={30} gradient={false} play={!paused3}>
+        {/* Marquee 3: First Array (start from middle = opposite of 0) - Direction inverted to right */}
+        <Marquee direction="right" speed={30} gradient={false} play={!paused3}>
           {[...rotateArray(firstArray, Math.floor(firstArray.length / 2)), ...rotateArray(firstArray, Math.floor(firstArray.length / 2))].map((logo, idx) => (
             <ClientLogo key={`marquee3-${idx}`} logo={logo} setPaused={setPaused3} />
           ))}
         </Marquee>
 
-        {/* Marquee 4: Second Array (start from middle = opposite of 0) */}
-        <Marquee direction="right" speed={25} gradient={false} play={!paused4}>
+        {/* Marquee 4: Second Array (start from middle = opposite of 0) - Direction inverted to left */}
+        <Marquee direction="left" speed={25} gradient={false} play={!paused4}>
           {[...rotateArray(secondArray, Math.floor(secondArray.length / 2)), ...rotateArray(secondArray, Math.floor(secondArray.length / 2))].map((logo, idx) => (
             <ClientLogo key={`marquee4-${idx}`} logo={logo} setPaused={setPaused4} />
           ))}

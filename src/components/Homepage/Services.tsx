@@ -1,4 +1,5 @@
 'use client';
+import { useRouter } from 'next/navigation'; // Add this at the top of your component
 import Cursor from '@/components/Global/Cursor';
 import { motion, useMotionValue } from 'framer-motion'; 
 import {
@@ -19,17 +20,17 @@ import {
   Smartphone,
 } from 'lucide-react';
 import Image from 'next/image';
+import Link from 'next/link';
 import { JSX, useCallback, useEffect, useRef, useState } from 'react';
-
 
 interface Service {
   id: number;
   title: string;
   icon: JSX.Element;
-  description: string;
   category: 'business' | 'tech';
   slug: string;
   image: string;
+  path: string; // Added path property
 }
 
 const allServices: Service[] = [
@@ -37,136 +38,136 @@ const allServices: Service[] = [
     id: 1,
     title: 'Virtual Assistance',
     icon: <Headphones className="w-10 h-10 text-[var(--primary)]" />,
-    description: 'Remote support for administrative and customer tasks.',
     category: 'business',
     slug: 'virtual-assistance',
     image: '/assets/services/virtual-assistant.jpg',
+    path: '/services/business/virtual-assistance'
   },
   {
     id: 2,
     title: 'Project Management',
     icon: <ClipboardList className="w-10 h-10 text-[var(--primary)]" />,
-    description: 'Complete coordination for project execution and tracking.',
     category: 'business',
     slug: 'project-management',
     image: '/assets/services/project-management.JPG',
+    path: '/services/business/project-management'
   },
   {
     id: 3,
     title: 'Data Entry & Transcription',
     icon: <Keyboard className="w-10 h-10 text-[var(--primary)]" />,
-    description: 'Precise data processing and document conversion solutions.',
     category: 'business',
     slug: 'data-entry-transcription',
     image: '/assets/services/data-entry.jpeg',
+    path: '/services/business/data-entry-transcription'
   },
   {
     id: 4,
     title: 'Data Extraction/ETL',
     icon: <Database className="w-10 h-10 text-[var(--primary)]" />,
-    description: 'Systematic data collection from multiple sources.',
     category: 'business',
     slug: 'data-extraction-etl',
     image: '/assets/services/extraction.jpg',
+    path: '/services/business/data-extraction-etl'
   },
   {
     id: 5,
     title: 'Lead Generation',
     icon: <PhoneOutgoing className="w-10 h-10 text-[var(--primary)]" />,
-    description: 'Targeted identification of potential sales prospects.',
     category: 'business',
     slug: 'lead-generation',
     image: '/assets/services/lead.jpeg',
+    path: '/services/business/lead-generation'
   },
   {
     id: 6,
     title: 'ERP/CRM Software',
     icon: <LayoutDashboard className="w-10 h-10 text-[var(--primary)]" />,
-    description: 'Implementation and enhancement of business systems.',
     category: 'business',
     slug: 'erp-crm-software',
     image: '/assets/services/crm.jpg',
+    path: '/services/business/erp-crm-software'
   },
   {
     id: 7,
     title: 'Data Mining',
     icon: <HardDrive className="w-10 h-10 text-[var(--primary)]" />,
-    description: 'Extraction of insights from complex datasets.',
     category: 'business',
     slug: 'data-mining',
     image: '/assets/services/mining.jpg',
+    path: '/services/business/data-mining'
   },
   {
     id: 8,
     title: 'Market Research',
     icon: <Search className="w-10 h-10 text-[var(--primary)]" />,
-    description: 'Analysis of competition and product evaluation.',
     category: 'business',
     slug: 'market-research',
     image: '/assets/services/research.jpg',
+    path: '/services/business/market-research'
   },
   {
     id: 9,
     title: 'Data Analysis',
     icon: <BarChart2 className="w-10 h-10 text-[var(--primary)]" />,
-    description: 'Statistical examination of business information.',
     category: 'business',
     slug: 'data-analysis',
     image: '/assets/services/analysis.jpeg',
+    path: '/services/business/data-analysis'
   },
   {
     id: 10,
     title: 'Database Management',
     icon: <Server className="w-10 h-10 text-[var(--primary)]" />,
-    description: 'Comprehensive administration of data storage systems.',
     category: 'business',
     slug: 'database-management',
     image: '/assets/services/dbms.jpg',
+    path: '/services/business/database-management'
   },
   {
     id: 11,
     title: 'Web Development',
     icon: <Code className="w-10 h-10 text-[var(--primary)]" />,
-    description: 'Building modern custom web applications.',
     category: 'tech',
     slug: 'web-development',
     image: '/assets/services/dev.jpeg',
+    path: '/services/technology/web-development'
   },
   {
     id: 12,
     title: 'Mobile App Development',
     icon: <Smartphone className="w-10 h-10 text-[var(--primary)]" />,
-    description: 'Creating seamless iOS and Android applications.',
     category: 'tech',
     slug: 'mobile-app-development',
     image: '/assets/services/app.jpeg',
+    path: '/services/technology/mobile-app-development'
   },
   {
     id: 13,
     title: 'UI/UX Design',
     icon: <Globe className="w-10 h-10 text-[var(--primary)]" />,
-    description: 'Designing engaging and intuitive user interfaces.',
     category: 'tech',
     slug: 'ui-ux-design',
     image: '/assets/services/uiux.jpeg',
+    path: '/services/technology/ui-ux-design'
   },
   {
     id: 14,
     title: 'Cloud Solutions',
     icon: <Cloud className="w-10 h-10 text-[var(--primary)]" />,
-    description: 'Deploying scalable cloud infrastructure services.',
     category: 'tech',
     slug: 'cloud-solutions',
     image: '/assets/services/cloud.jpg',
+    path: '/services/technology/cloud-solutions'
   },
   {
     id: 15,
     title: 'AI Solutions',
     icon: <Cpu className="w-10 h-10 text-[var(--primary)]" />,
-    description: 'Implementing intelligent automation technologies.',
     category: 'tech',
     slug: 'ai-solutions',
     image: '/assets/services/ai.jpg',
+    path: '/services/technology/ai-solutions'
   },
 ];
 
@@ -177,6 +178,7 @@ export default function Services() {
   const [isDragging, setIsDragging] = useState(false);
   const x = useMotionValue(0);
   const animationRef = useRef<number | null>(null);
+  const router = useRouter();
 
   // Custom cursor state
   const [mousePos, setMousePos] = useState({ x: 0, y: 0 });
@@ -242,35 +244,6 @@ export default function Services() {
   // Mouse move for custom cursor
   const handleMouseMove = (e: React.MouseEvent) => {
     setMousePos({ x: e.clientX, y: e.clientY });
-  };
-
-  // Pointer down/up for click vs drag detection
-  const handlePointerDown = (e: React.PointerEvent) => {
-    pointerDownPos.current = { x: e.clientX, y: e.clientY };
-    if (clickTimeout.current) {
-      clearTimeout(clickTimeout.current);
-      clickTimeout.current = null;
-    }
-  };
-
-  const handlePointerUp = (slug: string, e: React.PointerEvent) => {
-    if (!pointerDownPos.current) return;
-    const dx = Math.abs(e.clientX - pointerDownPos.current.x);
-    const dy = Math.abs(e.clientY - pointerDownPos.current.y);
-    const dragThreshold = 10;
-
-    if (dx > dragThreshold || dy > dragThreshold) {
-      // It was a drag; do nothing
-      pointerDownPos.current = null;
-      return;
-    }
-
-    // Otherwise, treat as click after slight delay
-    clickTimeout.current = setTimeout(() => {
-      window.location.href = `/services#${slug}`;
-      pointerDownPos.current = null;
-      clickTimeout.current = null;
-    }, 150);
   };
 
   return (
@@ -347,22 +320,29 @@ export default function Services() {
           dragMomentum={false}
         >
           {infiniteServices.map((service, idx) => (
-            <motion.div
-              key={`${service.id}-${Math.floor(idx / filteredServices.length)}-${idx % filteredServices.length}`}
-              className="flex-shrink-0 w-64 sm:w-72 md:w-80 h-80 sm:h-96 cursor-pointer relative"
-              whileHover={{ scale: 1.03 }}
-              transition={{ type: 'spring', stiffness: 400, damping: 30 }}
-              onPointerDown={handlePointerDown}
-              onPointerUp={(e) => handlePointerUp(service.slug, e)}
-              onPointerCancel={() => {
-                if (clickTimeout.current) {
-                  clearTimeout(clickTimeout.current);
-                  clickTimeout.current = null;
-                }
-                pointerDownPos.current = null;
-              }}
-            >
-              <div className="h-full bg-[var(--card-bg)] rounded-xl overflow-hidden shadow-sm transition-all duration-300 hover:shadow-xl hover:bg-[var(--card-bg)]/80 flex flex-col relative">
+          <div
+  key={`${service.id}-${Math.floor(idx / filteredServices.length)}-${idx % filteredServices.length}`}
+  className="flex-shrink-0 w-64 sm:w-72 md:w-80 h-80 sm:h-96 cursor-pointer relative"
+  onPointerDown={(e) => {
+    pointerDownPos.current = { x: e.clientX, y: e.clientY };
+  }}
+  onPointerUp={(e) => {
+    if (!pointerDownPos.current) return;
+    const dx = Math.abs(e.clientX - pointerDownPos.current.x);
+    const dy = Math.abs(e.clientY - pointerDownPos.current.y);
+
+    if (dx < 5 && dy < 5) {
+      router.push(service.path); // Navigate only on real click
+    }
+
+    pointerDownPos.current = null;
+  }}
+>
+  <motion.div
+    className="h-full bg-[var(--card-bg)] rounded-xl overflow-hidden shadow-sm transition-all duration-300 hover:shadow-xl hover:bg-[var(--card-bg)]/80 flex flex-col relative"
+    whileHover={{ scale: 1.03 }}
+    transition={{ type: 'spring', stiffness: 400, damping: 30 }}
+  >
                 {/* Background image + gradient overlay */}
                 <div className="absolute inset-0 z-0">
                   <Image
@@ -391,12 +371,11 @@ export default function Services() {
                     {service.description}
                   </p>
                 </div>
-              </div>
-            </motion.div>
+              </motion.div>
+            </div>
           ))}
         </motion.div>
 
-       {/* Replace the custom cursor with the imported component */}
         <Cursor 
           mousePos={mousePos} 
           isDragging={isDragging} 
