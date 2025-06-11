@@ -338,11 +338,13 @@ export default function Services() {
     pointerDownPos.current = null;
   }}
 >
-  <motion.div
-    className="h-full bg-[var(--card-bg)] rounded-xl overflow-hidden shadow-sm transition-all duration-300 hover:shadow-xl hover:bg-[var(--card-bg)]/80 flex flex-col relative"
-    whileHover={{ scale: 1.03 }}
-    transition={{ type: 'spring', stiffness: 400, damping: 30 }}
-  >
+<motion.div
+  className="relative group card-effect card-effect-hover card-glow-hover card-saber-effect card-saber-hover h-full bg-[var(--card-bg)] rounded-xl overflow-hidden shadow-sm transition-all duration-300 hover:shadow-xl hover:bg-[var(--card-bg)]/80 flex flex-col"
+whileHover={{ scale: 1.03 }}
+  transition={{ type: 'spring', stiffness: 400, damping: 30 }}
+>
+
+
                 {/* Background image + gradient overlay */}
                 <div className="absolute inset-0 z-0">
                   <Image

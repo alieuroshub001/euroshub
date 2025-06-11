@@ -1,7 +1,7 @@
 'use client';
 
 import { useState, useEffect, useRef, useCallback } from 'react';
-import { motion, useMotionValue } from 'framer-motion';
+import { motion, useMotionValue, useReducedMotion } from 'framer-motion';
 import { UserCircle2 } from 'lucide-react';
 import Cursor from '@/components/Global/Cursor';
 
@@ -35,75 +35,70 @@ export default function Testimonials() {
   const containerRef = useRef<HTMLDivElement>(null);
   const x = useMotionValue(0);
   const animationRef = useRef<number | null>(null);
+  const lastFrameTime = useRef<number | null>(null);
+  const shouldReduceMotion = useReducedMotion();
 
   const [isHovered, setIsHovered] = useState(false);
   const [isDragging, setIsDragging] = useState(false);
-
   const [mousePos, setMousePos] = useState({ x: 0, y: 0 });
   const [showCursor, setShowCursor] = useState(false);
 
-  // For detecting drag vs click
   const pointerDownPos = useRef<{ x: number; y: number } | null>(null);
   const clickTimeout = useRef<NodeJS.Timeout | null>(null);
 
-  // Create 5 copies for seamless infinite scroll
-  const infiniteTestimonials = Array(5).fill(testimonials).flat();
-  
-  // Calculate dimensions for infinite loop
-  const cardWidth = 280; // w-[280px]
-  const gap = 16; // gap-4 = 16px
+  const infiniteTestimonials = Array(3).fill(testimonials).flat();
+  const cardWidth = 280;
+  const gap = 16;
   const singleSetWidth = testimonials.length * (cardWidth + gap);
 
-  // Dark mode detection
- 
-  // Auto-scroll marquee animation
-  const moveMarquee = useCallback(() => {
-    if (isHovered || isDragging) return;
-    
-    const currentX = x.get();
-    x.set(currentX - 0.8); // Slightly slower than services
-    
-    animationRef.current = requestAnimationFrame(moveMarquee);
-  }, [isHovered, isDragging, x]);
+  const moveMarquee = useCallback((timestamp: number) => {
+    if (isHovered || isDragging || shouldReduceMotion) return;
 
-  // Handle infinite loop repositioning
+    if (!lastFrameTime.current) lastFrameTime.current = timestamp;
+    const delta = timestamp - lastFrameTime.current;
+
+    if (delta > 16) {
+      const currentX = x.get();
+      x.set(currentX - 0.8);
+      lastFrameTime.current = timestamp;
+    }
+
+    animationRef.current = requestAnimationFrame(moveMarquee);
+  }, [isHovered, isDragging, shouldReduceMotion, x]);
+
   const handleInfiniteLoop = useCallback(() => {
     const currentX = x.get();
-    
-    // If we've moved too far left, jump back to equivalent position
     if (currentX <= -singleSetWidth * 2) {
       x.set(currentX + singleSetWidth);
-    }
-    // If we've moved too far right, jump back to equivalent position  
-    else if (currentX >= 0) {
+    } else if (currentX >= 0) {
       x.set(currentX - singleSetWidth);
     }
   }, [x, singleSetWidth]);
 
-  // Monitor x value changes for infinite loop
   useEffect(() => {
     const unsubscribe = x.onChange(handleInfiniteLoop);
     return unsubscribe;
   }, [x, handleInfiniteLoop]);
 
   useEffect(() => {
-    animationRef.current = requestAnimationFrame(moveMarquee);
+    if (shouldReduceMotion) return;
+
+    const frame = (time: number) => moveMarquee(time);
+    animationRef.current = requestAnimationFrame(frame);
+
     return () => {
       if (animationRef.current) cancelAnimationFrame(animationRef.current);
     };
-  }, [moveMarquee]);
+  }, [moveMarquee, shouldReduceMotion]);
 
-  // Initialize position at middle for smooth bi-directional scroll
   useEffect(() => {
-    x.set(-singleSetWidth); // Start from middle position
+    x.set(-singleSetWidth);
   }, [x, singleSetWidth]);
 
-  // Mouse move for custom cursor
   const handleMouseMove = useCallback((e: React.MouseEvent) => {
     setMousePos({ x: e.clientX, y: e.clientY });
   }, []);
 
-  // Pointer down/up for click vs drag detection
   const handlePointerDown = (e: React.PointerEvent) => {
     pointerDownPos.current = { x: e.clientX, y: e.clientY };
     if (clickTimeout.current) {
@@ -116,20 +111,14 @@ export default function Testimonials() {
     if (!pointerDownPos.current) return;
     const dx = Math.abs(e.clientX - pointerDownPos.current.x);
     const dy = Math.abs(e.clientY - pointerDownPos.current.y);
-    const dragThreshold = 10;
 
-    if (dx > dragThreshold || dy > dragThreshold) {
-      // It was a drag; do nothing
-      pointerDownPos.current = null;
-      return;
+    if (dx < 10 && dy < 10) {
+      clickTimeout.current = setTimeout(() => {
+        console.log(`Clicked testimonial ${testimonialId}`);
+      }, 150);
     }
 
-    // Otherwise, treat as click after slight delay (could open testimonial details)
-    clickTimeout.current = setTimeout(() => {
-      console.log(`Clicked testimonial ${testimonialId}`);
-      pointerDownPos.current = null;
-      clickTimeout.current = null;
-    }, 150);
+    pointerDownPos.current = null;
   };
 
   return (
@@ -171,8 +160,8 @@ export default function Testimonials() {
               <motion.div
                 key={`${testimonial.id}-${Math.floor(index / testimonials.length)}-${index % testimonials.length}`}
                 className="flex-shrink-0 w-[280px] h-[280px] px-2 cursor-pointer"
-                whileHover={{ scale: 1.03 }}
-                transition={{ type: 'spring', stiffness: 400, damping: 30 }}
+                whileHover={{ scale: 1.015 }}
+                transition={{ type: 'spring', stiffness: 250, damping: 20 }}
                 onPointerDown={handlePointerDown}
                 onPointerUp={(e) => handlePointerUp(testimonial.id, e)}
                 onPointerCancel={() => {
@@ -194,7 +183,6 @@ export default function Testimonials() {
                         <p className="text-sm text-[var(--foreground)]/80">{testimonial.role}</p>
                       </div>
                     </div>
-
                     <blockquote className="text-sm text-[var(--foreground)] italic line-clamp-4">
                       &apos;{testimonial.content}&apos;
                     </blockquote>
@@ -219,8 +207,7 @@ export default function Testimonials() {
             ))}
           </motion.div>
 
-          {/* Custom Cursor */}
-           <Cursor 
+          <Cursor 
             mousePos={mousePos} 
             isDragging={isDragging} 
             showCursor={showCursor}

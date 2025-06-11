@@ -114,23 +114,25 @@ export default function Cursor({ mousePos, isDragging, showCursor }: CursorProps
   if (!mounted) return null;
 
   const size = isDragging ? 48 : 56;
+  const borderWidth = isDragging ? 4 : 6;
   const offset = size / 2;
   const chevronOffset = isDragging ? '-26px' : '-30px';
   const chevronSize = isDragging ? 16 : 18;
-  const glowSize = isDragging ? '14px' : '16px';
 
   return (
     <motion.div
-      className="fixed pointer-events-none z-50 rounded-full"
+      className="fixed pointer-events-none z-50 flex items-center justify-center"
       style={{
         top: mousePos.y - offset,
         left: mousePos.x - offset,
         width: size,
         height: size,
-        border: `6px solid ${dynamicColor}`,
+        borderRadius: '50%',
+        border: `${borderWidth}px solid ${dynamicColor}`,
         backgroundColor: 'transparent',
-        boxShadow: `0 0 ${glowSize} ${dynamicColor}`,
-        willChange: 'transform',
+        boxShadow: `0 0 8px ${dynamicColor}`,
+        transition: 'border-color 0.2s ease, box-shadow 0.2s ease',
+        mixBlendMode: 'difference',
       }}
       initial={{ opacity: 0 }}
       animate={{ opacity: showCursor ? 1 : 0 }}
@@ -138,12 +140,18 @@ export default function Cursor({ mousePos, isDragging, showCursor }: CursorProps
     >
       <ChevronLeft
         className="absolute top-1/2 -translate-y-1/2 transition-all duration-200"
-        style={{ left: chevronOffset, color: dynamicColor }}
+        style={{
+          left: chevronOffset,
+          color: dynamicColor,
+        }}
         size={chevronSize}
       />
       <ChevronRight
         className="absolute top-1/2 -translate-y-1/2 transition-all duration-200"
-        style={{ right: chevronOffset, color: dynamicColor }}
+        style={{
+          right: chevronOffset,
+          color: dynamicColor,
+        }}
         size={chevronSize}
       />
     </motion.div>
