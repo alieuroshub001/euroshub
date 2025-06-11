@@ -20,7 +20,6 @@ import {
   Smartphone,
 } from 'lucide-react';
 import Image from 'next/image';
-import Link from 'next/link';
 import { JSX, useCallback, useEffect, useRef, useState } from 'react';
 
 interface Service {
@@ -186,7 +185,6 @@ export default function Services() {
 
   // For detecting drag vs click
   const pointerDownPos = useRef<{ x: number; y: number } | null>(null);
-  const clickTimeout = useRef<NodeJS.Timeout | null>(null);
 
   // Filtered services for current tab
   const filteredServices = allServices.filter((s) => s.category === activeTab);

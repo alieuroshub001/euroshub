@@ -1,53 +1,39 @@
 'use client';
 
-import { useEffect, useRef, useState } from 'react';
+import { useEffect, useRef, useState, useCallback } from 'react';
 
 type Star = {
   x: number;
   y: number;
-  radius: number;
-  speed: number;
+  brightness: number;
+  size: number;
+  twinkleSpeed: number;
   twinklePhase: number;
-  isLarge: boolean;
-};
+}
 
-type ShootingStar = {
-  x: number;
-  y: number;
-  length: number;
-  speed: number;
-  angle: number;
-  progress: number;
-  active: boolean;
-};
-
-type DustCloud = {
+type Planet = {
   x: number;
   y: number;
   radius: number;
+  color: string;
   opacity: number;
-  speed: number;
-  dx: number;
-  dy: number;
+  ringOpacity?: number;
+  ringRadius?: number;
 };
 
-export default function SpaceBackground() {
+export default function MinimalSpaceBackground() {
   const canvasRef = useRef<HTMLCanvasElement>(null);
   const animationRef = useRef<number | null>(null);
   const starsRef = useRef<Star[]>([]);
-  const shootingStarsRef = useRef<ShootingStar[]>([]);
-  const dustCloudsRef = useRef<DustCloud[]>([]);
-  const lastTimeRef = useRef<number>(0);
+  const planetsRef = useRef<Planet[]>([]);
   const [isDarkMode, setIsDarkMode] = useState<boolean>(false);
 
-  const SMALL_STARS = 150;
-  const LARGE_STARS = 15;
-  const SHOOTING_STARS = 5;
-  const DUST_CLOUDS = 8;
+  const STAR_COUNT = 80;
+  const PLANET_COUNT = 2;
 
   const rand = (min: number, max: number) => Math.random() * (max - min) + min;
 
-  const initCanvas = () => {
+  const initCanvas = useCallback(() => {
     const canvas = canvasRef.current;
     if (!canvas) return;
 
@@ -56,7 +42,6 @@ export default function SpaceBackground() {
 
     let width = canvas.clientWidth;
     let height = canvas.clientHeight;
-
     const pixelRatio = window.devicePixelRatio || 1;
 
     const resize = () => {
@@ -70,145 +55,127 @@ export default function SpaceBackground() {
     resize();
     window.addEventListener('resize', resize);
 
-    const stars: Star[] = Array.from({ length: SMALL_STARS + LARGE_STARS }, (_, i) => {
-      const isLarge = i >= SMALL_STARS;
-      return {
-        x: rand(0, width),
-        y: rand(0, height),
-        radius: rand(isLarge ? 2 : 0.5, isLarge ? 6 : 2),
-        speed: rand(isLarge ? 0.02 : 0.05, isLarge ? 0.1 : 0.2),
-        twinklePhase: rand(0, Math.PI * 2),
-        isLarge,
-      };
-    });
-    starsRef.current = stars;
-
-    shootingStarsRef.current = Array.from({ length: SHOOTING_STARS }, () => ({
-      x: 0,
-      y: 0,
-      length: rand(60, 120),
-      speed: rand(0.8, 1.5),
-      angle: rand(-Math.PI / 4, Math.PI / 4),
-      progress: 0,
-      active: false,
+    // Generate realistic star field
+    starsRef.current = Array.from({ length: STAR_COUNT }, () => ({
+      x: rand(0, width),
+      y: rand(0, height),
+      brightness: rand(0.3, 1.0),
+      size: rand(0.5, 1.5),
+      twinkleSpeed: rand(0.01, 0.03),
+      twinklePhase: rand(0, Math.PI * 2),
     }));
 
-    dustCloudsRef.current = Array.from({ length: DUST_CLOUDS }, () => {
-      const radius = rand(80, 200);
-      const angle = rand(0, Math.PI * 2);
+    // Generate distant planets
+    planetsRef.current = Array.from({ length: PLANET_COUNT }, (_, i) => {
+      const hasRings = Math.random() > 0.7;
+      const radius = rand(20, 40);
+      const colors = ['#4a5568', '#2d3748', '#1a202c', '#2c5282'];
+      
       return {
-        x: rand(0, width),
-        y: rand(0, height),
+        x: i === 0 ? rand(50, width * 0.3) : rand(width * 0.7, width - 50),
+        y: rand(50, height - 50),
         radius,
-        opacity: rand(0.03, 0.06),
-        speed: rand(0.005, 0.02),
-        dx: Math.cos(angle),
-        dy: Math.sin(angle),
+        color: colors[Math.floor(Math.random() * colors.length)],
+        opacity: rand(0.15, 0.3),
+        ringOpacity: hasRings ? rand(0.1, 0.2) : undefined,
+        ringRadius: hasRings ? radius * rand(1.5, 2.2) : undefined,
       };
     });
 
     const animate = (time: number) => {
-      const delta = (time - lastTimeRef.current) / 16;
-      lastTimeRef.current = time;
-
       ctx.clearRect(0, 0, width, height);
 
-      // Dust clouds
-      for (const cloud of dustCloudsRef.current) {
-        cloud.x += cloud.dx * cloud.speed * delta * 50;
-        cloud.y += cloud.dy * cloud.speed * delta * 50;
+      // Draw subtle nebula effect
+      const nebula = ctx.createRadialGradient(
+        width * 0.3, height * 0.2, 0,
+        width * 0.3, height * 0.2, width * 0.8
+      );
+      nebula.addColorStop(0, 'rgba(25, 25, 50, 0.08)');
+      nebula.addColorStop(0.5, 'rgba(15, 15, 30, 0.04)');
+      nebula.addColorStop(1, 'rgba(5, 5, 15, 0)');
+      ctx.fillStyle = nebula;
+      ctx.fillRect(0, 0, width, height);
 
-        if (cloud.x - cloud.radius > width) cloud.x = -cloud.radius;
-        if (cloud.x + cloud.radius < 0) cloud.x = width + cloud.radius;
-        if (cloud.y - cloud.radius > height) cloud.y = -cloud.radius;
-        if (cloud.y + cloud.radius < 0) cloud.y = height + cloud.radius;
+      // Draw distant planets
+      for (const planet of planetsRef.current) {
+        // Planet shadow effect
+        const gradient = ctx.createRadialGradient(
+          planet.x - planet.radius * 0.3,
+          planet.y - planet.radius * 0.3,
+          0,
+          planet.x,
+          planet.y,
+          planet.radius
+        );
+        gradient.addColorStop(0, `${planet.color}${Math.floor(planet.opacity * 255).toString(16).padStart(2, '0')}`);
+        gradient.addColorStop(1, `${planet.color}${Math.floor(planet.opacity * 0.3 * 255).toString(16).padStart(2, '0')}`);
 
-        const grd = ctx.createRadialGradient(cloud.x, cloud.y, 0, cloud.x, cloud.y, cloud.radius);
-        grd.addColorStop(0, `rgba(80,80,80,${cloud.opacity})`);
-        grd.addColorStop(1, 'rgba(80,80,80,0)');
         ctx.beginPath();
-        ctx.fillStyle = grd;
-        ctx.arc(cloud.x, cloud.y, cloud.radius, 0, Math.PI * 2);
+        ctx.fillStyle = gradient;
+        ctx.arc(planet.x, planet.y, planet.radius, 0, Math.PI * 2);
         ctx.fill();
+
+        // Draw rings if present
+        if (planet.ringOpacity && planet.ringRadius) {
+          ctx.save();
+          ctx.globalAlpha = planet.ringOpacity;
+          ctx.strokeStyle = planet.color;
+          ctx.lineWidth = 2;
+          ctx.beginPath();
+          ctx.ellipse(planet.x, planet.y, planet.ringRadius, planet.ringRadius * 0.2, 0, 0, Math.PI * 2);
+          ctx.stroke();
+          ctx.restore();
+        }
       }
 
-      // Stars
+      // Draw stars with realistic twinkling
       for (const star of starsRef.current) {
-        star.twinklePhase += 0.02 * (star.isLarge ? 0.5 : 1);
-        const twinkle = (star.isLarge ? 0.6 : 0.3) + Math.sin(star.twinklePhase) * (star.isLarge ? 0.4 : 0.2);
+        star.twinklePhase += star.twinkleSpeed;
+        const twinkle = 0.6 + Math.sin(star.twinklePhase) * 0.4;
+        const currentBrightness = star.brightness * twinkle;
+
+        // Realistic star colors based on brightness
+        let color;
+        if (currentBrightness > 0.8) {
+          color = `rgba(255, 255, 255, ${currentBrightness})`;
+        } else if (currentBrightness > 0.6) {
+          color = `rgba(255, 248, 240, ${currentBrightness})`;
+        } else {
+          color = `rgba(240, 240, 255, ${currentBrightness})`;
+        }
 
         ctx.beginPath();
-        ctx.fillStyle = star.isLarge
-          ? `rgba(173,216,230,${twinkle})`
-          : `rgba(255,255,255,${twinkle})`;
-        ctx.shadowColor = 'rgba(255,255,255,0.2)';
-        ctx.shadowBlur = star.isLarge ? 8 : 4;
-        ctx.arc(star.x, star.y, star.radius, 0, Math.PI * 2);
+        ctx.fillStyle = color;
+        
+        // Subtle glow for brighter stars
+        if (currentBrightness > 0.7) {
+          ctx.shadowColor = color;
+          ctx.shadowBlur = 2;
+        }
+        
+        ctx.arc(star.x, star.y, star.size, 0, Math.PI * 2);
         ctx.fill();
         ctx.shadowBlur = 0;
-
-        star.x += Math.cos(star.twinklePhase) * star.speed * delta * 5;
-        star.y += Math.sin(star.twinklePhase) * star.speed * delta * 5;
-
-        if (star.x > width + star.radius) star.x = -star.radius;
-        if (star.x < -star.radius) star.x = width + star.radius;
-        if (star.y > height + star.radius) star.y = -star.radius;
-        if (star.y < -star.radius) star.y = height + star.radius;
       }
 
-      // Shooting stars
-      for (const shoot of shootingStarsRef.current) {
-        if (!shoot.active && Math.random() < 0.001 * delta) {
-          shoot.active = true;
-          shoot.x = rand(0, width);
-          shoot.y = rand(0, height * 0.5);
-          shoot.progress = 0;
-          shoot.angle = rand(-Math.PI / 3, -Math.PI / 6);
-          shoot.speed = rand(1.0, 1.5);
-          shoot.length = rand(80, 140);
-        }
-
-        if (shoot.active) {
-          ctx.save();
-          ctx.translate(shoot.x, shoot.y);
-          ctx.rotate(shoot.angle);
-          const grad = ctx.createLinearGradient(0, 0, shoot.length, 0);
-          grad.addColorStop(0, 'rgba(255,255,255,0)');
-          grad.addColorStop(0.5, 'rgba(255,255,255,0.8)');
-          grad.addColorStop(1, 'rgba(255,255,255,0)');
-          ctx.fillStyle = grad;
-          ctx.fillRect(0, -1.5, shoot.length, 3);
-          ctx.restore();
-
-          shoot.x += Math.cos(shoot.angle) * shoot.speed * delta * 15;
-          shoot.y += Math.sin(shoot.angle) * shoot.speed * delta * 15;
-          shoot.progress += shoot.speed * delta;
-
-          if (
-            shoot.x < -shoot.length ||
-            shoot.x > width + shoot.length ||
-            shoot.y < -shoot.length ||
-            shoot.y > height + shoot.length ||
-            shoot.progress > (width + height) / 100
-          ) {
-            shoot.active = false;
-          }
-        }
+      // Add very subtle star field depth with tiny distant stars
+      ctx.fillStyle = 'rgba(255, 255, 255, 0.1)';
+      for (let i = 0; i < 200; i++) {
+        const x = (time * 0.001 + i * 137.5) % width;
+        const y = (time * 0.0007 + i * 234.7) % height;
+        ctx.fillRect(x, y, 0.5, 0.5);
       }
 
       animationRef.current = requestAnimationFrame(animate);
     };
 
-    animationRef.current = requestAnimationFrame((time) => {
-      lastTimeRef.current = time;
-      animate(time);
-    });
+    animationRef.current = requestAnimationFrame(animate);
 
     return () => {
       window.removeEventListener('resize', resize);
       if (animationRef.current) cancelAnimationFrame(animationRef.current);
     };
-  };
+  }, []);
 
   useEffect(() => {
     const observer = new MutationObserver(() => {
@@ -227,7 +194,7 @@ export default function SpaceBackground() {
       cancelAnimationFrame(animationRef.current);
       animationRef.current = null;
     }
-  }, [isDarkMode]);
+  }, [isDarkMode, initCanvas]);
 
   if (!isDarkMode) return null;
 
@@ -235,7 +202,9 @@ export default function SpaceBackground() {
     <canvas
       ref={canvasRef}
       className="fixed inset-0 -z-50 w-full h-full pointer-events-none"
-      style={{ background: 'radial-gradient(circle at center, #000010, #000000)' }}
+      style={{ 
+        background: 'linear-gradient(180deg, #000008 0%, #000015 50%, #000008 100%)'
+      }}
     />
   );
 }
