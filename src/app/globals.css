@@ -325,3 +325,13 @@ body:not(.dark) .dust-cloud {
   opacity: 1;
   animation: saberPulse 2s infinite ease-in-out;
 }
+
+/* Clients section gradient background - only in light mode */
+.clients-gradient-bg {
+  background: transparent; /* Default transparent for dark mode */
+}
+
+/* Light mode gradient - only show when NOT in dark mode */
+body:not(.dark) .clients-gradient-bg {
+  background-color: #17b6b2;
+}

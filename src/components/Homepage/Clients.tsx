@@ -56,8 +56,6 @@ const ClientLogo = ({
   </div>
 );
 
-
-
 export default function Clients() {
   const [paused1, setPaused1] = useState(false);
   const [paused2, setPaused2] = useState(false);
@@ -65,7 +63,7 @@ export default function Clients() {
   const [paused4, setPaused4] = useState(false);
 
   return (
-    <section className="py-20 text-[var(--foreground)] bg-transparent">
+    <section className="py-20 text-[var(--foreground)] clients-gradient-bg">
       <div className="w-full overflow-hidden space-y-10">
 
         {/* Marquee 1: First Array (start at 0) - Direction inverted to right */}
