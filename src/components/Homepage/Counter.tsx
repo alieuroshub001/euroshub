@@ -157,7 +157,7 @@ export default function Counter() {
           >
             <video
               ref={videoRef}
-              src="/videos/counter.mp4"
+              src="/videos/counter.webm"
               autoPlay
               muted
               loop
