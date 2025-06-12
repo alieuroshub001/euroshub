@@ -10,6 +10,7 @@ interface TeamMember {
   name: string;
   role: string;
   image: string;
+  video: string; // Added video property
   bio?: string;
   longBio?: string;
   social?: {
@@ -28,6 +29,7 @@ const teamMembers: TeamMember[] = [
     name: 'Sheikh Nabeel',
     role: 'Founder & CEO',
     image: '/assets/team1/Sheikh Nabeel (CEO & Founder).png',
+    video: '/videos/ceo.webm',
     bio: 'Visionary leader with 15+ years in tech entrepreneurship',
     longBio:
       'Sheikh Nabeel is a visionary entrepreneur with over 15 years of experience in building and scaling technology companies. He has led multiple successful ventures and is passionate about innovation and digital transformation.',
@@ -45,6 +47,7 @@ const teamMembers: TeamMember[] = [
     name: 'Muhammad Awais',
     role: 'Co-Founder & CTO',
     image: '/assets/team1/Muhammad Awais (Co-Founder).png',
+    video: '/videos/cto.webm',
     bio: 'Technology architect specializing in scalable systems',
     longBio:
       'Muhammad Awais is a seasoned technology leader with expertise in building scalable, high-performance systems. He has architected solutions that serve millions of users worldwide.',
@@ -61,6 +64,7 @@ const teamMembers: TeamMember[] = [
     name: 'Saira Ali',
     role: 'Managing Director',
     image: '/assets/team1/Saira Ali (Managing Director).png',
+    video: '/videos/md.webm',
     bio: 'Operations expert driving business growth',
     longBio:
       'Saira Ali brings exceptional operational expertise and strategic thinking to drive business growth. She has successfully scaled operations across multiple markets.',
@@ -78,7 +82,7 @@ const teamMembers: TeamMember[] = [
 export default function Team() {
   const [selectedMember, setSelectedMember] = useState<TeamMember | null>(null);
   const [isModalOpen, setIsModalOpen] = useState(false);
-  const [, setHoveredIndex] = useState<number | null>(null);
+  const [hoveredIndex, setHoveredIndex] = useState<number | null>(null);
 
   const openModal = (member: TeamMember) => {
     setSelectedMember(member);
@@ -144,7 +148,7 @@ export default function Team() {
             transition={{ duration: 0.6, delay: 0.2 }}
             className="inline-block px-4 py-2 bg-gradient-to-r from-[var(--primary)]/20 to-purple-500/20 rounded-full text-sm font-medium text-[var(--primary)] mb-4 border border-[var(--primary)]/20"
           >
-            Meet Our Team
+          Meet  Our Leadership
           </motion.span>
 
           <motion.h2
@@ -171,76 +175,96 @@ export default function Team() {
           </motion.p>
         </motion.div>
 
-        {/* Team Grid */}
-        <motion.div
-          variants={containerVariants}
-          initial="hidden"
-          whileInView="visible"
-          viewport={{ once: true, margin: '-100px' }}
-          className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-8"
-        >
-          {teamMembers.map((member, index) => (
-            <motion.div
-              key={index}
-              variants={cardVariants}
-              className="group cursor-pointer"
-              onMouseEnter={() => setHoveredIndex(index)}
-              onMouseLeave={() => setHoveredIndex(null)}
-              onClick={() => openModal(member)}
-            >
-              <div
-                className="relative rounded-2xl overflow-hidden border border-white/10 transition-all duration-500 hover:border-[var(--primary)]/30"
-                style={{ backgroundColor: 'transparent' }}
+        {/* Team Grid - Centered */}
+        <div className="flex justify-center">
+          <motion.div
+            variants={containerVariants}
+            initial="hidden"
+            whileInView="visible"
+            viewport={{ once: true, margin: '-100px' }}
+            className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-8 max-w-5xl"
+          >
+            {teamMembers.map((member, index) => (
+              <motion.div
+                key={index}
+                variants={cardVariants}
+                className="group cursor-pointer"
+                onMouseEnter={() => setHoveredIndex(index)}
+                onMouseLeave={() => setHoveredIndex(null)}
+                onClick={() => openModal(member)}
               >
-                {/* Corner Accent */}
-                <div className="absolute top-0 right-0 w-12 h-12 overflow-hidden">
-                  <div className="absolute -right-6 -top-6 w-12 h-12 rotate-45 bg-gradient-to-r from-[var(--primary)] to-[var(--primary)]/20 opacity-20 group-hover:opacity-40 transition-opacity duration-300" />
-                </div>
+                <div className="relative group rounded-2xl overflow-hidden border border-white/10 transition-all duration-500 hover:border-[var(--primary)]/30 bg-transparent">
+                  {/* Video Background */}
+                  {hoveredIndex === index && (
+                    <video
+                      autoPlay
+                      loop
+                      muted
+                      playsInline
+                      key={`${index}-${member.video}`} // forces reload on each hover with unique video
+                      className="absolute inset-0 w-full h-full object-cover z-0 pointer-events-none opacity-80"
+                      style={{ 
+                        clipPath: 'inset(0 round 1rem)',
+                        mixBlendMode: 'overlay'
+                      }}
+                    >
+                      <source src={member.video} type="video/webm" />
+                    </video>
+                  )}
 
-                {/* Image */}
-                <div className="relative h-56 sm:h-64 overflow-hidden">
-                  <div className="absolute inset-0 bg-gradient-to-b from-transparent to-black/30 z-10" />
-                  <Image
-                    src={member.image}
-                    alt={member.name}
-                    fill
-                    className="object-cover object-top transition-transform duration-500 group-hover:scale-105"
-                  />
-                  <div className="absolute bottom-3 left-3 z-20">
-                    <span className="px-3 py-1 bg-[var(--primary)] text-white text-xs font-medium rounded-full">
-                      {member.role}
-                    </span>
+                  {/* Overlay for lightning border effect */}
+                  <div className="absolute inset-0 z-10 rounded-2xl pointer-events-none group-hover:ring-2 group-hover:ring-[var(--primary)]/40 group-hover:animate-pulse" />
+
+                  {/* Content (z-20) */}
+                  <div className="relative z-20">
+                    {/* Corner Accent */}
+                    <div className="absolute top-0 right-0 w-12 h-12 overflow-hidden z-30">
+                      <div className="absolute -right-6 -top-6 w-12 h-12 rotate-45 bg-gradient-to-r from-[var(--primary)] to-[var(--primary)]/20 opacity-20 group-hover:opacity-40 transition-opacity duration-300" />
+                    </div>
+
+                    {/* Image */}
+                    <div className="relative h-56 sm:h-64 overflow-hidden z-10">
+                      <div className="absolute inset-0 bg-gradient-to-b from-transparent to-black/30 z-10" />
+                      <Image
+                        src={member.image}
+                        alt={member.name}
+                        fill
+                        className="object-cover object-top transition-transform duration-500 group-hover:scale-105"
+                      />
+                      <div className="absolute bottom-3 left-3 z-20">
+                        <span className="px-3 py-1 bg-[var(--primary)] text-white text-xs font-medium rounded-full">
+                          {member.role}
+                        </span>
+                      </div>
+                    </div>
+
+                    {/* Text */}
+                    <div className="p-5 sm:p-6">
+                      <h3 className="text-lg sm:text-xl font-bold mb-1 group-hover:text-[var(--primary)] transition-colors duration-300">
+                        {member.name}
+                      </h3>
+                      <p className="text-sm mb-3" style={{ color: 'var(--foreground)', opacity: 0.8 }}>
+                        {member.bio}
+                      </p>
+
+                      {/* Location & Experience */}
+                      <div className="flex items-center justify-between text-xs">
+                        <div className="flex items-center space-x-1" style={{ color: 'var(--foreground)', opacity: 0.6 }}>
+                          <MapPin className="w-3 h-3" />
+                          <span>{member.location}</span>
+                        </div>
+                        <div className="flex items-center space-x-1" style={{ color: 'var(--foreground)', opacity: 0.6 }}>
+                          <Calendar className="w-3 h-3" />
+                          <span>{member.experience}</span>
+                        </div>
+                      </div>
+                    </div>
                   </div>
                 </div>
-
-                {/* Text */}
-                <div className="p-5 sm:p-6">
-                  <h3 className="text-lg sm:text-xl font-bold mb-1 group-hover:text-[var(--primary)] transition-colors duration-300">
-                    {member.name}
-                  </h3>
-                  <p className="text-sm mb-3" style={{ color: 'var(--foreground)', opacity: 0.8 }}>
-                    {member.bio}
-                  </p>
-
-                  {/* Location & Experience */}
-                  <div className="flex items-center justify-between text-xs">
-                    <div className="flex items-center space-x-1" style={{ color: 'var(--foreground)', opacity: 0.6 }}>
-                      <MapPin className="w-3 h-3" />
-                      <span>{member.location}</span>
-                    </div>
-                    <div className="flex items-center space-x-1" style={{ color: 'var(--foreground)', opacity: 0.6 }}>
-                      <Calendar className="w-3 h-3" />
-                      <span>{member.experience}</span>
-                    </div>
-                  </div>
-                </div>
-
-                {/* Hover Overlay */}
-                <div className="absolute inset-0 bg-gradient-to-t from-[var(--primary)]/10 via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
-              </div>
-            </motion.div>
-          ))}
-        </motion.div>
+              </motion.div>
+            ))}
+          </motion.div>
+        </div>
       </div>
 
       {/* Modal */}
