@@ -10,7 +10,7 @@ interface TeamMember {
   name: string;
   role: string;
   image: string;
-  video: string; // Added video property
+  video: string;
   bio?: string;
   longBio?: string;
   social?: {
@@ -148,7 +148,7 @@ export default function Team() {
             transition={{ duration: 0.6, delay: 0.2 }}
             className="inline-block px-4 py-2 bg-gradient-to-r from-[var(--primary)]/20 to-purple-500/20 rounded-full text-sm font-medium text-[var(--primary)] mb-4 border border-[var(--primary)]/20"
           >
-          Meet  Our Leadership
+            Meet Our Leadership
           </motion.span>
 
           <motion.h2
@@ -188,35 +188,43 @@ export default function Team() {
               <motion.div
                 key={index}
                 variants={cardVariants}
-                className="group cursor-pointer"
+                className="group cursor-pointer relative"
                 onMouseEnter={() => setHoveredIndex(index)}
                 onMouseLeave={() => setHoveredIndex(null)}
                 onClick={() => openModal(member)}
               >
-                <div className="relative group rounded-2xl overflow-hidden border border-white/10 transition-all duration-500 hover:border-[var(--primary)]/30 bg-transparent">
-                  {/* Video Background */}
-                  {hoveredIndex === index && (
+                {/* Video Background - Now positioned absolutely and larger */}
+                {hoveredIndex === index && (
+                  <motion.div 
+                    initial={{ opacity: 0 }}
+                    animate={{ opacity: 1 }}
+                    exit={{ opacity: 0 }}
+                    className="absolute -inset-8 z-0 overflow-hidden pointer-events-none"
+                  >
                     <video
                       autoPlay
                       loop
                       muted
                       playsInline
-                      key={`${index}-${member.video}`} // forces reload on each hover with unique video
-                      className="absolute inset-0 w-full h-full object-cover z-0 pointer-events-none opacity-80"
-                      style={{ 
-                        clipPath: 'inset(0 round 1rem)',
-                        mixBlendMode: 'overlay'
+                      key={`${index}-${member.video}`}
+                      className="ml-4 mt-[-6.3rem] w-full h-160 object-cover scale-125"
+                      style={{
+                        maskImage: 'radial-gradient(circle at center, white 0%, transparent 70%)',
+                        WebkitMaskImage: 'radial-gradient(circle at center, white 0%, transparent 70%)'
                       }}
                     >
                       <source src={member.video} type="video/webm" />
                     </video>
-                  )}
+                  </motion.div>
+                )}
 
+                {/* Card Content */}
+                <div className="relative rounded-2xl overflow-hidden border border-white/10 transition-all duration-500 hover:border-[var(--primary)]/30 bg-transparent z-10 h-full">
                   {/* Overlay for lightning border effect */}
                   <div className="absolute inset-0 z-10 rounded-2xl pointer-events-none group-hover:ring-2 group-hover:ring-[var(--primary)]/40 group-hover:animate-pulse" />
 
                   {/* Content (z-20) */}
-                  <div className="relative z-20">
+                  <div className="relative z-20 h-full">
                     {/* Corner Accent */}
                     <div className="absolute top-0 right-0 w-12 h-12 overflow-hidden z-30">
                       <div className="absolute -right-6 -top-6 w-12 h-12 rotate-45 bg-gradient-to-r from-[var(--primary)] to-[var(--primary)]/20 opacity-20 group-hover:opacity-40 transition-opacity duration-300" />
