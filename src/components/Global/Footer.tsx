@@ -8,23 +8,23 @@ import { FaXTwitter } from 'react-icons/fa6';
 
 const Footer: React.FC = () => {
   const renderTextWithStyledE = (text: string) => {
-    return text.split('').map((letter, index) => (
-      <span
-        key={index}
-        className={`inline-block ${
-          letter === 'E' ? 'styled-e' : ''
-        } glow-text`}
-        style={{
-          background: 'linear-gradient(135deg, #d8fdff, #a0f7ff, #7df3ff)',
-          backgroundClip: 'text',
-          WebkitBackgroundClip: 'text',
-          color: 'transparent',
-        }}
-      >
-        {letter === ' ' ? '\u00A0' : letter}
-      </span>
-    ));
-  };
+  return text.split('').map((letter, index) => (
+    <span
+      key={index}
+      className={`inline-block ${
+        letter === 'E' ? 'styled-e' : ''
+      } glow-text animate-dimlight`}
+      style={{
+        background: 'linear-gradient(135deg, #d8fdff, #a0f7ff, #7df3ff)',
+        backgroundClip: 'text',
+        WebkitBackgroundClip: 'text',
+        color: 'transparent',
+      }}
+    >
+      {letter === ' ' ? '\u00A0' : letter}
+    </span>
+  ));
+};
 
   return (
     <footer className="w-full mt-0 pt-12 lg:pt-0 border-t border-neutral-400 dark:border-neutral-700 relative z-20 backdrop-blur-sm bg-transparent">
@@ -81,16 +81,16 @@ const Footer: React.FC = () => {
           </div>
 
           {/* Let's Connect */}
-          <Link
-            href="/contact"
-            className="pt-8 md:pt-14 mb-0 md:mb-12 text-center mx-auto lg:text-left font-library3am tracking-wider w-fit max-w-full group"
-          >
-            <div className="px-6 py-3 rounded-lg">
-              <span className="text-4xl md:text-6xl lg:text-7xl font-library3am tracking-tight">
-                {renderTextWithStyledE('LETS CONNECT')}
-              </span>
-            </div>
-          </Link>
+         <Link
+  href="/contact"
+  className="pt-8 md:pt-14 mb-0 md:mb-12 text-center mx-auto lg:text-left font-library3am tracking-wider w-fit max-w-full group box-reflect"
+>
+  <div className="px-6 py-3 rounded-lg">
+    <span className="text-4xl md:text-6xl lg:text-7xl font-library3am tracking-tight">
+      {renderTextWithStyledE('LETS CONNECT')}
+    </span>
+  </div>
+</Link>
         </div>
       </div>
 

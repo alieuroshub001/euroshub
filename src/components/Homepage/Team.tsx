@@ -182,7 +182,7 @@ export default function Team() {
             initial="hidden"
             whileInView="visible"
             viewport={{ once: true, margin: '-100px' }}
-            className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-8 max-w-5xl"
+            className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-10 max-w-5xl"
           >
             {teamMembers.map((member, index) => (
               <motion.div
@@ -207,8 +207,8 @@ export default function Team() {
                       muted
                       playsInline
                       key={`${index}-${member.video}`}
-                      className="ml-4 mt-[-6.3rem] w-full h-160 object-cover scale-125"
-                      style={{
+                      className="mt-[-165px] ml-7.5 w-full h-190 object-cover scale-120"
+                       style={{
                         maskImage: 'radial-gradient(circle at center, white 0%, transparent 70%)',
                         WebkitMaskImage: 'radial-gradient(circle at center, white 0%, transparent 70%)'
                       }}

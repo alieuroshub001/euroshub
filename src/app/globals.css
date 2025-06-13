@@ -335,3 +335,25 @@ body:not(.dark) .dust-cloud {
 body:not(.dark) .clients-gradient-bg {
   background-color: #17b6b2;
 }
+/* Add this to your globals.css */
+@keyframes dimlight {
+  0%, 18%, 20%, 50.1%, 60%, 65.1%, 80%, 90.1%, 92% {
+    opacity: 0.7;
+    text-shadow: none;
+  }
+  18.1%, 20.1%, 30%, 50%, 60.1%, 65%, 80.1%, 90%, 92.1%, 100% {
+    opacity: 1;
+    text-shadow: 
+      0 0 10px #03bcf4,
+      0 0 20px rgba(216, 253, 255, 0.8),
+      0 0 30px rgba(216, 253, 255, 0.6);
+  }
+}
+
+.animate-dimlight {
+  animation: dimlight 5s infinite;
+}
+
+.box-reflect {
+  -webkit-box-reflect: below 1px linear-gradient(transparent, #0004);
+}

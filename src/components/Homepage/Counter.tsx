@@ -3,7 +3,7 @@
 import { motion, useScroll, useTransform } from 'framer-motion';
 import { useRef, useState, useEffect } from 'react';
 import { useInView } from 'react-intersection-observer';
-import { Aperture, CheckCircle, Clock, Globe, Users, TrendingUp } from 'lucide-react';
+import { CheckCircle, Clock, Globe, Users, TrendingUp } from 'lucide-react';
 
 const ICONS = [CheckCircle, Globe, Clock, Users];
 const TARGETS = [150, 50, 10, 20];
