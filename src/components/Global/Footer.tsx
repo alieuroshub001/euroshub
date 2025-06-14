@@ -80,15 +80,15 @@ const Footer: React.FC = () => {
             ))}
           </div>
 
-          {/* Let's Connect */}
+          {/* Let's Talk */}
           <Link
             href="/contact"
-            className="pt-8 md:pt-14 mb-0 md:mb-12 text-center mx-auto lg:text-left font-library3am tracking-wider w-fit max-w-full group box-reflect"
+            className="pt-8 md:pt-14 mb-0 md:mb-12 text-center mx-auto lg:text-left font-library3am tracking-wider w-fit max-w-full group "
           >
             <div className="px-6 py-3 rounded-lg">
               <span className="text-4xl md:text-7xl lg:text-9xl font-library3am tracking-tight">
                 {renderTextWithStyledE('Lets ')} &nbsp;
-                {renderTextWithStyledE(' Connect')}
+                {renderTextWithStyledE(' Talk')}
               </span>
             </div>
           </Link>

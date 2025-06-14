@@ -208,7 +208,7 @@ export default function Team() {
       muted
       playsInline
       key={`${index}-${member.video}`}
-      className="ml-4.5 w-full h-full object-cover scale-[1.4] translate-y-[-2.9%] bg-transparent" // Added bg-transparent here
+      className="ml-4.5 w-full h-full object-cover scale-[1.31] translate-y-[-3%] bg-transparent" // Added bg-transparent here
       style={{
         maskImage: 'radial-gradient(circle at center, white 40%, transparent 85%)', // Adjusted gradient
         WebkitMaskImage: 'radial-gradient(circle at center, white 40%, transparent 85%)',
@@ -219,16 +219,14 @@ export default function Team() {
   </motion.div>
 )}
                 {/* Card Content */}
-                <div className="relative rounded-2xl overflow-hidden border border-white/10 transition-all duration-500 hover:border-[var(--primary)]/30 bg-transparent z-10 h-full">
+                <div className="relative rounded-3xl overflow-hidden border border-white/10 transition-all duration-500 hover:border-[var(--primary)]/30 bg-transparent z-10 h-full">
                   {/* Overlay for lightning border effect */}
                   <div className="absolute inset-0 z-10 rounded-2xl pointer-events-none group-hover:ring-2 group-hover:ring-[var(--primary)]/40 group-hover:animate-pulse" />
 
                   {/* Content (z-20) */}
                   <div className="relative z-20 h-full">
                     {/* Corner Accent */}
-                    <div className="absolute top-0 right-0 w-12 h-12 overflow-hidden z-30">
-                      <div className="absolute -right-6 -top-6 w-12 h-12 rotate-45 bg-gradient-to-r from-[var(--primary)] to-[var(--primary)]/20 opacity-20 group-hover:opacity-40 transition-opacity duration-300" />
-                    </div>
+                  
 
                     {/* Image */}
                     <div className="relative h-56 sm:h-64 overflow-hidden z-10">
