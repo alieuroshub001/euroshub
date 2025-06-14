@@ -18,6 +18,7 @@ import {
   Search,
   Server,
   Smartphone,
+  Eye,
 } from 'lucide-react';
 import Image from 'next/image';
 import { JSX, useCallback, useEffect, useRef, useState } from 'react';
@@ -175,6 +176,7 @@ export default function Services() {
   const containerRef = useRef<HTMLDivElement>(null);
   const [isHovered, setIsHovered] = useState(false);
   const [isDragging, setIsDragging] = useState(false);
+  const [hoveredCard, setHoveredCard] = useState<number | null>(null);
   const x = useMotionValue(0);
   const animationRef = useRef<number | null>(null);
   const router = useRouter();
@@ -267,31 +269,32 @@ export default function Services() {
           </motion.p>
         </div>
 
-        <div className="flex justify-center mb-12">
-          <div className="inline-flex bg-[var(--card-bg)]/30 rounded-lg p-1 flex-wrap">
-            <button
-              onClick={() => setActiveTab('business')}
-              className={`px-5 py-2.5 rounded-lg font-medium transition-all duration-200 ${
-                activeTab === 'business'
-                  ? 'bg-[var(--primary)] text-white shadow-md'
-                  : 'hover:bg-[var(--card-bg)]/60'
-              }`}
-            >
-              Business Services
-            </button>
-            <button
-              onClick={() => setActiveTab('tech')}
-              className={`px-5 py-2.5 rounded-lg font-medium transition-all duration-200 ${
-                activeTab === 'tech'
-                  ? 'bg-[var(--primary)] text-white shadow-md'
-                  : 'hover:bg-[var(--card-bg)]/60'
-              }`}
-            >
-              Technology
-            </button>
-          </div>
-        </div>
-      </div>
+      <div className="flex justify-center mb-12">
+  <div className="inline-flex bg-[var(--card-bg)]/40 rounded-xl p-2 flex-wrap gap-2 shadow-lg">
+    <button
+      onClick={() => setActiveTab('business')}
+      className={`px-6 py-3 rounded-xl font-semibold transition-all duration-200 text-sm md:text-base border-2 ${
+        activeTab === 'business'
+          ? 'bg-[var(--primary)] text-white border-[var(--primary)] shadow-lg'
+          : 'bg-white/10 text-[var(--foreground)] border-transparent hover:bg-[var(--card-bg)]/60 hover:border-[var(--card-bg)]/60'
+      }`}
+    >
+      Business Services
+    </button>
+    <button
+      onClick={() => setActiveTab('tech')}
+      className={`px-13 py-3 rounded-xl font-semibold transition-all duration-200 text-sm md:text-base border-2 ${
+        activeTab === 'tech'
+          ? 'bg-[var(--primary)] text-white border-[var(--primary)] shadow-lg'
+          : 'bg-white/10 text-[var(--foreground)] border-transparent hover:bg-[var(--card-bg)]/60 hover:border-[var(--card-bg)]/60'
+      }`}
+    >
+      Technology
+    </button>
+  </div>
+</div>
+</div>
+
 
       {/* → Infinite Marquee Container */}
       <div
@@ -335,27 +338,56 @@ export default function Services() {
 
     pointerDownPos.current = null;
   }}
+  onMouseEnter={() => setHoveredCard(service.id)}
+  onMouseLeave={() => setHoveredCard(null)}
 >
 <motion.div
   className="relative group card-effect card-effect-hover card-glow-hover card-saber-effect card-saber-hover h-full bg-[var(--card-bg)] rounded-xl overflow-hidden shadow-sm transition-all duration-300 hover:shadow-xl hover:bg-[var(--card-bg)]/80 flex flex-col"
-whileHover={{ scale: 1.03 }}
+  whileHover={{ scale: 1.03 }}
   transition={{ type: 'spring', stiffness: 400, damping: 30 }}
 >
-
-
                 {/* Background image + gradient overlay */}
                 <div className="absolute inset-0 z-0">
                   <Image
                     src={service.image}
                     alt={service.title}
                     fill
-                    className="object-cover"
+                    className={`object-cover transition-all duration-300 ${
+                      hoveredCard === service.id ? 'blur-sm scale-110' : ''
+                    }`}
                     quality={80}
                   />
-                  <div className="absolute inset-0 bg-gradient-to-t from-black/70 via-black/40 to-transparent" />
+                  <div className={`absolute inset-0 bg-gradient-to-t from-black/70 via-black/40 to-transparent transition-all duration-300 ${
+                    hoveredCard === service.id ? 'from-black/90 via-black/60 to-black/20' : ''
+                  }`} />
                 </div>
 
-                {/* Content */}
+                {/* View More Button - appears on hover */}
+                <motion.div
+                  className="absolute inset-0 z-20 flex items-center justify-center"
+                  initial={{ opacity: 0 }}
+                  animate={{ opacity: hoveredCard === service.id ? 1 : 0 }}
+                  transition={{ duration: 0.3 }}
+                >
+                  <motion.button
+                    className="bg-[var(--primary)] text-white px-6 py-3 rounded-lg font-semibold flex items-center gap-2 shadow-lg hover:bg-[var(--primary)]/90 transition-colors"
+                    initial={{ scale: 0.8, y: 20 }}
+                    animate={{ 
+                      scale: hoveredCard === service.id ? 1 : 0.8,
+                      y: hoveredCard === service.id ? 0 : 20
+                    }}
+                    transition={{ type: 'spring', stiffness: 400, damping: 25 }}
+                    onClick={(e) => {
+                      e.stopPropagation();
+                      router.push(service.path);
+                    }}
+                  >
+                    <Eye className="w-4 h-4" />
+                    View More
+                  </motion.button>
+                </motion.div>
+
+                {/* Content - Service name stays in same position */}
                 <div className="mt-auto p-5 flex flex-col relative z-10">
                   <div className="flex items-center mb-3">
                     <motion.div

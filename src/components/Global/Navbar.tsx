@@ -175,7 +175,7 @@ export default function Navbar() {
   const navbarRef = useRef<HTMLDivElement>(null);
 const allServices = [
   {
-    category: 'Business Services',
+    category: 'Business Expertise',
     services: [
       { 
         name: 'Virtual Assistance', 
@@ -210,7 +210,7 @@ const allServices = [
     ]
   },
   {
-    category: 'Technology Services',
+    category: 'Technology Expertise',
     services: [
       { 
         name: 'Web Development', 
@@ -398,11 +398,11 @@ const allServices = [
                   className="flex items-center px-3 py-2 rounded-lg font-medium cursor-pointer hover:bg-[var(--primary)]/10 hover:text-[var(--primary)] transition-all"
                   onClick={toggleServices}
                 >
-                  Services
+                  Expertise
                   {servicesOpen ? (
-                    <ChevronUpIcon className="ml-1 w-4 h-4" />
+                    <ChevronUpIcon className="ml-1 w-6 h-6" />
                   ) : (
-                    <ChevronDownIcon className="ml-1 w-4 h-4" />
+                    <ChevronDownIcon className="ml-1 w-6 h-6" />
                   )}
                   <span className="absolute bottom-0 left-0 w-0 h-0.5 bg-[var(--primary)] transition-all group-hover:w-full"></span>
                 </div>
@@ -468,10 +468,12 @@ const allServices = [
             </div>
             <div className="mt-4 pt-3 border-t border-[var(--secondary)] text-center">
               <Link href="/services" className="inline-flex items-center gap-2 bg-[var(--primary)] text-white px-4 py-2 rounded-full text-sm font-medium hover:bg-[var(--primary)]/90 transition-colors">
-                View All Services
-                <ChevronDownIcon className="w-3 h-3 rotate-90" />
+                View All Experties
+                <ChevronDownIcon className="w-5 h-5 rotate-90" />
               </Link>
             </div>
+
+
           </div>
         </div>
       )}

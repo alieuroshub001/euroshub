@@ -79,12 +79,15 @@ export default function Clients() {
             <ClientLogo key={`marquee2-${idx}`} logo={logo} setPaused={setPaused2} />
           ))}
         </Marquee>
+      </div>
 
         {/* Heading */}
-        <h2 className="text-3xl md:text-4xl font-bold text-center">
+        <div className="space-y-5 mt-30 mb-30 text-3xl md:text-4xl font-bold text-center">
           Trusted by Global Brands
-        </h2>
+      </div>
 
+
+      <div className="w-full overflow-hidden space-y-10">
         {/* Marquee 3: First Array (start from middle = opposite of 0) - Direction inverted to right */}
         <Marquee direction="right" speed={30} gradient={false} play={!paused3}>
           {[...rotateArray(firstArray, Math.floor(firstArray.length / 2)), ...rotateArray(firstArray, Math.floor(firstArray.length / 2))].map((logo, idx) => (

@@ -50,7 +50,7 @@ const Footer: React.FC = () => {
               {
                 href: 'https://twitter.com/EurosHub',
                 icon: <FaXTwitter className="w-6 h-10" />,
-                label: 'X',
+                label: '',
               },
               {
                 href: 'https://www.linkedin.com/company/euroshub',
@@ -87,7 +87,7 @@ const Footer: React.FC = () => {
 >
   <div className="px-6 py-3 rounded-lg">
     <span className="text-4xl md:text-6xl lg:text-7xl font-library3am tracking-tight">
-      {renderTextWithStyledE('LETS CONNECT')}
+      {renderTextWithStyledE('Let’s Collaborate')}
     </span>
   </div>
 </Link>
@@ -95,26 +95,27 @@ const Footer: React.FC = () => {
       </div>
 
       {/* Bottom Section */}
-      <div className="w-full px-[5%] md:px-[2.5%] mt-8 lg:mt-0 bg-[var(--secondary)] dark:bg-[var(--secondary)] border-t border-neutral-400 dark:border-neutral-700 backdrop-blur-md">
-        <div className="max-w-[1900px] w-full mx-auto">
-          <div className="flex flex-col-reverse gap-y-6 lg:flex-row justify-between items-center py-6">
-            <p className="text-sm sm:text-base xxl:text-lg text-[var(--foreground)] dark:text-[var(--foreground)]">
-              © 2025 | All rights reserved by EurosHub
-            </p>
-            <div className="mr-13 flex gap-8">
-              {['about', 'contact', 'career'].map((page) => (
-                <Link
-                  key={page}
-                  href={`/${page}`}
-                  className="text-sm sm:text-base xxl:text-lg text-[var(--foreground)] dark:text-[var(--foreground)] hover:text-[var(--primary)] dark:hover:text-[var(--primary)]"
-                >
-                  {page.charAt(0).toUpperCase() + page.slice(1)}
-                </Link>
-              ))}
-            </div>
-          </div>
-        </div>
+<div className="w-full px-[5%] md:px-[2.5%] mt-8 lg:mt-0 border-t border-neutral-400 dark:border-neutral-700">
+  <div className="max-w-[1900px] w-full mx-auto">
+    <div className="flex flex-col-reverse gap-y-6 lg:flex-row justify-between items-center py-6">
+      <p className="text-sm sm:text-base xxl:text-lg text-[var(--foreground)] dark:text-[var(--foreground)]">
+        © 2025 | All rights reserved by EurosHub
+      </p>
+      <div className="mr-13 flex gap-8">
+        {['home', 'expertise', 'about us'].map((page) => (
+          <Link
+            key={page}
+            href={`/${page}`}
+            className="text-sm sm:text-base xxl:text-lg text-[var(--foreground)] dark:text-[var(--foreground)] hover:text-[var(--primary)] dark:hover:text-[var(--primary)]"
+          >
+            {page.charAt(0).toUpperCase() + page.slice(1)}
+          </Link>
+        ))}
       </div>
+    </div>
+  </div>
+</div>
+
     </footer>
   );
 };

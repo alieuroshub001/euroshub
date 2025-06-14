@@ -20,7 +20,7 @@ const getLuminance = ([r, g, b]: number[]): number =>
 
 export default function Cursor({ mousePos, isDragging, showCursor }: CursorProps) {
   const [mounted, setMounted] = useState(false);
-  const [dynamicColor, setDynamicColor] = useState<string>('#00FFFF');
+  const [dynamicColor, setDynamicColor] = useState<string>('#17b6b2');
   const canvasRef = useRef<HTMLCanvasElement | null>(null);
   const rafRef = useRef<number | null>(null);
 
@@ -63,35 +63,25 @@ export default function Cursor({ mousePos, isDragging, showCursor }: CursorProps
 
   const getContrastingColor = useCallback(async (x: number, y: number): Promise<string> => {
     const el = document.elementFromPoint(x, y);
-    if (!el) return '#00FFFF';
+    if (!el) return '#17b6b2';
 
-    const isDarkMode = window.matchMedia('(prefers-color-scheme: dark)').matches;
     const styles = window.getComputedStyle(el);
 
     if (el.tagName === 'IMG') {
       const img = el as HTMLImageElement;
       if (img.complete && img.naturalWidth > 0) {
         const color = getImageColorAtPoint(img, x, y);
-        if (color) {
-          if ((color === '#ffffff' && !isDarkMode) || (color === '#000000' && isDarkMode)) {
-            return '#00FFFF';
-          }
-          return color;
-        }
+        if (color === '#ffffff' || color === '#000000') return color;
       }
     }
 
     const rgb = parseRGB(styles.backgroundColor || styles.color || '');
     if (rgb) {
       const luminance = getLuminance(rgb);
-      const baseColor = luminance > 0.5 ? '#000000' : '#ffffff';
-      if ((baseColor === '#ffffff' && !isDarkMode) || (baseColor === '#000000' && isDarkMode)) {
-        return '#00FFFF';
-      }
-      return baseColor;
+      return luminance > 0.5 ? '#000000' : '#ffffff';
     }
 
-    return '#00FFFF';
+    return '#17b6b2';
   }, [getImageColorAtPoint]);
 
   useEffect(() => {
@@ -101,8 +91,10 @@ export default function Cursor({ mousePos, isDragging, showCursor }: CursorProps
 
     rafRef.current = requestAnimationFrame(async () => {
       const color = await getContrastingColor(mousePos.x, mousePos.y);
-      if (color !== dynamicColor) {
-        setDynamicColor(color);
+      const allowedColors = ['#ffffff', '#000000', '#17b6b2', '#063a53'];
+      const safeColor = allowedColors.includes(color) ? color : '#17b6b2';
+      if (safeColor !== dynamicColor) {
+        setDynamicColor(safeColor);
       }
     });
 
@@ -119,6 +111,9 @@ export default function Cursor({ mousePos, isDragging, showCursor }: CursorProps
   const chevronOffset = isDragging ? '-26px' : '-30px';
   const chevronSize = isDragging ? 16 : 18;
 
+  // Use blend mode only if white/black to create masked look
+  const useBlendMode = ['#ffffff', '#000000'].includes(dynamicColor);
+
   return (
     <motion.div
       className="fixed pointer-events-none z-50 flex items-center justify-center"
@@ -132,7 +127,7 @@ export default function Cursor({ mousePos, isDragging, showCursor }: CursorProps
         backgroundColor: 'transparent',
         boxShadow: `0 0 8px ${dynamicColor}`,
         transition: 'border-color 0.2s ease, box-shadow 0.2s ease',
-        mixBlendMode: 'difference',
+        mixBlendMode: useBlendMode ? 'difference' : 'normal',
       }}
       initial={{ opacity: 0 }}
       animate={{ opacity: showCursor ? 1 : 0 }}

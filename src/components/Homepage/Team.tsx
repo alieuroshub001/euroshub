@@ -29,7 +29,7 @@ const teamMembers: TeamMember[] = [
     name: 'Sheikh Nabeel',
     role: 'Founder & CEO',
     image: '/assets/team1/Sheikh Nabeel (CEO & Founder).png',
-    video: '/videos/ceo.webm',
+    video: '/videos/common.webm',
     bio: 'Visionary leader with 15+ years in tech entrepreneurship',
     longBio:
       'Sheikh Nabeel is a visionary entrepreneur with over 15 years of experience in building and scaling technology companies. He has led multiple successful ventures and is passionate about innovation and digital transformation.',
@@ -47,7 +47,7 @@ const teamMembers: TeamMember[] = [
     name: 'Muhammad Awais',
     role: 'Co-Founder & CTO',
     image: '/assets/team1/Muhammad Awais (Co-Founder).png',
-    video: '/videos/cto.webm',
+    video: '/videos/common.webm',
     bio: 'Technology architect specializing in scalable systems',
     longBio:
       'Muhammad Awais is a seasoned technology leader with expertise in building scalable, high-performance systems. He has architected solutions that serve millions of users worldwide.',
@@ -64,7 +64,7 @@ const teamMembers: TeamMember[] = [
     name: 'Saira Ali',
     role: 'Managing Director',
     image: '/assets/team1/Saira Ali (Managing Director).png',
-    video: '/videos/md.webm',
+    video: '/videos/common.webm',
     bio: 'Operations expert driving business growth',
     longBio:
       'Saira Ali brings exceptional operational expertise and strategic thinking to drive business growth. She has successfully scaled operations across multiple markets.',
@@ -182,7 +182,7 @@ export default function Team() {
             initial="hidden"
             whileInView="visible"
             viewport={{ once: true, margin: '-100px' }}
-            className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-10 max-w-5xl"
+            className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-15 max-w-5xl"
           >
             {teamMembers.map((member, index) => (
               <motion.div
@@ -194,30 +194,30 @@ export default function Team() {
                 onClick={() => openModal(member)}
               >
                 {/* Video Background - Now positioned absolutely and larger */}
-                {hoveredIndex === index && (
-                  <motion.div 
-                    initial={{ opacity: 0 }}
-                    animate={{ opacity: 1 }}
-                    exit={{ opacity: 0 }}
-                    className="absolute -inset-8 z-0 overflow-hidden pointer-events-none"
-                  >
-                    <video
-                      autoPlay
-                      loop
-                      muted
-                      playsInline
-                      key={`${index}-${member.video}`}
-                      className="mt-[-165px] ml-7.5 w-full h-190 object-cover scale-120"
-                       style={{
-                        maskImage: 'radial-gradient(circle at center, white 0%, transparent 70%)',
-                        WebkitMaskImage: 'radial-gradient(circle at center, white 0%, transparent 70%)'
-                      }}
-                    >
-                      <source src={member.video} type="video/webm" />
-                    </video>
-                  </motion.div>
-                )}
-
+           {/* Video Background - Now positioned absolutely and larger */}
+{hoveredIndex === index && (
+  <motion.div 
+    initial={{ opacity: 0 }}
+    animate={{ opacity: 1 }}
+    exit={{ opacity: 0 }}
+    className="absolute inset-0 z-0 overflow-visible pointer-events-none scale-[1.5]"
+  >
+    <video
+      autoPlay
+      loop
+      muted
+      playsInline
+      key={`${index}-${member.video}`}
+      className="ml-4.5 w-full h-full object-cover scale-[1.4] translate-y-[-2.9%] bg-transparent" // Added bg-transparent here
+      style={{
+        maskImage: 'radial-gradient(circle at center, white 40%, transparent 85%)', // Adjusted gradient
+        WebkitMaskImage: 'radial-gradient(circle at center, white 40%, transparent 85%)',
+      }}
+    >
+      <source src={member.video} type="video/mp4" />
+    </video>
+  </motion.div>
+)}
                 {/* Card Content */}
                 <div className="relative rounded-2xl overflow-hidden border border-white/10 transition-all duration-500 hover:border-[var(--primary)]/30 bg-transparent z-10 h-full">
                   {/* Overlay for lightning border effect */}
@@ -324,15 +324,19 @@ export default function Team() {
                         </div>
                       </div>
                     </div>
-                    <motion.button
-                      whileHover={{ scale: 1.1, rotate: 90 }}
-                      whileTap={{ scale: 0.9 }}
-                      onClick={closeModal}
-                      className="w-10 h-10 rounded-full flex items-center justify-center transition-colors"
-                      style={{ backgroundColor: 'var(--foreground)', opacity: 0.1 }}
-                    >
-                      <X className="w-5 h-5" />
-                    </motion.button>
+                  <motion.button
+  whileHover={{ scale: 1.1, rotate: 90 }}
+  whileTap={{ scale: 0.9 }}
+  onClick={closeModal}
+  className="w-10 h-10 rounded-full flex items-center justify-center transition-colors"
+  style={{
+    backgroundColor: 'var(--foreground)',
+    color: 'var(--background)',
+    opacity: 1, // Changed from 0.1 to 1
+  }}
+>
+  <X className="w-5 h-5" />
+</motion.button>
                   </div>
 
                   {/* About */}

@@ -13,6 +13,7 @@
     "@fontsource/orbitron": "^5.2.5",
     "@fortawesome/fontawesome-free": "^6.7.2",
     "@hookform/resolvers": "^5.0.1",
+    "@mediapipe/selfie_segmentation": "^0.1.1675465747",
     "@types/react-router-dom": "^5.3.3",
     "@vercel/speed-insights": "^1.2.0",
     "bcryptjs": "^3.0.2",
