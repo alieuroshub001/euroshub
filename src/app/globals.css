@@ -357,3 +357,12 @@ body:not(.dark) .clients-gradient-bg {
 .box-reflect {
   -webkit-box-reflect: below 1px linear-gradient(transparent, #0004);
 }
+/* Default (dark mode) - transparent background */
+.clients-gradient-bg {
+  background: transparent;
+}
+
+/* Light mode only - apply gradient */
+body:not(.dark) .clients-gradient-bg {
+  background: linear-gradient(135deg, #FFFFFF, #0FB8AF);
+}

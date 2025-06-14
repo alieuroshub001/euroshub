@@ -8,23 +8,23 @@ import { FaXTwitter } from 'react-icons/fa6';
 
 const Footer: React.FC = () => {
   const renderTextWithStyledE = (text: string) => {
-  return text.split('').map((letter, index) => (
-    <span
-      key={index}
-      className={`inline-block ${
-        letter === 'E' ? 'styled-e' : ''
-      } glow-text animate-dimlight`}
-      style={{
-        background: 'linear-gradient(135deg, #d8fdff, #a0f7ff, #7df3ff)',
-        backgroundClip: 'text',
-        WebkitBackgroundClip: 'text',
-        color: 'transparent',
-      }}
-    >
-      {letter === ' ' ? '\u00A0' : letter}
-    </span>
-  ));
-};
+    return text.split('').map((letter, index) => (
+      <span
+        key={index}
+        className={`inline-block ${
+          letter === 'E' ? 'styled-e' : ''
+        } glow-text animate-dimlight`}
+        style={{
+          background: 'linear-gradient(135deg, #FFFFFF, #0FB8AF)',
+          backgroundClip: 'text',
+          WebkitBackgroundClip: 'text',
+          color: 'transparent',
+        }}
+      >
+        {letter === ' ' ? '\u00A0' : letter}
+      </span>
+    ));
+  };
 
   return (
     <footer className="w-full mt-0 pt-12 lg:pt-0 border-t border-neutral-400 dark:border-neutral-700 relative z-20 backdrop-blur-sm bg-transparent">
@@ -40,7 +40,7 @@ const Footer: React.FC = () => {
               className="object-contain"
             />
             <p className="text-sm sm:text-base font-normal leading-[26px] text-[var(--foreground)] dark:text-[var(--foreground)] max-w-[700px] sm:max-w-[500px]">
-              When do they work well, and when do they on us and Finally, <br /> when do we actually need how can we avoid them.
+              When do they work well, and when do they on us and Finally, when do we actually need how can we avoid them.
             </p>
           </div>
 
@@ -49,22 +49,22 @@ const Footer: React.FC = () => {
             {[
               {
                 href: 'https://twitter.com/EurosHub',
-                icon: <FaXTwitter className="w-6 h-10" />,
+                icon: <FaXTwitter className="w-6 h-13" />,
                 label: '',
               },
               {
                 href: 'https://www.linkedin.com/company/euroshub',
-                icon: <FaLinkedin className="w-6 h-10" />,
+                icon: <FaLinkedin className="w-6 h-13" />,
                 label: 'LinkedIn',
               },
               {
                 href: 'https://www.facebook.com/official.euroshub/',
-                icon: <FaFacebook className="w-6 h-10" />,
+                icon: <FaFacebook className="w-6 h-13" />,
                 label: 'Facebook',
               },
               {
                 href: 'https://www.instagram.com/euroshub.official/',
-                icon: <FaInstagram className="w-6 h-10" />,
+                icon: <FaInstagram className="w-6 h-13" />,
                 label: 'Instagram',
               },
             ].map(({ href, icon, label }) => (
@@ -81,41 +81,41 @@ const Footer: React.FC = () => {
           </div>
 
           {/* Let's Connect */}
-         <Link
-  href="/contact"
-  className="pt-8 md:pt-14 mb-0 md:mb-12 text-center mx-auto lg:text-left font-library3am tracking-wider w-fit max-w-full group box-reflect"
->
-  <div className="px-6 py-3 rounded-lg">
-    <span className="text-4xl md:text-6xl lg:text-7xl font-library3am tracking-tight">
-      {renderTextWithStyledE('Let’s Collaborate')}
-    </span>
-  </div>
-</Link>
+          <Link
+            href="/contact"
+            className="pt-8 md:pt-14 mb-0 md:mb-12 text-center mx-auto lg:text-left font-library3am tracking-wider w-fit max-w-full group box-reflect"
+          >
+            <div className="px-6 py-3 rounded-lg">
+              <span className="text-4xl md:text-7xl lg:text-9xl font-library3am tracking-tight">
+                {renderTextWithStyledE('Lets ')} &nbsp;
+                {renderTextWithStyledE(' Connect')}
+              </span>
+            </div>
+          </Link>
         </div>
       </div>
 
       {/* Bottom Section */}
-<div className="w-full px-[5%] md:px-[2.5%] mt-8 lg:mt-0 border-t border-neutral-400 dark:border-neutral-700">
-  <div className="max-w-[1900px] w-full mx-auto">
-    <div className="flex flex-col-reverse gap-y-6 lg:flex-row justify-between items-center py-6">
-      <p className="text-sm sm:text-base xxl:text-lg text-[var(--foreground)] dark:text-[var(--foreground)]">
-        © 2025 | All rights reserved by EurosHub
-      </p>
-      <div className="mr-13 flex gap-8">
-        {['home', 'expertise', 'about us'].map((page) => (
-          <Link
-            key={page}
-            href={`/${page}`}
-            className="text-sm sm:text-base xxl:text-lg text-[var(--foreground)] dark:text-[var(--foreground)] hover:text-[var(--primary)] dark:hover:text-[var(--primary)]"
-          >
-            {page.charAt(0).toUpperCase() + page.slice(1)}
-          </Link>
-        ))}
+      <div className="w-full px-[5%] md:px-[2.5%] mt-8 lg:mt-0 border-t border-neutral-400 dark:border-neutral-700">
+        <div className="max-w-[1900px] w-full mx-auto">
+          <div className="flex flex-col-reverse gap-y-6 lg:flex-row justify-between items-center py-6">
+            <p className="text-sm sm:text-base xxl:text-lg text-[var(--foreground)] dark:text-[var(--foreground)]">
+              © 2025 | All rights reserved by EurosHub
+            </p>
+            <div className="flex gap-8">
+              {['home', 'expertise', 'about us'].map((page) => (
+                <Link
+                  key={page}
+                  href={`/${page}`}
+                  className="text-sm sm:text-base xxl:text-lg text-[var(--foreground)] dark:text-[var(--foreground)] hover:text-[var(--primary)] dark:hover:text-[var(--primary)]"
+                >
+                  {page.charAt(0).toUpperCase() + page.slice(1)}
+                </Link>
+              ))}
+            </div>
+          </div>
+        </div>
       </div>
-    </div>
-  </div>
-</div>
-
     </footer>
   );
 };

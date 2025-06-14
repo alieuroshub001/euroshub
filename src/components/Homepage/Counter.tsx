@@ -58,7 +58,7 @@ export default function Counter() {
   const videoWidth = useTransform(
     scrollYProgress, 
     [0.2, 0.6], 
-    isLargeScreen ? ['100%', '70%'] : ['100%', '100%']
+    isLargeScreen ? ['100%', '60%'] : ['100%', '100%']
   );
 
   // Counter section appears only when video is overlapping
@@ -171,7 +171,7 @@ export default function Counter() {
               y: contentY,
               scale: contentScale,
             }}
-            className="absolute right-0 w-full md:w-1/2 lg:w-2/5 h-full flex flex-col justify-center px-6 sm:px-10 lg:px-16"
+            className="mr-25 absolute right-0 w-full md:w-1/2 lg:w-2/5 h-full flex flex-col justify-center px-6 sm:px-10 lg:px-16"
           >
             <div className="relative z-10">
               {/* Header Section */}
