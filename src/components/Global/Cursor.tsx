@@ -24,16 +24,16 @@ export default function Cursor({ mousePos, isDragging, showCursor }: CursorProps
   const canvasRef = useRef<HTMLCanvasElement | null>(null);
   const rafRef = useRef<number | null>(null);
 
-  useEffect(() => setMounted(true), []);
-
   useEffect(() => {
+    setMounted(true);
+
     const canvas = document.createElement('canvas');
-    canvas.style.cssText = 'display: none; position: absolute; top: -9999px;';
+    canvas.style.display = 'none';
     document.body.appendChild(canvas);
     canvasRef.current = canvas;
 
     return () => {
-      if (canvas.parentNode) canvas.parentNode.removeChild(canvas);
+      document.body.removeChild(canvas);
       canvasRef.current = null;
     };
   }, []);
@@ -41,23 +41,27 @@ export default function Cursor({ mousePos, isDragging, showCursor }: CursorProps
   const getImageColorAtPoint = useCallback((img: HTMLImageElement, x: number, y: number): string | null => {
     const canvas = canvasRef.current;
     if (!canvas) return null;
+
     const ctx = canvas.getContext('2d', { willReadFrequently: true });
     if (!ctx) return null;
 
     const rect = img.getBoundingClientRect();
-    canvas.width = img.naturalWidth || rect.width;
-    canvas.height = img.naturalHeight || rect.height;
+    const scaleX = img.naturalWidth / rect.width;
+    const scaleY = img.naturalHeight / rect.height;
 
-    ctx.drawImage(img, 0, 0, canvas.width, canvas.height);
+    canvas.width = img.naturalWidth;
+    canvas.height = img.naturalHeight;
+    ctx.drawImage(img, 0, 0);
 
-    const relX = ((x - rect.left) / rect.width) * canvas.width;
-    const relY = ((y - rect.top) / rect.height) * canvas.height;
+    const relX = (x - rect.left) * scaleX;
+    const relY = (y - rect.top) * scaleY;
 
     const clampedX = Math.floor(Math.min(Math.max(0, relX), canvas.width - 1));
     const clampedY = Math.floor(Math.min(Math.max(0, relY), canvas.height - 1));
 
-    const imageData = ctx.getImageData(clampedX, clampedY, 1, 1).data;
-    const luminance = getLuminance([imageData[0], imageData[1], imageData[2]]);
+    const pixel = ctx.getImageData(clampedX, clampedY, 1, 1).data;
+    const luminance = getLuminance([pixel[0], pixel[1], pixel[2]]);
+
     return luminance > 0.5 ? '#000000' : '#ffffff';
   }, []);
 
@@ -69,15 +73,15 @@ export default function Cursor({ mousePos, isDragging, showCursor }: CursorProps
 
     if (el.tagName === 'IMG') {
       const img = el as HTMLImageElement;
-      if (img.complete && img.naturalWidth > 0) {
+      if (img.complete && img.naturalWidth > 0 && img.naturalHeight > 0) {
         const color = getImageColorAtPoint(img, x, y);
-        if (color === '#ffffff' || color === '#000000') return color;
+        if (color) return color;
       }
     }
 
-    const rgb = parseRGB(styles.backgroundColor || styles.color || '');
-    if (rgb) {
-      const luminance = getLuminance(rgb);
+    const bgRGB = parseRGB(styles.backgroundColor || '');
+    if (bgRGB) {
+      const luminance = getLuminance(bgRGB);
       return luminance > 0.5 ? '#000000' : '#ffffff';
     }
 
@@ -91,17 +95,17 @@ export default function Cursor({ mousePos, isDragging, showCursor }: CursorProps
 
     rafRef.current = requestAnimationFrame(async () => {
       const color = await getContrastingColor(mousePos.x, mousePos.y);
-      const allowedColors = ['#ffffff', '#000000', '#17b6b2', '#063a53'];
-      const safeColor = allowedColors.includes(color) ? color : '#17b6b2';
-      if (safeColor !== dynamicColor) {
-        setDynamicColor(safeColor);
+      const safeColors = ['#ffffff', '#000000', '#17b6b2', '#063a53'];
+      const finalColor = safeColors.includes(color) ? color : '#17b6b2';
+      if (finalColor !== dynamicColor) {
+        setDynamicColor(finalColor);
       }
     });
 
     return () => {
       if (rafRef.current) cancelAnimationFrame(rafRef.current);
     };
-  }, [mousePos.x, mousePos.y, mounted, getContrastingColor, dynamicColor]);
+  }, [mousePos, mounted, getContrastingColor, dynamicColor]);
 
   if (!mounted) return null;
 
@@ -110,9 +114,7 @@ export default function Cursor({ mousePos, isDragging, showCursor }: CursorProps
   const offset = size / 2;
   const chevronOffset = isDragging ? '-26px' : '-30px';
   const chevronSize = isDragging ? 16 : 18;
-
-  // Use blend mode only if white/black to create masked look
-  const useBlendMode = ['#ffffff', '#000000'].includes(dynamicColor);
+  const useBlend = ['#ffffff', '#000000'].includes(dynamicColor);
 
   return (
     <motion.div
@@ -125,28 +127,22 @@ export default function Cursor({ mousePos, isDragging, showCursor }: CursorProps
         borderRadius: '50%',
         border: `${borderWidth}px solid ${dynamicColor}`,
         backgroundColor: 'transparent',
-        boxShadow: `0 0 8px ${dynamicColor}`,
+        boxShadow: `0 0 6px ${dynamicColor}`,
+        mixBlendMode: useBlend ? 'difference' : 'normal',
         transition: 'border-color 0.2s ease, box-shadow 0.2s ease',
-        mixBlendMode: useBlendMode ? 'difference' : 'normal',
       }}
       initial={{ opacity: 0 }}
       animate={{ opacity: showCursor ? 1 : 0 }}
       transition={{ type: 'spring', stiffness: 300, damping: 20 }}
     >
       <ChevronLeft
-        className="absolute top-1/2 -translate-y-1/2 transition-all duration-200"
-        style={{
-          left: chevronOffset,
-          color: dynamicColor,
-        }}
+        className="absolute top-1/2 -translate-y-1/2"
+        style={{ left: chevronOffset, color: dynamicColor }}
         size={chevronSize}
       />
       <ChevronRight
-        className="absolute top-1/2 -translate-y-1/2 transition-all duration-200"
-        style={{
-          right: chevronOffset,
-          color: dynamicColor,
-        }}
+        className="absolute top-1/2 -translate-y-1/2"
+        style={{ right: chevronOffset, color: dynamicColor }}
         size={chevronSize}
       />
     </motion.div>

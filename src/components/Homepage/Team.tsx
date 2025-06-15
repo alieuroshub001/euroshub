@@ -208,7 +208,7 @@ export default function Team() {
       muted
       playsInline
       key={`${index}-${member.video}`}
-      className="ml-4.5 w-full h-full object-cover scale-[1.31] translate-y-[-3%] bg-transparent" // Added bg-transparent here
+      className="ml-4.5 w-full h-full object-cover scale-[1.4] translate-y-[-2.9%] bg-transparent" // Added bg-transparent here
       style={{
         maskImage: 'radial-gradient(circle at center, white 40%, transparent 85%)', // Adjusted gradient
         WebkitMaskImage: 'radial-gradient(circle at center, white 40%, transparent 85%)',
