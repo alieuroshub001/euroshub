@@ -2,6 +2,7 @@
 // Add these imports at the top of Navbar.tsx
 import { motion, useAnimation } from 'framer-motion';
 import {
+  ArrowRightIcon,
   ChevronDownIcon,
   ChevronUpIcon,
   ClipboardListIcon,
@@ -11,9 +12,7 @@ import {
   DatabaseIcon,
   GlobeIcon,
   HeadsetIcon,
-  KeyboardIcon,
   LayoutDashboardIcon,
-  PhoneOutgoingIcon,
   SmartphoneIcon
 } from 'lucide-react';
 import Image from 'next/image';
@@ -188,25 +187,22 @@ const allServices = [
         path: '/services/business/project-management'
       },
       { 
-        name: 'Data Entry & Transcription', 
-        icon: <KeyboardIcon className="w-4 h-4" />,
-        path: '/services/business/data-entry-transcription'
-      },
-      { 
         name: 'Data Extraction/ETL', 
         icon: <DatabaseIcon className="w-4 h-4" />,
         path: '/services/business/data-extraction-etl'
-      },
-      { 
-        name: 'Lead Generation', 
-        icon: <PhoneOutgoingIcon className="w-4 h-4" />,
-        path: '/services/business/lead-generation'
       },
       { 
         name: 'ERP/CRM Software', 
         icon: <LayoutDashboardIcon className="w-4 h-4" />,
         path: '/services/business/erp-crm-software'
       },
+      { 
+        name: 'DevOps', 
+        icon: <LayoutDashboardIcon className="w-4 h-4" />,
+        path: '/services/business/DevOps'
+      },
+
+
     ]
   },
   {
@@ -459,7 +455,12 @@ const allServices = [
     <div className="bg-[var(--primary)]/10 p-1.5 rounded-full group-hover:bg-[var(--primary)] group-hover:text-white">
       {service.icon}
     </div>
-    <span className="text-sm font-medium group-hover:text-[var(--primary)]">{service.name}</span>
+    <div className="flex items-center gap-1 flex-1">
+      <span className="text-sm font-medium group-hover:text-[var(--primary)]">
+        {service.name}
+      </span>
+      <ArrowRightIcon className="ml-10 w-5 h-5 text-[var(--primary)] opacity-0 group-hover:opacity-100 transition-opacity ml-1" />
+    </div>
   </Link>
 ))}
                   </div>
@@ -469,7 +470,7 @@ const allServices = [
             <div className="mt-4 pt-3 border-t border-[var(--secondary)] text-center">
               <Link href="/services" className="inline-flex items-center gap-2 bg-[var(--primary)] text-white px-4 py-2 rounded-full text-sm font-medium hover:bg-[var(--primary)]/90 transition-colors">
                 View All Experties
-                <ChevronDownIcon className="w-5 h-5 rotate-90" />
+                <ChevronUpIcon className="w-5 h-5 rotate-90" />
               </Link>
             </div>
 

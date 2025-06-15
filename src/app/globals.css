@@ -362,7 +362,11 @@ body:not(.dark) .clients-gradient-bg {
   background: transparent;
 }
 
-/* Light mode only - apply gradient */
 body:not(.dark) .clients-gradient-bg {
-  background: linear-gradient(135deg, #FFFFFF, #0FB8AF);
+  background: linear-gradient(
+    to bottom,
+    #0FB8AF 0%,
+    #ffffff 50%,
+    #0FB8AF 100%
+  );
 }

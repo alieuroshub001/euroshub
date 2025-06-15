@@ -1,7 +1,7 @@
 'use client';
 
-import { Briefcase, Home, LogOut, Menu, Moon, Sun, X } from 'lucide-react';
-import Link from 'next/link';
+import { Briefcase, Home, LogOut, Menu, Moon, Sun, X, Clock, MessageSquare } from 'lucide-react';
+import Link from 'next/link'
 import { useRouter } from 'next/navigation';
 import { JSX, useEffect, useState } from 'react';
 
@@ -53,6 +53,9 @@ export default function AdminLayout({ children }: { children: React.ReactNode })
         <nav className="space-y-2">
           <NavItem href="/admin/dashboard" icon={<Home className="w-5 h-5 mr-3" />} label="Dashboard" onClick={() => setMobileMenuOpen(false)} />
           <NavItem href="/admin/jobs" icon={<Briefcase className="w-5 h-5 mr-3" />} label="Job Postings" onClick={() => setMobileMenuOpen(false)} />
+          <NavItem href="/admin/testimonials" icon={<MessageSquare className="w-5 h-5 mr-3" />} label="Testimonials" onClick={() => setMobileMenuOpen(false)} />
+          <NavItem href="/admin/counter" icon={<Clock className="w-5 h-5 mr-3" />} label="Counter" onClick={() => setMobileMenuOpen(false)} />
+          <NavItem href="/admin/services" icon={<Briefcase className="w-5 h-5 mr-3" />} label="Services" onClick={() => setMobileMenuOpen(false)} />
         </nav>
 
         <div className="mt-8 space-y-2">

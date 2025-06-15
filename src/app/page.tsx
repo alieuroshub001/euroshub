@@ -3,7 +3,7 @@ import Navbar from '@/components/Global/Navbar';
 import Clients from '@/components/Homepage/Clients';
 import Counter from '@/components/Homepage/Counter';
 import Hero from '@/components/Homepage/Hero';
-import Services from '@/components/Homepage/Services';
+import Services from '@/components/Homepage/Experties';
 import Team from '@/components/Homepage/Team';
 import Testimonial from '@/components/Homepage/Testimonial';
 import { Metadata } from 'next';

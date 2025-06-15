@@ -1,58 +1,64 @@
 'use client';
 
-import { useState, useEffect, useRef, useCallback } from 'react';
-import { motion, useMotionValue, useReducedMotion } from 'framer-motion';
+import { useState, useEffect, useRef, useCallback, JSX } from 'react';
+import { motion, AnimatePresence, useMotionValue, useReducedMotion } from 'framer-motion';
 import { UserCircle2 } from 'lucide-react';
 import Cursor from '@/components/Global/Cursor';
+import { Testimonial } from '@/types/testimonial';
 
-interface Testimonial {
-  id: number;
-  name: string;
-  role: string;
-  content: string;
-  rating: number;
-}
-
-const testimonials: Testimonial[] = [
-  { id: 1, name: 'Sarah Johnson', role: 'CEO, North Data', content: 'Working with this team transformed our digital presence. Their attention to detail and creative solutions exceeded our expectations.', rating: 5 },
-  { id: 2, name: 'Michael Chen', role: 'CTO, Proventas', content: 'The technical expertise and professionalism demonstrated were outstanding. Delivered our complex project ahead of schedule.', rating: 5 },
-  { id: 3, name: 'Emma Rodriguez', role: 'Marketing Director', content: 'Our engagement metrics improved by 300% after implementing their strategies. Truly understands business growth.', rating: 4 },
-  { id: 4, name: 'David Kim', role: 'Founder, MSS', content: 'Reliable, innovative, and consistently delivers quality. Multiple projects completed without disappointment.', rating: 5 },
-  { id: 5, name: 'James Wilson', role: 'Product Manager', content: 'Exceptional problem-solving skills. Turned our vague ideas into a polished product that users love.', rating: 5 },
-  { id: 6, name: 'Lisa Wong', role: 'UX Lead', content: 'Their design thinking approach revolutionized our user experience. Conversion rates up by 45%.', rating: 4 },
-  { id: 7, name: 'Robert Garcia', role: 'Startup Founder', content: 'Punched above their weight class. Delivered enterprise-grade solutions at startup speed.', rating: 5 },
-  { id: 8, name: 'Priya Patel', role: 'E-commerce Director', content: 'Our Black Friday infrastructure handled 3x traffic with zero downtime. Flawless execution.', rating: 5 },
-  { id: 9, name: 'Thomas Müller', role: 'Engineering Manager', content: 'Clean, maintainable code with excellent documentation. Onboarded our team quickly.', rating: 4 },
-  { id: 10, name: 'Olivia Smith', role: 'Content Strategist', content: 'Transformed our content workflow. Now producing 2x more content with higher quality.', rating: 5 },
-  { id: 11, name: 'Ahmed Khan', role: 'CTO, FinTech', content: 'Implemented robust security measures that passed our strict compliance audit on first try.', rating: 5 },
-  { id: 12, name: 'Sophie Martin', role: 'Brand Director', content: 'Rebranded our company with precision. Customer recognition improved dramatically.', rating: 4 },
-  { id: 13, name: 'Daniel Brown', role: 'Operations Lead', content: 'Automated 80% of our manual processes. Team can now focus on strategic work.', rating: 5 },
-  { id: 14, name: 'Yuki Tanaka', role: 'Mobile Lead', content: 'Our app ratings went from 3.8 to 4.9 stars after their optimizations. Incredible work.', rating: 5 },
-  { id: 15, name: 'Carlos Ruiz', role: 'VP Sales', content: 'Built the analytics dashboard that helped us identify our most profitable customer segments.', rating: 4 }
-];
+const testimonialCategories = ['All', '5 Stars', 'Featured'];
 
 export default function Testimonials() {
+  const [activeCategory, setActiveCategory] = useState('All');
+  const [testimonials, setTestimonials] = useState<Testimonial[]>([]);
+  const [isLoading, setIsLoading] = useState(true);
+  const [error, setError] = useState<string | null>(null);
+  
+  // Animation and interaction state
   const containerRef = useRef<HTMLDivElement>(null);
   const x = useMotionValue(0);
   const animationRef = useRef<number | null>(null);
   const lastFrameTime = useRef<number | null>(null);
   const shouldReduceMotion = useReducedMotion();
-
   const [isHovered, setIsHovered] = useState(false);
   const [isDragging, setIsDragging] = useState(false);
   const [mousePos, setMousePos] = useState({ x: 0, y: 0 });
   const [showCursor, setShowCursor] = useState(false);
-
   const pointerDownPos = useRef<{ x: number; y: number } | null>(null);
   const clickTimeout = useRef<NodeJS.Timeout | null>(null);
 
-  const infiniteTestimonials = Array(3).fill(testimonials).flat();
+  useEffect(() => {
+    const fetchTestimonials = async () => {
+      try {
+        const res = await fetch('/api/testimonials');
+        if (!res.ok) throw new Error('Failed to fetch testimonials');
+        const data = await res.json();
+        setTestimonials(data);
+      } catch (err) {
+        const message = err instanceof Error ? err.message : 'Something went wrong';
+        setError(message);
+      } finally {
+        setIsLoading(false);
+      }
+    };
+
+    fetchTestimonials();
+  }, []);
+
+  const filteredTestimonials = testimonials.filter(testimonial => {
+    if (activeCategory === 'All') return true;
+    if (activeCategory === '5 Stars') return testimonial.rating === 5;
+    if (activeCategory === 'Featured') return testimonial.isFeatured;
+    return true;
+  });
+
+  const infiniteTestimonials = Array(3).fill(filteredTestimonials).flat();
   const cardWidth = 280;
   const gap = 16;
-  const singleSetWidth = testimonials.length * (cardWidth + gap);
+  const singleSetWidth = filteredTestimonials.length * (cardWidth + gap);
 
   const moveMarquee = useCallback((timestamp: number) => {
-    if (isHovered || isDragging || shouldReduceMotion) return;
+    if (isHovered || isDragging || shouldReduceMotion || filteredTestimonials.length === 0) return;
 
     if (!lastFrameTime.current) lastFrameTime.current = timestamp;
     const delta = timestamp - lastFrameTime.current;
@@ -64,7 +70,7 @@ export default function Testimonials() {
     }
 
     animationRef.current = requestAnimationFrame(moveMarquee);
-  }, [isHovered, isDragging, shouldReduceMotion, x]);
+  }, [isHovered, isDragging, shouldReduceMotion, x, filteredTestimonials.length]);
 
   const handleInfiniteLoop = useCallback(() => {
     const currentX = x.get();
@@ -81,7 +87,7 @@ export default function Testimonials() {
   }, [x, handleInfiniteLoop]);
 
   useEffect(() => {
-    if (shouldReduceMotion) return;
+    if (shouldReduceMotion || filteredTestimonials.length === 0) return;
 
     const frame = (time: number) => moveMarquee(time);
     animationRef.current = requestAnimationFrame(frame);
@@ -89,11 +95,13 @@ export default function Testimonials() {
     return () => {
       if (animationRef.current) cancelAnimationFrame(animationRef.current);
     };
-  }, [moveMarquee, shouldReduceMotion]);
+  }, [moveMarquee, shouldReduceMotion, filteredTestimonials.length]);
 
   useEffect(() => {
-    x.set(-singleSetWidth);
-  }, [x, singleSetWidth]);
+    if (filteredTestimonials.length > 0) {
+      x.set(-singleSetWidth);
+    }
+  }, [x, singleSetWidth, filteredTestimonials.length]);
 
   const handleMouseMove = useCallback((e: React.MouseEvent) => {
     setMousePos({ x: e.clientX, y: e.clientY });
@@ -107,7 +115,7 @@ export default function Testimonials() {
     }
   };
 
-  const handlePointerUp = (testimonialId: number, e: React.PointerEvent) => {
+  const handlePointerUp = (testimonialId: string, e: React.PointerEvent) => {
     if (!pointerDownPos.current) return;
     const dx = Math.abs(e.clientX - pointerDownPos.current.x);
     const dy = Math.abs(e.clientY - pointerDownPos.current.y);
@@ -121,7 +129,7 @@ export default function Testimonials() {
     pointerDownPos.current = null;
   };
 
-  return (
+  const renderStatusSection = (content: JSX.Element) => (
     <section className="py-10 w-full overflow-hidden relative">
       <div className="w-full mx-auto px-0">
         <motion.h2
@@ -132,38 +140,90 @@ export default function Testimonials() {
         >
           What Our Clients Say
         </motion.h2>
+        {content}
+      </div>
+    </section>
+  );
 
-        <div
-          ref={containerRef}
-          className="relative w-full overflow-x-hidden py-8"
-          onMouseEnter={() => {
-            setIsHovered(true);
-            setShowCursor(true);
-          }}
-          onMouseLeave={() => {
-            setIsHovered(false);
-            setShowCursor(false);
-          }}
-          onMouseMove={handleMouseMove}
-        >
-          <motion.div
-            className="flex gap-4 w-max items-stretch pl-4 cursor-grab active:cursor-grabbing"
-            style={{ x }}
-            drag="x"
-            dragConstraints={{ left: -Infinity, right: Infinity }}
-            onDragStart={() => setIsDragging(true)}
-            onDragEnd={() => setIsDragging(false)}
-            dragElastic={0}
-            dragMomentum={false}
+  if (isLoading) {
+    return renderStatusSection(
+      <div className="flex justify-center items-center h-64">
+        <div className="animate-spin h-12 w-12 border-t-2 border-b-2 border-[var(--primary)] rounded-full" />
+      </div>
+    );
+  }
+
+  if (error) {
+    return renderStatusSection(
+      <div className="p-4 bg-red-100 border border-red-400 text-red-700 rounded text-center max-w-md mx-auto">
+        {error}
+      </div>
+    );
+  }
+
+  if (filteredTestimonials.length === 0) {
+    return renderStatusSection(
+      <div className="text-center py-12 text-[var(--foreground)]/70">
+        No testimonials found in this category.
+      </div>
+    );
+  }
+
+  return renderStatusSection(
+    <>
+      {/* Category Buttons */}
+      <div className="flex flex-wrap justify-center gap-2 mb-12">
+        {testimonialCategories.map(category => (
+          <button
+            key={category}
+            onClick={() => setActiveCategory(category)}
+            className={`px-4 py-2 rounded-full font-medium transition-all ${
+              activeCategory === category
+                ? 'bg-[var(--primary)] text-white'
+                : 'bg-[var(--secondary)] hover:bg-[var(--secondary)]/80'
+            }`}
           >
+            {category}
+          </button>
+        ))}
+      </div>
+
+      {/* Testimonials Carousel */}
+      <div
+        ref={containerRef}
+        className="relative w-full overflow-x-hidden py-8"
+        onMouseEnter={() => {
+          setIsHovered(true);
+          setShowCursor(true);
+        }}
+        onMouseLeave={() => {
+          setIsHovered(false);
+          setShowCursor(false);
+        }}
+        onMouseMove={handleMouseMove}
+      >
+        <motion.div
+          className="flex gap-4 w-max items-stretch pl-4 cursor-grab active:cursor-grabbing"
+          style={{ x }}
+          drag="x"
+          dragConstraints={{ left: -Infinity, right: Infinity }}
+          onDragStart={() => setIsDragging(true)}
+          onDragEnd={() => setIsDragging(false)}
+          dragElastic={0}
+          dragMomentum={false}
+        >
+          <AnimatePresence>
             {infiniteTestimonials.map((testimonial, index) => (
               <motion.div
-                key={`${testimonial.id}-${Math.floor(index / testimonials.length)}-${index % testimonials.length}`}
+                key={`${testimonial._id}-${Math.floor(index / filteredTestimonials.length)}-${index % filteredTestimonials.length}`}
                 className="flex-shrink-0 w-[280px] h-[280px] px-2 cursor-pointer"
+                initial={{ opacity: 0 }}
+                animate={{ opacity: 1 }}
+                exit={{ opacity: 0 }}
                 whileHover={{ scale: 1.015 }}
                 transition={{ type: 'spring', stiffness: 250, damping: 20 }}
                 onPointerDown={handlePointerDown}
-                onPointerUp={(e) => handlePointerUp(testimonial.id, e)}
+                onPointerUp={(e) => handlePointerUp(String(testimonial._id), e)}
                 onPointerCancel={() => {
                   if (clickTimeout.current) {
                     clearTimeout(clickTimeout.current);
@@ -205,15 +265,15 @@ export default function Testimonials() {
                 </div>
               </motion.div>
             ))}
-          </motion.div>
+          </AnimatePresence>
+        </motion.div>
 
-          <Cursor 
-            mousePos={mousePos} 
-            isDragging={isDragging} 
-            showCursor={showCursor}
-          />
-        </div>
+        <Cursor 
+          mousePos={mousePos} 
+          isDragging={isDragging} 
+          showCursor={showCursor}
+        />
       </div>
-    </section>
+    </>
   );
 }

@@ -14,7 +14,6 @@ import {
   Headphones,
   Keyboard,
   LayoutDashboard,
-  PhoneOutgoing,
   Search,
   Server,
   Smartphone,
@@ -41,7 +40,7 @@ const allServices: Service[] = [
     category: 'business',
     slug: 'virtual-assistance',
     image: '/assets/services/virtual-assistant.jpg',
-    path: '/services/business/virtual-assistance'
+    path: '/experties/business/virtual-assistance'
   },
   {
     id: 2,
@@ -50,124 +49,188 @@ const allServices: Service[] = [
     category: 'business',
     slug: 'project-management',
     image: '/assets/services/project-management.JPG',
-    path: '/services/business/project-management'
+    path: '/experties/business/project-management'
   },
+ 
   {
     id: 3,
-    title: 'Data Entry & Transcription',
-    icon: <Keyboard className="w-10 h-10 text-[var(--primary)]" />,
-    category: 'business',
-    slug: 'data-entry-transcription',
-    image: '/assets/services/data-entry.jpeg',
-    path: '/services/business/data-entry-transcription'
-  },
-  {
-    id: 4,
     title: 'Data Extraction/ETL',
     icon: <Database className="w-10 h-10 text-[var(--primary)]" />,
     category: 'business',
     slug: 'data-extraction-etl',
     image: '/assets/services/extraction.jpg',
-    path: '/services/business/data-extraction-etl'
+    path: '/experties/business/data-extraction-etl'
   },
   {
-    id: 5,
-    title: 'Lead Generation',
-    icon: <PhoneOutgoing className="w-10 h-10 text-[var(--primary)]" />,
-    category: 'business',
-    slug: 'lead-generation',
-    image: '/assets/services/lead.jpeg',
-    path: '/services/business/lead-generation'
-  },
-  {
-    id: 6,
+    id: 4,
     title: 'ERP/CRM Software',
     icon: <LayoutDashboard className="w-10 h-10 text-[var(--primary)]" />,
     category: 'business',
     slug: 'erp-crm-software',
     image: '/assets/services/crm.jpg',
-    path: '/services/business/erp-crm-software'
+    path: '/experties/business/erp-crm-software'
   },
   {
-    id: 7,
+    id: 5,
     title: 'Data Mining',
     icon: <HardDrive className="w-10 h-10 text-[var(--primary)]" />,
     category: 'business',
     slug: 'data-mining',
     image: '/assets/services/mining.jpg',
-    path: '/services/business/data-mining'
+    path: '/experties/business/data-mining'
   },
   {
-    id: 8,
+    id: 6,
     title: 'Market Research',
     icon: <Search className="w-10 h-10 text-[var(--primary)]" />,
     category: 'business',
     slug: 'market-research',
     image: '/assets/services/research.jpg',
-    path: '/services/business/market-research'
+    path: '/experties/business/market-research'
+  },
+   {
+    id: 7,
+    title: 'Staff Augmentation',
+    icon: <Keyboard className="w-10 h-10 text-[var(--primary)]" />,
+    category: 'tech',
+    slug: 'staff-augmentation',
+    image: '/assets/services/staff-augmentation.jpg',
+    path: '/experties/business/staff-augmentation'
+  },
+  {
+    id: 8,
+    title: 'Data Analytics and Insights',
+    icon: <BarChart2 className="w-10 h-10 text-[var(--primary)]" />,
+    category: 'business',
+    slug: 'data-analytics-insights',
+    image: '/assets/services/analysis.jpeg',
+    path: '/experties/business/data-analysis'
   },
   {
     id: 9,
-    title: 'Data Analysis',
-    icon: <BarChart2 className="w-10 h-10 text-[var(--primary)]" />,
-    category: 'business',
-    slug: 'data-analysis',
-    image: '/assets/services/analysis.jpeg',
-    path: '/services/business/data-analysis'
-  },
-  {
-    id: 10,
     title: 'Database Management',
     icon: <Server className="w-10 h-10 text-[var(--primary)]" />,
     category: 'business',
     slug: 'database-management',
     image: '/assets/services/dbms.jpg',
-    path: '/services/business/database-management'
+    path: '/experties/business/database-management'
+  },
+   {
+    id: 10,
+    title: 'Quality Assurance',
+    icon: <Server className="w-10 h-10 text-[var(--primary)]" />,
+    category: 'business',
+    slug: 'quality-assurance',
+    image: '/assets/services/qa.jpg',
+    path: '/experties/business/quality-assurance'
   },
   {
     id: 11,
+    title: 'Maintenance & Support',
+    icon: <Server className="w-10 h-10 text-[var(--primary)]" />,
+    category: 'business',
+    slug: 'maintenance-support',
+    image: '/assets/services/maintenance.jpg',
+    path: '/experties/business/maintenance-support'
+  },
+  {
+    id: 12,
     title: 'Web Development',
     icon: <Code className="w-10 h-10 text-[var(--primary)]" />,
     category: 'tech',
     slug: 'web-development',
     image: '/assets/services/dev.jpeg',
-    path: '/services/technology/web-development'
+    path: '/experties/technology/web-development'
   },
   {
-    id: 12,
+    id: 13,
     title: 'Mobile App Development',
     icon: <Smartphone className="w-10 h-10 text-[var(--primary)]" />,
     category: 'tech',
     slug: 'mobile-app-development',
     image: '/assets/services/app.jpeg',
-    path: '/services/technology/mobile-app-development'
+    path: '/experties/technology/mobile-app-development'
   },
   {
-    id: 13,
+    id: 14,
     title: 'UI/UX Design',
     icon: <Globe className="w-10 h-10 text-[var(--primary)]" />,
     category: 'tech',
     slug: 'ui-ux-design',
     image: '/assets/services/uiux.jpeg',
-    path: '/services/technology/ui-ux-design'
+    path: '/experties/technology/ui-ux-design'
   },
   {
-    id: 14,
+    id: 15,
     title: 'Cloud Solutions',
     icon: <Cloud className="w-10 h-10 text-[var(--primary)]" />,
     category: 'tech',
     slug: 'cloud-solutions',
     image: '/assets/services/cloud.jpg',
-    path: '/services/technology/cloud-solutions'
+    path: '/experties/technology/cloud-solutions'
   },
   {
-    id: 15,
+    id: 16,
+    title: 'DevOps',
+    icon: <Cpu className="w-10 h-10 text-[var(--primary)]" />,
+    category: 'tech',
+    slug: 'devops',
+    image: '/assets/services/devops.jpg',
+    path: '/experties/technology/devops'
+  },
+  {
+    id: 17,
+    title: 'SaaS Solutions',
+    icon: <Cpu className="w-10 h-10 text-[var(--primary)]" />,
+    category: 'tech',
+    slug: 'saas-solutions',
+    image: '/assets/services/saas.jpg',
+    path: '/experties/technology/saas-solutions'
+  },
+  {
+    id: 18,
+    title: 'Cybersecurity',
+    icon: <Cpu className="w-10 h-10 text-[var(--primary)]" />,
+    category: 'tech',
+    slug: 'cybersecurity',
+    image: '/assets/services/cybersecurity.jpg',
+    path: '/experties/technology/cybersecurity'
+  },
+  {
+    id: 19,
+    title: 'E-Commerce Solutions',
+    icon: <Cpu className="w-10 h-10 text-[var(--primary)]" />,
+    category: 'tech',
+    slug: 'e-commerce-solutions',
+    image: '/assets/services/e-commerce.jpg',
+    path: '/experties/technology/e-commerce-solutions'
+  },
+  {
+    id: 20,
     title: 'AI Solutions',
     icon: <Cpu className="w-10 h-10 text-[var(--primary)]" />,
     category: 'tech',
     slug: 'ai-solutions',
     image: '/assets/services/ai.jpg',
-    path: '/services/technology/ai-solutions'
+    path: '/experties/technology/ai-solutions'
+  },
+   {
+    id: 21,
+    title: 'Design & Development',
+    icon: <Cpu className="w-10 h-10 text-[var(--primary)]" />,
+    category: 'tech',
+    slug: 'design-development',
+    image: '/assets/services/design-development.jpg',
+    path: '/experties/technology/design-development'
+  },
+  {
+    id: 22,
+    title: 'Automation & Apps',
+    icon: <Cpu className="w-10 h-10 text-[var(--primary)]" />,
+    category: 'tech',
+    slug: 'automation-apps',
+    image: '/assets/services/automation-apps.jpg',
+    path: '/experties/technology/automation-apps'
   },
 ];
 
@@ -249,50 +312,50 @@ export default function Services() {
   return (
     <section className="py-24 text-[var(--foreground)]">
       {/* → Heading + Tabs */}
-      <div className="max-w-7xl mx-auto px-6 sm:px-8 md:px-16 lg:px-32 mb-16">
-        <div className="text-center mb-12">
-          <motion.h2
-            initial={{ opacity: 0, y: -20 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.6 }}
-            className="text-3xl md:text-4xl font-bold mb-4"
-          >
-            Our Comprehensive Solutions
-          </motion.h2>
-          <motion.p
-            initial={{ opacity: 0 }}
-            animate={{ opacity: 0.8 }}
-            transition={{ duration: 0.6, delay: 0.2 }}
-            className="text-lg md:text-xl opacity-80"
-          >
-            End-to-end services covering both business operations and technology development
-          </motion.p>
-        </div>
-
-      <div className="flex justify-center mb-12">
-  <div className="inline-flex bg-[var(--card-bg)]/40 rounded-xl p-2 flex-wrap gap-2 shadow-lg">
-    <button
-      onClick={() => setActiveTab('business')}
-      className={`px-6 py-3 rounded-xl font-semibold transition-all duration-200 text-sm md:text-base border-2 ${
-        activeTab === 'business'
-          ? 'bg-[var(--primary)] text-white border-[var(--primary)] shadow-lg'
-          : 'bg-white/10 text-[var(--foreground)] border-transparent hover:bg-[var(--card-bg)]/60 hover:border-[var(--card-bg)]/60'
-      }`}
+<div className="max-w-7xl mx-auto px-6 sm:px-8 md:px-16 lg:px-32 mb-16">
+  <div className="text-center mb-12">
+    <motion.h2
+      initial={{ opacity: 0, y: -20 }}
+      animate={{ opacity: 1, y: 0 }}
+      transition={{ duration: 0.6 }}
+      className="text-3xl md:text-4xl font-bold mb-4"
     >
-      Business Services
-    </button>
-    <button
-      onClick={() => setActiveTab('tech')}
-      className={`px-13 py-3 rounded-xl font-semibold transition-all duration-200 text-sm md:text-base border-2 ${
-        activeTab === 'tech'
-          ? 'bg-[var(--primary)] text-white border-[var(--primary)] shadow-lg'
-          : 'bg-white/10 text-[var(--foreground)] border-transparent hover:bg-[var(--card-bg)]/60 hover:border-[var(--card-bg)]/60'
-      }`}
+      Our Comprehensive Solutions
+    </motion.h2>
+    <motion.p
+      initial={{ opacity: 0 }}
+      animate={{ opacity: 0.8 }}
+      transition={{ duration: 0.6, delay: 0.2 }}
+      className="text-lg md:text-xl opacity-80"
     >
-      Technology
-    </button>
+      End-to-end services covering both business operations and technology development
+    </motion.p>
   </div>
-</div>
+
+  <div className="flex justify-center mb-12">
+    <div className="inline-flex bg-[var(--card-bg)]/40 rounded-xl p-2 flex-wrap gap-2 shadow-lg">
+      <button
+        onClick={() => setActiveTab('business')}
+        className={`px-6 py-3 rounded-xl font-semibold transition-all duration-200 text-sm md:text-base border-2 cursor-pointer ${
+          activeTab === 'business'
+            ? 'bg-[var(--primary)] text-white border-[var(--primary)] shadow-lg'
+            : 'bg-white/10 text-[var(--foreground)] border-transparent hover:bg-[var(--card-bg)]/60 hover:border-[var(--card-bg)]/60'
+        }`}
+      >
+        Business Services
+      </button>
+      <button
+        onClick={() => setActiveTab('tech')}
+        className={`px-13 py-3 rounded-xl font-semibold transition-all duration-200 text-sm md:text-base border-2 cursor-pointer ${
+          activeTab === 'tech'
+            ? 'bg-[var(--primary)] text-white border-[var(--primary)] shadow-lg'
+            : 'bg-white/10 text-[var(--foreground)] border-transparent hover:bg-[var(--card-bg)]/60 hover:border-[var(--card-bg)]/60'
+        }`}
+      >
+        Technology
+      </button>
+    </div>
+  </div>
 </div>
 
 

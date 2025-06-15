@@ -22,19 +22,19 @@ const Hero: FC = () => {
             and sustainable technology that transforms vision into value.
           </p>
 
-          <div className="flex justify-center md:justify-start gap-4 flex-wrap">
-            <Link href="/contact" passHref>
-              <button className="bg-[var(--primary)] text-white px-6 py-3 rounded-full font-medium hover:opacity-90 transition hover:shadow-lg hover:shadow-[var(--primary)]/30">
-                Let’s Talk Business
-              </button>
-            </Link>
+     <div className="flex justify-center md:justify-start gap-4 flex-wrap">
+  <Link href="/contact" passHref>
+    <button className="bg-[var(--primary)] text-white px-6 py-3 rounded-full font-medium hover:opacity-90 transition hover:shadow-lg hover:shadow-[var(--primary)]/30 cursor-pointer">
+      Let&apos;s Talk Business
+    </button>
+  </Link>
 
-            <Link href="/career" passHref>
-              <button className="border border-[var(--primary)] text-[var(--primary)] px-6 py-3 rounded-full font-medium hover:bg-[var(--primary)] hover:text-white transition hover:shadow-lg hover:shadow-[var(--primary)]/20">
-                Explore Careers
-              </button>
-            </Link>
-          </div>
+  <Link href="/career" passHref>
+    <button className="border border-[var(--primary)] text-[var(--primary)] px-6 py-3 rounded-full font-medium hover:bg-[var(--primary)] hover:text-white transition hover:shadow-lg hover:shadow-[var(--primary)]/20 cursor-pointer">
+      Explore Careers
+    </button>
+  </Link>
+</div>
         </div>
 
         {/* ───────────────────────────────────────────────────────────────────── Hero Image ───────────────────────────────────────────────────────────────────── */}
