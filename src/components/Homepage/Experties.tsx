@@ -1,5 +1,5 @@
 'use client';
-import { useRouter } from 'next/navigation'; // Add this at the top of your component
+import { useRouter } from 'next/navigation'; 
 import Cursor from '@/components/Global/Cursor';
 import { motion, useMotionValue } from 'framer-motion'; 
 import {
@@ -29,209 +29,208 @@ interface Service {
   category: 'business' | 'tech';
   slug: string;
   image: string;
-  path: string; // Added path property
+  path: string; 
 }
 
 const allServices: Service[] = [
   {
-    id: 1,
-    title: 'Virtual Assistance',
-    icon: <Headphones className="w-10 h-10 text-[var(--primary)]" />,
-    category: 'business',
-    slug: 'virtual-assistance',
-    image: '/assets/services/virtual-assistant.jpg',
-    path: '/experties/business/virtual-assistance'
-  },
+  id: 1,
+  title: 'Virtual Assistance',
+  icon: <Headphones className="w-10 h-10 text-[var(--primary)]" />,
+  category: 'business',
+  slug: 'virtual-assistance',
+  image: '/assets/services/virtual-assistant.jpg',
+  path: '/experties/business/virtual-assistance'
+},
+{
+  id: 2,
+  title: 'Project Management',
+  icon: <ClipboardList className="w-10 h-10 text-[var(--primary)]" />,
+  category: 'business',
+  slug: 'project-management',
+  image: '/assets/services/project-management.JPG',
+  path: '/experties/business/project-management'
+},
+{
+  id: 3,
+  title: 'Data Extraction/ETL',
+  icon: <Database className="w-10 h-10 text-[var(--primary)]" />,
+  category: 'business',
+  slug: 'data-extraction-etl',
+  image: '/assets/services/extraction.jpg',
+  path: '/experties/business/data-extraction-etl'
+},
+{
+  id: 4,
+  title: 'ERP/CRM Software',
+  icon: <LayoutDashboard className="w-10 h-10 text-[var(--primary)]" />,
+  category: 'business',
+  slug: 'erp-crm-software',
+  image: '/assets/services/crm.jpg',
+  path: '/experties/business/erp-crm-software'
+},
+{
+  id: 5,
+  title: 'Data Mining',
+  icon: <HardDrive className="w-10 h-10 text-[var(--primary)]" />,
+  category: 'business',
+  slug: 'data-mining',
+  image: '/assets/services/mining.jpg',
+  path: '/experties/business/data-mining'
+},
+{
+  id: 6,
+  title: 'Market Research',
+  icon: <Search className="w-10 h-10 text-[var(--primary)]" />,
+  category: 'business',
+  slug: 'market-research',
+  image: '/assets/services/research.jpg',
+  path: '/experties/business/market-research'
+},
+{
+  id: 8,
+  title: 'Data Analytics and Insights',
+  icon: <BarChart2 className="w-10 h-10 text-[var(--primary)]" />,
+  category: 'business',
+  slug: 'data-analytics-insights',
+  image: '/assets/services/analysis.jpeg',
+  path: '/experties/business/data-analysis'
+},
+{
+  id: 9,
+  title: 'Database Management',
+  icon: <Server className="w-10 h-10 text-[var(--primary)]" />,
+  category: 'business',
+  slug: 'database-management',
+  image: '/assets/services/dbms.jpg',
+  path: '/experties/business/database-management'
+},
+{
+  id: 10,
+  title: 'Quality Assurance',
+  icon: <Server className="w-10 h-10 text-[var(--primary)]" />,
+  category: 'business',
+  slug: 'quality-assurance',
+  image: '/assets/services/qa.jpg',
+  path: '/experties/business/quality-assurance'
+},
+{
+  id: 11,
+  title: 'Maintenance & Support',
+  icon: <Server className="w-10 h-10 text-[var(--primary)]" />,
+  category: 'business',
+  slug: 'maintenance-support',
+  image: '/assets/services/maintenance.jpg',
+  path: '/experties/business/maintenance-support'
+},
+{
+  id: 7,
+  title: 'Staff Augmentation',
+  icon: <Keyboard className="w-10 h-10 text-[var(--primary)]" />,
+  category: 'tech',
+  slug: 'staff-augmentation',
+  image: '/assets/services/staff-augmentation.jpg',
+  path: '/experties/business/staff-augmentation'
+},
   {
-    id: 2,
-    title: 'Project Management',
-    icon: <ClipboardList className="w-10 h-10 text-[var(--primary)]" />,
-    category: 'business',
-    slug: 'project-management',
-    image: '/assets/services/project-management.JPG',
-    path: '/experties/business/project-management'
-  },
- 
-  {
-    id: 3,
-    title: 'Data Extraction/ETL',
-    icon: <Database className="w-10 h-10 text-[var(--primary)]" />,
-    category: 'business',
-    slug: 'data-extraction-etl',
-    image: '/assets/services/extraction.jpg',
-    path: '/experties/business/data-extraction-etl'
-  },
-  {
-    id: 4,
-    title: 'ERP/CRM Software',
-    icon: <LayoutDashboard className="w-10 h-10 text-[var(--primary)]" />,
-    category: 'business',
-    slug: 'erp-crm-software',
-    image: '/assets/services/crm.jpg',
-    path: '/experties/business/erp-crm-software'
-  },
-  {
-    id: 5,
-    title: 'Data Mining',
-    icon: <HardDrive className="w-10 h-10 text-[var(--primary)]" />,
-    category: 'business',
-    slug: 'data-mining',
-    image: '/assets/services/mining.jpg',
-    path: '/experties/business/data-mining'
-  },
-  {
-    id: 6,
-    title: 'Market Research',
-    icon: <Search className="w-10 h-10 text-[var(--primary)]" />,
-    category: 'business',
-    slug: 'market-research',
-    image: '/assets/services/research.jpg',
-    path: '/experties/business/market-research'
-  },
-   {
-    id: 7,
-    title: 'Staff Augmentation',
-    icon: <Keyboard className="w-10 h-10 text-[var(--primary)]" />,
-    category: 'tech',
-    slug: 'staff-augmentation',
-    image: '/assets/services/staff-augmentation.jpg',
-    path: '/experties/business/staff-augmentation'
-  },
-  {
-    id: 8,
-    title: 'Data Analytics and Insights',
-    icon: <BarChart2 className="w-10 h-10 text-[var(--primary)]" />,
-    category: 'business',
-    slug: 'data-analytics-insights',
-    image: '/assets/services/analysis.jpeg',
-    path: '/experties/business/data-analysis'
-  },
-  {
-    id: 9,
-    title: 'Database Management',
-    icon: <Server className="w-10 h-10 text-[var(--primary)]" />,
-    category: 'business',
-    slug: 'database-management',
-    image: '/assets/services/dbms.jpg',
-    path: '/experties/business/database-management'
-  },
-   {
-    id: 10,
-    title: 'Quality Assurance',
-    icon: <Server className="w-10 h-10 text-[var(--primary)]" />,
-    category: 'business',
-    slug: 'quality-assurance',
-    image: '/assets/services/qa.jpg',
-    path: '/experties/business/quality-assurance'
-  },
-  {
-    id: 11,
-    title: 'Maintenance & Support',
-    icon: <Server className="w-10 h-10 text-[var(--primary)]" />,
-    category: 'business',
-    slug: 'maintenance-support',
-    image: '/assets/services/maintenance.jpg',
-    path: '/experties/business/maintenance-support'
-  },
-  {
-    id: 12,
-    title: 'Web Development',
-    icon: <Code className="w-10 h-10 text-[var(--primary)]" />,
-    category: 'tech',
-    slug: 'web-development',
-    image: '/assets/services/dev.jpeg',
-    path: '/experties/technology/web-development'
-  },
-  {
-    id: 13,
-    title: 'Mobile App Development',
-    icon: <Smartphone className="w-10 h-10 text-[var(--primary)]" />,
-    category: 'tech',
-    slug: 'mobile-app-development',
-    image: '/assets/services/app.jpeg',
-    path: '/experties/technology/mobile-app-development'
-  },
-  {
-    id: 14,
-    title: 'UI/UX Design',
-    icon: <Globe className="w-10 h-10 text-[var(--primary)]" />,
-    category: 'tech',
-    slug: 'ui-ux-design',
-    image: '/assets/services/uiux.jpeg',
-    path: '/experties/technology/ui-ux-design'
-  },
-  {
-    id: 15,
-    title: 'Cloud Solutions',
-    icon: <Cloud className="w-10 h-10 text-[var(--primary)]" />,
-    category: 'tech',
-    slug: 'cloud-solutions',
-    image: '/assets/services/cloud.jpg',
-    path: '/experties/technology/cloud-solutions'
-  },
-  {
-    id: 16,
-    title: 'DevOps',
-    icon: <Cpu className="w-10 h-10 text-[var(--primary)]" />,
-    category: 'tech',
-    slug: 'devops',
-    image: '/assets/services/devops.jpg',
-    path: '/experties/technology/devops'
-  },
-  {
-    id: 17,
-    title: 'SaaS Solutions',
-    icon: <Cpu className="w-10 h-10 text-[var(--primary)]" />,
-    category: 'tech',
-    slug: 'saas-solutions',
-    image: '/assets/services/saas.jpg',
-    path: '/experties/technology/saas-solutions'
-  },
-  {
-    id: 18,
-    title: 'Cybersecurity',
-    icon: <Cpu className="w-10 h-10 text-[var(--primary)]" />,
-    category: 'tech',
-    slug: 'cybersecurity',
-    image: '/assets/services/cybersecurity.jpg',
-    path: '/experties/technology/cybersecurity'
-  },
-  {
-    id: 19,
-    title: 'E-Commerce Solutions',
-    icon: <Cpu className="w-10 h-10 text-[var(--primary)]" />,
-    category: 'tech',
-    slug: 'e-commerce-solutions',
-    image: '/assets/services/e-commerce.jpg',
-    path: '/experties/technology/e-commerce-solutions'
-  },
-  {
-    id: 20,
-    title: 'AI Solutions',
-    icon: <Cpu className="w-10 h-10 text-[var(--primary)]" />,
-    category: 'tech',
-    slug: 'ai-solutions',
-    image: '/assets/services/ai.jpg',
-    path: '/experties/technology/ai-solutions'
-  },
-   {
-    id: 21,
-    title: 'Design & Development',
-    icon: <Cpu className="w-10 h-10 text-[var(--primary)]" />,
-    category: 'tech',
-    slug: 'design-development',
-    image: '/assets/services/design-development.jpg',
-    path: '/experties/technology/design-development'
-  },
-  {
-    id: 22,
-    title: 'Automation & Apps',
-    icon: <Cpu className="w-10 h-10 text-[var(--primary)]" />,
-    category: 'tech',
-    slug: 'automation-apps',
-    image: '/assets/services/automation-apps.jpg',
-    path: '/experties/technology/automation-apps'
-  },
+  id: 12,
+  title: 'Web Development',
+  icon: <Code className="w-10 h-10 text-[var(--primary)]" />,
+  category: 'tech',
+  slug: 'web-development',
+  image: '/assets/services/dev.jpeg',
+  path: '/experties/technology/web-development'
+},
+{
+  id: 13,
+  title: 'Mobile App Development',
+  icon: <Smartphone className="w-10 h-10 text-[var(--primary)]" />,
+  category: 'tech',
+  slug: 'mobile-app-development',
+  image: '/assets/services/app.jpeg',
+  path: '/experties/technology/mobile-app-development'
+},
+{
+  id: 14,
+  title: 'UI/UX Design',
+  icon: <Globe className="w-10 h-10 text-[var(--primary)]" />,
+  category: 'tech',
+  slug: 'ui-ux-design',
+  image: '/assets/services/uiux.jpeg',
+  path: '/experties/technology/ui-ux-design'
+},
+{
+  id: 15,
+  title: 'Cloud Solutions',
+  icon: <Cloud className="w-10 h-10 text-[var(--primary)]" />,
+  category: 'tech',
+  slug: 'cloud-solutions',
+  image: '/assets/services/cloud.jpg',
+  path: '/experties/technology/cloud-solutions'
+},
+{
+  id: 16,
+  title: 'DevOps',
+  icon: <Cpu className="w-10 h-10 text-[var(--primary)]" />,
+  category: 'tech',
+  slug: 'devops',
+  image: '/assets/services/devops.jpg',
+  path: '/experties/technology/devops'
+},
+{
+  id: 17,
+  title: 'SaaS Solutions',
+  icon: <Cpu className="w-10 h-10 text-[var(--primary)]" />,
+  category: 'tech',
+  slug: 'saas-solutions',
+  image: '/assets/services/saas.jpg',
+  path: '/experties/technology/saas-solutions'
+},
+{
+  id: 18,
+  title: 'Cybersecurity',
+  icon: <Cpu className="w-10 h-10 text-[var(--primary)]" />,
+  category: 'tech',
+  slug: 'cybersecurity',
+  image: '/assets/services/cybersecurity.jpg',
+  path: '/experties/technology/cybersecurity'
+},
+{
+  id: 19,
+  title: 'E-Commerce Solutions',
+  icon: <Cpu className="w-10 h-10 text-[var(--primary)]" />,
+  category: 'tech',
+  slug: 'e-commerce-solutions',
+  image: '/assets/services/e-commerce.jpg',
+  path: '/experties/technology/e-commerce-solutions'
+},
+{
+  id: 20,
+  title: 'AI Solutions',
+  icon: <Cpu className="w-10 h-10 text-[var(--primary)]" />,
+  category: 'tech',
+  slug: 'ai-solutions',
+  image: '/assets/services/ai.jpg',
+  path: '/experties/technology/ai-solutions'
+},
+{
+  id: 21,
+  title: 'Design & Development',
+  icon: <Cpu className="w-10 h-10 text-[var(--primary)]" />,
+  category: 'tech',
+  slug: 'design-development',
+  image: '/assets/services/design-development.jpg',
+  path: '/experties/technology/design-development'
+},
+{
+  id: 22,
+  title: 'Automation & Apps',
+  icon: <Cpu className="w-10 h-10 text-[var(--primary)]" />,
+  category: 'tech',
+  slug: 'automation-apps',
+  image: '/assets/services/automation-apps.jpg',
+  path: '/experties/technology/automation-apps'
+}
 ];
 
 export default function Services() {

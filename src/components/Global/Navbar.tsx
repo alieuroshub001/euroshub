@@ -3,6 +3,7 @@
 import { motion, useAnimation } from 'framer-motion';
 import {
   ArrowRightIcon,
+  BarChart2Icon,
   ChevronDownIcon,
   ChevronUpIcon,
   ClipboardListIcon,
@@ -13,6 +14,7 @@ import {
   GlobeIcon,
   HeadsetIcon,
   LayoutDashboardIcon,
+  SearchIcon,
   SmartphoneIcon
 } from 'lucide-react';
 import Image from 'next/image';
@@ -23,7 +25,6 @@ import MobileMenu from './MobileMenu';
 const AnimatedLogoText: React.FC<{ text: string; isHovered: boolean }> = ({ text, isHovered }) => {
   const letters = text.split('');
   const controls = useAnimation();
-
   useEffect(() => {
     if (isHovered) {
       controls.start(i => ({
@@ -66,7 +67,6 @@ const AnimatedLogoText: React.FC<{ text: string; isHovered: boolean }> = ({ text
       }));
     }
   }, [isHovered, controls]);
-
   return (
     <div className="flex items-center">
       {letters.map((letter, index) => (
@@ -96,7 +96,6 @@ const AnimatedLogoText: React.FC<{ text: string; isHovered: boolean }> = ({ text
     </div>
   );
 };
-
 const AnimatedLogo: React.FC<{ isHovered: boolean }> = ({ isHovered }) => {
   return (
     <motion.div
@@ -160,7 +159,6 @@ const AnimatedLogo: React.FC<{ isHovered: boolean }> = ({ isHovered }) => {
     </motion.div>
   );
 };
-
 export default function Navbar() {
   const [darkMode, setDarkMode] = useState(false);
   const [showMobileMenu, setShowMobileMenu] = useState(false);
@@ -174,73 +172,79 @@ export default function Navbar() {
   const navbarRef = useRef<HTMLDivElement>(null);
 const allServices = [
   {
-    category: 'Business Expertise',
-    services: [
-      { 
-        name: 'Virtual Assistance', 
-        icon: <HeadsetIcon className="w-4 h-4" />,
-        path: '/services/business/virtual-assistance'
-      },
-      { 
-        name: 'Project Management', 
-        icon: <ClipboardListIcon className="w-4 h-4" />,
-        path: '/services/business/project-management'
-      },
-      { 
-        name: 'Data Extraction/ETL', 
-        icon: <DatabaseIcon className="w-4 h-4" />,
-        path: '/services/business/data-extraction-etl'
-      },
-      { 
-        name: 'ERP/CRM Software', 
-        icon: <LayoutDashboardIcon className="w-4 h-4" />,
-        path: '/services/business/erp-crm-software'
-      },
-      { 
-        name: 'DevOps', 
-        icon: <LayoutDashboardIcon className="w-4 h-4" />,
-        path: '/services/business/DevOps'
-      },
-
-
-    ]
-  },
-  {
-    category: 'Technology Expertise',
-    services: [
-      { 
-        name: 'Web Development', 
-        icon: <CodeIcon className="w-4 h-4" />,
-        path: '/services/technology/web-development'
-      },
-      { 
-        name: 'Mobile App Development', 
-        icon: <SmartphoneIcon className="w-4 h-4" />,
-        path: '/services/technology/mobile-app-development'
-      },
-      { 
-        name: 'UI/UX Design', 
-        icon: <GlobeIcon className="w-4 h-4" />,
-        path: '/services/technology/ui-ux-design'
-      },
-      { 
-        name: 'Cloud Solutions', 
-        icon: <CloudIcon className="w-4 h-4" />,
-        path: '/services/technology/cloud-solutions'
-      },
-      { 
-        name: 'AI Solutions', 
-        icon: <CpuIcon className="w-4 h-4" />,
-        path: '/services/technology/ai-solutions'
-      }
-    ]
-  }
+  category: 'Business Expertise',
+  services: [
+    { 
+      name: 'Virtual Assistance', 
+      icon: <HeadsetIcon className="w-4 h-4" />,
+      path: '/services/business/virtual-assistance'
+    },
+    { 
+      name: 'Project Management', 
+      icon: <ClipboardListIcon className="w-4 h-4" />,
+      path: '/services/business/project-management'
+    },
+    { 
+      name: 'Data Extraction/ETL', 
+      icon: <DatabaseIcon className="w-4 h-4" />,
+      path: '/services/business/data-extraction-etl'
+    },
+    { 
+      name: 'ERP/CRM Software', 
+      icon: <LayoutDashboardIcon className="w-4 h-4" />,
+      path: '/services/business/erp-crm-software'
+    },
+    { 
+      name: 'Data Analytics and Insights', 
+      icon: <BarChart2Icon className="w-4 h-4" />,
+      path: '/services/business/data-analytics'
+    },
+    { 
+      name: 'Market Research', 
+      icon: <SearchIcon className="w-4 h-4" />,
+      path: '/services/business/market-research'
+    }
+  ]
+},
+{
+  category: 'Technology Expertise',
+  services: [
+    { 
+      name: 'Web Development', 
+      icon: <CodeIcon className="w-4 h-4" />,
+      path: '/services/technology/web-development'
+    },
+    { 
+      name: 'Mobile App Development', 
+      icon: <SmartphoneIcon className="w-4 h-4" />,
+      path: '/services/technology/mobile-app-development'
+    },
+    { 
+      name: 'UI/UX Design', 
+      icon: <GlobeIcon className="w-4 h-4" />,
+      path: '/services/technology/ui-ux-design'
+    },
+    { 
+      name: 'Cloud Solutions', 
+      icon: <CloudIcon className="w-4 h-4" />,
+      path: '/services/technology/cloud-solutions'
+    },
+    { 
+      name: 'DevOps', 
+      icon: <CpuIcon className="w-4 h-4" />,
+      path: '/services/technology/devops'
+    },
+    { 
+      name: 'AI Solutions', 
+      icon: <CpuIcon className="w-4 h-4" />,
+      path: '/services/technology/ai-solutions'
+    }
+  ]
+}
 ];
-
   useEffect(() => {
     const storedTheme = localStorage.getItem('theme');
     const systemPrefersDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
-
     if (storedTheme === 'dark' || (!storedTheme && systemPrefersDark)) {
       document.body.classList.add('dark');
       setDarkMode(true);
@@ -249,11 +253,9 @@ const allServices = [
       setDarkMode(false);
     }
   }, []);
-
   useEffect(() => {
     const handleScroll = () => {
       const currentScrollY = window.scrollY;
-      
       // Always show navbar at top of page
       if (currentScrollY <= 10) {
         setVisible(true);
@@ -261,7 +263,6 @@ const allServices = [
         setLastScrollY(currentScrollY);
         return;
       }
-
       // Determine scroll direction
       if (currentScrollY > lastScrollY && currentScrollY > 100) {
         // Scrolling down
@@ -270,15 +271,12 @@ const allServices = [
         // Scrolling up
         setVisible(true);
       }
-
       setIsScrolled(currentScrollY > 10);
       setLastScrollY(currentScrollY);
     };
-
     window.addEventListener('scroll', handleScroll, { passive: true });
     return () => window.removeEventListener('scroll', handleScroll);
   }, [lastScrollY]);
-
   const toggleDarkMode = () => {
     const newMode = !darkMode;
     setDarkMode(newMode);
@@ -290,21 +288,17 @@ const allServices = [
       localStorage.setItem('theme', 'light');
     }
   };
-
   useEffect(() => {
     const handleResize = () => {
       setShowMobileMenu(window.innerWidth < 950);
     };
-
     handleResize();
     window.addEventListener('resize', handleResize);
     return () => window.removeEventListener('resize', handleResize);
   }, []);
-
   const toggleServices = () => {
     setServicesOpen(!servicesOpen);
   };
-
   // Close dropdown when clicking outside
   useEffect(() => {
     const handleClickOutside = (event: MouseEvent) => {
@@ -316,13 +310,11 @@ const allServices = [
         setServicesOpen(false);
       }
     };
-
     document.addEventListener('mousedown', handleClickOutside);
     return () => {
       document.removeEventListener('mousedown', handleClickOutside);
     };
   }, [servicesOpen]);
-
   return (
     <motion.header
       ref={navbarRef}
@@ -350,7 +342,6 @@ const allServices = [
           >
             {/* Invisible expanded hover zone */}
             <div className="absolute -left-8 right-4 top-0 bottom-0 z-0" />
-
             <Link
               href="/"
               className="flex items-center relative z-10"
@@ -361,7 +352,6 @@ const allServices = [
               </div>
             </Link>
           </div>
-
           {/* Theme Toggle Button - Z-index above extended hover zone */}
           {!showMobileMenu && (
             <button
@@ -377,7 +367,6 @@ const allServices = [
             </button>
           )}
         </div>
-
         {/* Navigation Links */}
         <div className="flex items-center gap-8 flex-wrap">
           {!showMobileMenu && (
@@ -411,7 +400,6 @@ const allServices = [
               </li>
             </ul>
           )}
-
           {/* CTA Buttons */}
           <div className="nav-right flex gap-3 items-center navbar-cta">
             <Link href="/career">
@@ -425,11 +413,9 @@ const allServices = [
               </button>
             </Link>
           </div>
-
           {showMobileMenu && <MobileMenu darkMode={darkMode} toggleDarkMode={toggleDarkMode} />}
         </div>
       </nav>
-
       {/* Dropdown for Services */}
       {servicesOpen && (
         <div 
@@ -440,32 +426,45 @@ const allServices = [
         >
           <div className="px-6 py-4">
             <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-              {allServices.map((category) => (
-                <div key={category.category} className="space-y-2">
-                  <h3 className="text-base font-semibold text-[var(--primary)] border-b border-[var(--primary)]/20 pb-1">
-                    {category.category}
-                  </h3>
-                  <div className="grid grid-cols-1 lg:grid-cols-2 gap-1">
-{category.services.map((service) => (
-  <Link
-    key={service.name}
-    href={service.path}
-    className="flex items-center gap-2 p-2 rounded-lg hover:bg-[var(--primary)]/10 transition-all group"
-  >
-    <div className="bg-[var(--primary)]/10 p-1.5 rounded-full group-hover:bg-[var(--primary)] group-hover:text-white">
-      {service.icon}
+{allServices.map((category) => (
+  <div key={category.category} className="space-y-2">
+    <h3 className="text-base font-semibold text-[var(--primary)] border-b border-[var(--primary)]/20 pb-1">
+      {category.category}
+    </h3>
+    <div className="grid grid-cols-1 lg:grid-cols-2 gap-1">
+      {category.services.map((service) => {
+        // Find the longest service name in this category
+        const longestName = Math.max(...category.services.map(s => s.name.length));
+        return (
+          <Link
+            key={service.name}
+            href={service.path}
+            className="group relative flex items-center p-2 rounded-lg hover:bg-[var(--primary)]/10 transition-all"
+          >
+            <div className="flex items-center gap-2 w-full">
+              <div className="bg-[var(--primary)]/10 p-1.5 rounded-full group-hover:bg-[var(--primary)] group-hover:text-white">
+                {service.icon}
+              </div>
+              <span className="text-sm font-medium group-hover:text-[var(--primary)]">
+                {service.name}
+              </span>
+            </div>
+            {/* Centered arrow */}
+            <div 
+              className="absolute left-1/2 transform -translate-x-1/2"
+              style={{ 
+                left: `calc(50% + ${longestName * 4}px)`, // Adjust based on text length
+                transition: 'opacity 0.2s ease'
+              }}
+            >
+              <ArrowRightIcon className="w-4 h-4 text-[var(--primary)] opacity-0 group-hover:opacity-100" />
+            </div>
+          </Link>
+        );
+      })}
     </div>
-    <div className="flex items-center gap-1 flex-1">
-      <span className="text-sm font-medium group-hover:text-[var(--primary)]">
-        {service.name}
-      </span>
-      <ArrowRightIcon className="ml-10 w-5 h-5 text-[var(--primary)] opacity-0 group-hover:opacity-100 transition-opacity ml-1" />
-    </div>
-  </Link>
+  </div>
 ))}
-                  </div>
-                </div>
-              ))}
             </div>
             <div className="mt-4 pt-3 border-t border-[var(--secondary)] text-center">
               <Link href="/services" className="inline-flex items-center gap-2 bg-[var(--primary)] text-white px-4 py-2 rounded-full text-sm font-medium hover:bg-[var(--primary)]/90 transition-colors">
@@ -473,8 +472,6 @@ const allServices = [
                 <ChevronUpIcon className="w-5 h-5 rotate-90" />
               </Link>
             </div>
-
-
           </div>
         </div>
       )}
